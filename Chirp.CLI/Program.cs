@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 public class Program
 {
 
-    static string filePath = @"./chirp_cli_db.csv";
+    static string filePath = @"./Chirp.CLI/chirp_cli_db.csv";
     static string userName = Environment.UserName;
     static long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     static int count = 0;
