@@ -70,7 +70,7 @@ public class Program
         CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
         customCulture.DateTimeFormat.TimeSeparator = ":";
         
-        String date = dto.ToString("dd/MM/yyyy HH:mm:ss", customCulture);
+        String date = dto.ToString("dd/MM/yy HH:mm:ss", customCulture);
         return date;
     }
     

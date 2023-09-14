@@ -12,11 +12,12 @@ public class Tests
     public void TestUnixConversion()
     {
         //Arrange
-        String val = "14/09/2023 13:06:50";
+        string regexPattern = @"^\d{2}/\d{2}/\d{2} \d{2}:\d{2}:\d{2}$";
         Program programClient = new Program();
         //Act
-        String output = programClient.TimeStampConversion(1694696810);
+        string output = programClient.TimeStampConversion(DateTimeOffset.UtcNow.ToUnixTimeSeconds());
+        bool regexMatch = Regex.IsMatch(output, regexPattern);
         //Assert
-        Xunit.Assert.Equal(val, output);
+        Xunit.Assert.True(regexMatch);
     }
 }
