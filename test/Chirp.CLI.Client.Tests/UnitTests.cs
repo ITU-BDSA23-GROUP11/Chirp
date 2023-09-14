@@ -14,7 +14,7 @@ public class Tests
     [InlineData("NaN", 1, false)]
     public void TextUnixConversionEqual(String timestamp, long unix, bool expectedToMatch)
     {
-        String converted = CsvDatabase.TimeStampConversion(unix);
+        String converted = CSVDatabase.TimeStampConversion(unix);
         bool match = timestamp.Equals(converted);
 
         Assert.Equal(match, expectedToMatch);
