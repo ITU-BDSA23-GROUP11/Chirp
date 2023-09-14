@@ -18,4 +18,5 @@
     <ItemGroup>
         <Content Include="..\..\data\chirp_db.csv" Link="chirp_db.csv" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
     </ItemGroup>
+    <ItemGroup>
 </Project>

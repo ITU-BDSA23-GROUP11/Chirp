@@ -1,47 +1,52 @@
-﻿using System;
+﻿namespace Chirp.CLI.Client;
+
+using System;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
+using Chirp.CSVDB;
+using System.Globalization;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using CsvHelper;
-using Chirp.CSVDB;
 
-namespace Chirp.CLI
+public class Program
 {
-    public class Program
+
+    static string filePath = @"../../data/Chirp.CLI/chirp_cli_db.csv";
+    IDatabaseRepository db = new CsvDatabase(filePath);
+    static string userName = Environment.UserName;
+    static long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    static int count = 0;
+    
+    public record Cheep(string Author, string Message, long Timestamp);
+        
+    static void Main(string[] args)
     {
-        static string filePath = @"chirp_db.csv";
-        IDatabaseRepository db = new CsvDatabase(filePath);
-        string userName = Environment.UserName;
-        long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-
-        public record Cheep(string Author, string Message, long Timestamp);
-
-        public void Main(string[] args)
+        try
         {
-            try
+            switch (args[0])
             {
-                switch (args[0])
-                {
-                    case "read":
-                        Read();
-                        break;
+                case "read":
+                    Read();
+                    break;
 
-                    case "cheep":
-                        CheepWrite(args.Skip(1).ToArray());
-                        break;
+                case "cheep":
+                    CheepWrite(args.Skip(1).ToArray());
+                    break;
 
-                    default:
-                        Console.WriteLine("Error: Invalid command.");
-                        break;
-                }
+                default:
+                    Console.WriteLine("Error: Invalid command.");
+                    break;
             }
-            catch (IndexOutOfRangeException e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-                Console.WriteLine("It appears that you did not specify a command.");
-                Console.WriteLine("* Try: read or cheep");
-            }
+        catch (IndexOutOfRangeException e)
+        {
+            Console.WriteLine("Error: " + e.Message);
+            Console.WriteLine("It appears that you did not specify a command.");
+            Console.WriteLine("* Try: read or cheep");
         }
+        
+    }
 
         void Read()
         {
