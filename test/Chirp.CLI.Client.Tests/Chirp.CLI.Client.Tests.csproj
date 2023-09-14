@@ -14,6 +14,11 @@
         <PackageReference Include="NUnit3TestAdapter" Version="4.2.1"/>
         <PackageReference Include="NUnit.Analyzers" Version="3.3.0"/>
         <PackageReference Include="coverlet.collector" Version="3.1.2"/>
+        <PackageReference Include="xunit" Version="2.5.1-pre.33" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\src\Chirp.CLI.Client\Chirp.CLI.Client.csproj" />
     </ItemGroup>
 
 </Project>

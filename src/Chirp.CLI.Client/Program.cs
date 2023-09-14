@@ -1,18 +1,17 @@
 ﻿namespace Chirp.CLI.Client;
 
-
-using System.Diagnostics;
-using System.Text.RegularExpressions;
+using Chirp.CSVDB;
+using System.Globalization;
 
 public class Program
 {
 
-    static string filePath = @"../../data/Chirp.CLI/chirp_cli_db.csv";
-    static string userName = Environment.UserName;
-    static long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    static int count = 0;
-        
-    static void Main(string[] args)
+    string filePath = @"../../data/Chirp.CLI/chirp_cli_db.csv";
+    string userName = Environment.UserName;
+    long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    int count = 0;
+    
+    public void Main(string[] args)
     {
         try {
             switch (args[0]) {
@@ -35,7 +34,7 @@ public class Program
         }
     }
 
-    static void Read() {
+    void Read() {
         using (StreamReader sr = new StreamReader(filePath)) {
             sr.ReadLine();
             while (!sr.EndOfStream) {
@@ -45,7 +44,7 @@ public class Program
                 string readUser = line.Substring(0, firstComma);
                 string readMessage = line.Substring(firstComma + 1, lastComma);
                 long readTimestamp = long.Parse(line.Substring(lastComma + 1));
-                Console.WriteLine(readUser + " @ " + timeStampConversion(readTimestamp) + ": " + readMessage);
+                Console.WriteLine(readUser + " @ " + TimeStampConversion(readTimestamp) + ": " + readMessage);
                 //string[] split = line.Split(",");
                 //Console.WriteLine(split[2]);
                 //Console.WriteLine(split[0] + " @ " + timeStampConversion(long.Parse(split[2])) + ": " + split[1]);
@@ -53,7 +52,7 @@ public class Program
         }
     }
 
-    static void Cheep(string[] args) {
+    void Cheep(string[] args) {
         if (args.Length == 0) {
             Console.WriteLine("Error: You did not apply content");
             return;
@@ -64,11 +63,15 @@ public class Program
         }
     }
 
-    static string timeStampConversion(long unix) {
+    public string TimeStampConversion(long unix) {
         DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix);
         
-        string Date = dto.ToString("dd/MM/yyyy HH:mm:ss");
-        return Date;
+        //Set up a custom culture to ensure that formatting is in accordance with requested
+        CultureInfo customCulture = (CultureInfo)CultureInfo.InvariantCulture.Clone();
+        customCulture.DateTimeFormat.TimeSeparator = ":";
+        
+        String date = dto.ToString("dd/MM/yyyy HH:mm:ss", customCulture);
+        return date;
     }
     
 }
