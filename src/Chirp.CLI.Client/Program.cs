@@ -7,16 +7,16 @@ using Chirp.CSVDB;
 
 namespace Chirp.CLI
 {
-    class Program
+    public class Program
     {
         static string filePath = @"chirp_db.csv";
-        static IDatabaseRepository db = new CsvDatabase(filePath);
+        IDatabaseRepository db = new CsvDatabase(filePath);
         string userName = Environment.UserName;
         long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
         public record Cheep(string Author, string Message, long Timestamp);
 
-        public static void Main(string[] args)
+        public void Main(string[] args)
         {
             try
             {
@@ -43,26 +43,26 @@ namespace Chirp.CLI
             }
         }
 
-        static void Read()
+        void Read()
         {
             var cheeps = db.GetCheeps();
-            foreach(var cheep in cheeps)
+            foreach (var cheep in cheeps)
             {
                 Console.WriteLine(cheep);
             }
         }
 
-        static void CheepWrite(string[] args)
+        void CheepWrite(string[] args)
         {
             if (args.Length == 0)
             {
                 Console.WriteLine("Error: You did not apply content");
                 return;
             }
+
             //string[] data = { userName, "\"" + string.Join(" ", args) + "\"", timestamp };
             db.AddCheep(new Chirp.CSVDB.Cheep(userName, string.Join(" ", args), timestamp));
-            
-        }
 
+        }
     }
 }
