@@ -1,7 +1,8 @@
-﻿namespace Chirp.CSVDB;
-
-interface IDatabaseRepository<T>
+﻿namespace Chirp.CSVDB
 {
-    public IEnumerable<T> Read(string filePath);
-    public void Store(T record);
+    public interface IDatabaseRepository
+    {
+        void AddCheep(Cheep cheep);
+        List<string> GetCheeps();
+    }
 }
