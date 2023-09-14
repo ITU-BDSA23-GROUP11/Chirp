@@ -3,10 +3,10 @@
 
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.CommandLine;
 
-public class Program
+public class Program : UserInterface
 {
-
     static string filePath = @"../../data/Chirp.CLI/chirp_cli_db.csv";
     static string userName = Environment.UserName;
     static long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
