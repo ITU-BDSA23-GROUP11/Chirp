@@ -1,9 +1,8 @@
-﻿namespace Chirp.CLI.Client;
-
-using System;
+﻿using System;
 using CSVDB;
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
+using Chirp.CSVDB;
 
 class Program
 {
