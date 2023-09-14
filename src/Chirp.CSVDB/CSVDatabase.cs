@@ -1,8 +1,10 @@
-namespace SimpleDB;
+using System.Collections;
+
+namespace Chirp.CSVDB;
 
 public class CSVDatabase<T>: IDatabaseRepository<T>
 {
-    public IEnumerable<T> Read(int? limit = null)
+    public IEnumerable<T> Read(string filePath)
     {
         return null;
     }

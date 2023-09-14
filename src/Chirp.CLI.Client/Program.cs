@@ -1,4 +1,5 @@
-namespace Chirp.CLI;
+﻿namespace Chirp.CLI.Client;
+
 
 using System.Diagnostics;
 using System.Text.RegularExpressions;
@@ -6,14 +7,15 @@ using System.Text.RegularExpressions;
 public class Program
 {
 
-    static string filePath = @"./Chirp.CLI/chirp_cli_db.csv";
+    static string filePath = @"../../data/Chirp.CLI/chirp_cli_db.csv";
     static string userName = Environment.UserName;
     static long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     static int count = 0;
         
     static void Main(string[] args)
     {
-        try {switch (args[0]) {
+        try {
+            switch (args[0]) {
                 case "read":
                     Read();
                     break;
