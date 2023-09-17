@@ -28,7 +28,7 @@ public class Program
             switch (args[0])
             {
                 case "read":
-                    Read();
+                    UserInterface.Read(filePath);
                     break;
 
                 case "cheep":
