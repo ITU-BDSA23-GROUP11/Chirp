@@ -1,3 +1,7 @@
+### Chirp ###
+*.tar.gz
+*.zip
+
 ### Csharp ###
 # User-specific files
 *.rsuser
