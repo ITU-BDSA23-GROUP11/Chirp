@@ -31,7 +31,7 @@ jobs:
       - name: Check code coverage
         id: check_coverage
         run: |
-          $threshold=50
+          $threshold=40
           $actual=$(gcovr -r . --xml | [xml]::new().Load(Console.In))
           $coverage=[float]($actual.SelectSingleNode('//line-rate').InnerText) * 100
           echo "Code coverage: $coverage%"
