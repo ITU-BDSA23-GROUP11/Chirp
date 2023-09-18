@@ -47,9 +47,13 @@ namespace Chirp.CSVDB
         }
         static string TimeStampConversion(long unix)
         {
-            DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix);
-            string Date = dto.ToString("dd/MM/yyyy HH:mm:ss");
-            return Date;
+            DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix).AddHours(2);//Account for time difference
+            
+            CultureInfo customCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
+            customCulture.DateTimeFormat.DateSeparator = "/";
+            customCulture.DateTimeFormat.TimeSeparator = ":";
+
+            return dto.ToString("dd/MM/yy HH:mm:ss", customCulture);
         }
     }
 }
