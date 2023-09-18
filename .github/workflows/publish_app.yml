@@ -16,9 +16,18 @@ jobs:
           - kind: windows
             os: windows-latest
             target: win-x64
+          - kind: windows
+            os: windows-latest
+            target: win-x86
+          - kind: windows
+            os: windows-latest
+            target: win-arm64
           - kind: macOS
             os: macos-latest
             target: osx-x64
+          - kind: macOS
+            os: macos-latest
+            target: osx-arm64
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout
@@ -37,10 +46,10 @@ jobs:
           release_name="Chirp-$tag-${{ matrix.target }}"
 
           # Build everything
-          dotnet publish src/App/App.csproj --framework netcoreapp3.1 --runtime "${{ matrix.target }}" -c Release -o "$release_name"
+          dotnet publish Chirp.sln --runtime "${{ matrix.target }}" -c Release -o "$release_name"
 
           # Pack files
-          if [ "${{ matrix.target }}" == "win-x64" ]; then
+          if [ "${{ matrix.kind }}" == "windows" ]; then
             7z a -tzip "${release_name}.zip" "./${release_name}/*"
           else
             tar czvf "${release_name}.tar.gz" "$release_name"
@@ -50,8 +59,21 @@ jobs:
           rm -r "$release_name"
 
       - name: Publish
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@v1
         with:
           files: "Chirp*"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Clean
+        shell: bash
+        run: |
+          # Removes published folder
+          rm -r "$release_name"
+          
+          # Removes zipped folder
+          if [ "${{ matrix.kind }}" == "windows" ]; then
+            rm -r "${release_name}.zip"
+          else
+            rm -r "${release_name}.tar.gz"
+          fi
