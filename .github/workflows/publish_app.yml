@@ -63,16 +63,8 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: "Chirp*"
+          files: |
+            "Chirp*.tar.gz"
+            "Chirp*.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Clean
-        shell: bash
-        run: |
-          # Removes zipped folder
-          if [ "${{ matrix.kind }}" == "windows" ]; then
-            rm -r "${release_name}.zip"
-          else
-            rm -r "${release_name}.tar.gz"
-          fi
