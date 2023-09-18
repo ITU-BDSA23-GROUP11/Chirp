@@ -2,14 +2,13 @@ name: .NET Build and Test
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, develop, release ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop, release ]
 
 jobs:
-  build:
+  BuildAndTest:
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET

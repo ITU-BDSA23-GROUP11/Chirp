@@ -9,7 +9,7 @@ namespace Chirp.CLI
 {
     class Program
     {
-        static string filePath = @"./data/chirp_db.csv";
+        static string filePath = @"chirp_db.csv";
         static IDatabaseRepository db = new CsvDatabase(filePath);
         static string userName = Environment.UserName;
         static long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
