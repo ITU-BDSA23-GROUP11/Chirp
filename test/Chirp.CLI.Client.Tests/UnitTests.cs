@@ -1,26 +1,22 @@
-using System.Text.RegularExpressions;
-using System.Xml.XPath;
-using Chirp.CLI.Client;
+using Chirp.CSVDB;
 using Xunit;
 using Assert = Xunit.Assert;
+using Theory = Xunit.TheoryAttribute;
 
 namespace Chirp.CLI.Client.Tests;
 
 public class Tests
 {
-    //UNITTEST -> Test that the UNIX time is converted to a string correctly
-    [Test]
-    public void TestUnixConversion()
+    [Theory]
+    [InlineData("18/09/23 14:38:59", 1695040739, true)]
+    [InlineData("NaN", -100000000, true)]
+    [InlineData("18/09/23 14:38:59", 1692440719, false)]
+    [InlineData("NaN", 1, false)]
+    public void TextUnixConversionEqual(String timestamp, long unix, bool expectedToMatch)
     {
-        //Arrange
-        /*
-        String val = "14/09/2023 13:06:50";
-        Program programClient = new Program();
-        //Act
-        String output = programClient.TimeStampConversion(1694696810);
-        //Assert
-        Xunit.Assert.Equal(val, output);
-        */
-        Assert.True(true);
+        String converted = CsvDatabase.TimeStampConversion(unix);
+        bool match = timestamp.Equals(converted);
+
+        Assert.Equal(match, expectedToMatch);
     }
 }

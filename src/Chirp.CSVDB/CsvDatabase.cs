@@ -1,8 +1,7 @@
-using System.Collections;
 using CsvHelper;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
+using System.Text.RegularExpressions;
+
 
 
 namespace Chirp.CSVDB
@@ -45,7 +44,7 @@ namespace Chirp.CSVDB
 
             return cheepsList;
         }
-        static string TimeStampConversion(long unix)
+        public static string TimeStampConversion(long unix)
         {
             DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix).AddHours(2);//Account for time difference
             
@@ -53,7 +52,14 @@ namespace Chirp.CSVDB
             customCulture.DateTimeFormat.DateSeparator = "/";
             customCulture.DateTimeFormat.TimeSeparator = ":";
 
-            return dto.ToString("dd/MM/yy HH:mm:ss", customCulture);
+            String date = dto.ToString("dd/MM/yy HH:mm:ss", customCulture);
+            
+            string regexPattern = @"^(0[1-9]|[1-2][0-9]|3[01])/(0[1-9]|1[0-2])/(\d{2}) (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$";
+            
+            //Verify that the date is in the correct format
+            bool matches = Regex.IsMatch(date, regexPattern);
+            if (matches && dto.Year >= 1970) return date;
+            else return "NaN";
         }
     }
 }
