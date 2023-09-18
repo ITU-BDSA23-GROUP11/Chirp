@@ -11,8 +11,8 @@ namespace Chirp.CLI
     {
         static string filePath = @"chirp_db.csv";
         static IDatabaseRepository db = new CsvDatabase(filePath);
-        static string userName = Environment.UserName;
-        static long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        string userName = Environment.UserName;
+        long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
 
         public record Cheep(string Author, string Message, long Timestamp);
 
