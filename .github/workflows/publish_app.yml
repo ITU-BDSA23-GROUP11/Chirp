@@ -68,9 +68,6 @@ jobs:
       - name: Clean
         shell: bash
         run: |
-          # Removes published folder
-          rm -r "$release_name"
-          
           # Removes zipped folder
           if [ "${{ matrix.kind }}" == "windows" ]; then
             rm -r "${release_name}.zip"
