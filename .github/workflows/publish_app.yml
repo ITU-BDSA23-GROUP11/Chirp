@@ -1,5 +1,6 @@
 name: .NET Publish App
-
+permissions:
+  contents: write
 on:
   release:
     types: [ published ]
