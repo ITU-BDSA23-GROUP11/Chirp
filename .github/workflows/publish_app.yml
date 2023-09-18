@@ -64,7 +64,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            "Chirp*.tar.gz"
-            "Chirp*.zip"
+            "Chirp-$(git describe --tags --abbrev=0)-${{ matrix.target }}.tar.gz"
+            "Chirp-$(git describe --tags --abbrev=0)-${{ matrix.target }}.zip"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
