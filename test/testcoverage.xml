@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage line-rate="0.85" branch-rate="0.75">
+  <packages>
+    <package name="Chirp">
+      <classes>
+        <class name="Chirp.CLI.Client.Tests.UnitTests">
+        </class>
+        <class name="Chirp.CSVDB.Tests.UnitTests">
+        </class>
+      </classes>
+    </package>
+  </packages>
+</coverage>
+
