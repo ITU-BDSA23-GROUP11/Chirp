@@ -31,7 +31,7 @@ jobs:
     - name: Code Coverage Report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:
-        filename: test/testcoverage.xml
+        filename: /Chirp/test/testcoverage.xml
         badge: true
         fail_below_min: true
         format: markdown
