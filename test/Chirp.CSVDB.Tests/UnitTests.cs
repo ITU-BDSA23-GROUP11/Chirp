@@ -1,15 +1,11 @@
 namespace Chirp.CSVDB.Tests;
 
-public class Tests
+public class UnitTests
 {
-    [SetUp]
-    public void Setup()
-    {
-    }
 
-    [Test]
+    [Fact]
     public void Test1()
     {
-        Assert.Pass();
+        Assert.True(true);
     }
 }
