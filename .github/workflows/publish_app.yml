@@ -50,7 +50,7 @@ jobs:
           dotnet publish Chirp.sln --runtime "${{ matrix.target }}" -c Release -o "$release_name"
 
           # Pack files
-          if [ "${{ matrix.kind }}" == "windows" ]; then
+          if [ "${{ matrix.os }}" == "windows-latest" ]; then
             7z a -tzip "${release_name}.zip" "./${release_name}/*"
           else
             tar czvf "${release_name}.tar.gz" "$release_name"
