@@ -42,7 +42,7 @@ jobs:
           hide_complexity: false
           indicators: true
           output: both
-          thresholds: ${{ thresholds }}
+          thresholds: ${{ env.thresholds }}
         continue-on-error: true
 
       - name: Add Coverage PR Comment
@@ -60,4 +60,4 @@ jobs:
         with:
           filename: 'coverage/*/coverage.cobertura.xml'
           fail_below_min: true
-          thresholds: ${{ thresholds }}
+          thresholds: ${{ env.thresholds }}
