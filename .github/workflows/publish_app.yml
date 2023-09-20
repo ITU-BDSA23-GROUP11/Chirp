@@ -9,24 +9,24 @@ jobs:
   ReleaseApp:
     strategy:
       matrix:
-        kind: [ 'linux', 'windows', 'macOS' ]
+        kind: [ 'linux-x64', 'win-x64', 'win-x86', 'win-arm64', 'osx-x64', 'osx-arm64' ]
         include:
-          - kind: linux
+          - kind: linux-x64
             os: ubuntu-latest
             target: linux-x64
-          - kind: windows
+          - kind: win-x64
             os: windows-latest
             target: win-x64
-          - kind: windows
+          - kind: win-x86
             os: windows-latest
             target: win-x86
-          - kind: windows
+          - kind: win-arm64
             os: windows-latest
             target: win-arm64
-          - kind: macOS
+          - kind: osx-x64
             os: macos-latest
             target: osx-x64
-          - kind: macOS
+          - kind: osx-arm64
             os: macos-latest
             target: osx-arm64
     runs-on: ${{ matrix.os }}
