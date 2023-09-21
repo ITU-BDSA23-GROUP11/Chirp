@@ -8,7 +8,6 @@ class Program
     IDatabaseRepository db = new CsvDatabase(filePath);
     string userName = Environment.UserName;
     long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
-    int count = 0;
     
     public void Start(string[] args)
     {
