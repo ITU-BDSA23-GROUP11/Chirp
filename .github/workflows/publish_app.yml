@@ -50,11 +50,11 @@ jobs:
           dotnet publish Chirp.sln --runtime "${{ matrix.target }}" -c Release -o "$release_name"
 
           # Pack files
-          if [ "${{ matrix.os }}" == "windows-latest" ]; then
-            7z a -tzip "${release_name}.zip" "./${release_name}/*"
-          else
-            tar czvf "${release_name}.tar.gz" "$release_name"
-          fi
+#          if [ "${{ matrix.os }}" == "windows-latest" ]; then
+          7z a -tzip "${release_name}.zip" "./${release_name}/*"
+#          else
+#            tar czvf "${release_name}.tar.gz" "$release_name"
+#          fi
 
           # Delete output directory
           rm -r "$release_name"
@@ -64,7 +64,7 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            "Chirp-*.tar.gz"
-            "Chirp-*.zip"
+#            Chirp-*.tar.gz
+            Chirp-*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
