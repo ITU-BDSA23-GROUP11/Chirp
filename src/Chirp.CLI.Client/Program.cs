@@ -1,29 +1,20 @@
 ﻿namespace Chirp.CLI.Client;
 
 using System;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
-using Chirp.CSVDB;
-using System.Globalization;
+using CSVDB;
 using System.CommandLine;
-using System;
-using System.CommandLine.Invocation;
 using System.CommandLine.NamingConventionBinder;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using CsvHelper;
 
 class Program
 {
-    string filePath = @"C:\Users\laust\RiderProjects\ProjectFolder\Chirp\src\Chirp.CLI.Client\chirp_cli_db.csv";
+    static string filePath = @"chirp_db.csv";
+    IDatabaseRepository db = new CsvDatabase(filePath);
     string userName = Environment.UserName;
     long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
     int count = 0;
-    string[] argsToBeUsed = null;
-    public int Start(string[] args)
+    
+    public void Start(string[] args)
     {
-        argsToBeUsed = args;
         var rootCommand = new RootCommand("A simple command-line program");
 
         // defines the "read" command
@@ -36,48 +27,30 @@ class Program
         cheepCommand.AddOption(messageOption);
         cheepCommand.Handler = CommandHandler.Create(CheepCommand);
         
+        // adds commands
         rootCommand.AddCommand(readCommand);
         rootCommand.AddCommand(cheepCommand);
 
         // parses the command line arguments and invokes the appropriate command
-        return rootCommand.Invoke(args);
+        rootCommand.Invoke(args);
     }
 
     void ReadCommand()
     {
         Console.WriteLine("Executing the 'read' command.");
-        UserInterface.Read(filePath);
+        var cheeps = db.GetCheeps();
+        foreach (var cheep in cheeps)
+        {
+            Console.WriteLine(cheep);
+        }
     }
 
     void CheepCommand(string message)
     {
         Console.WriteLine(message);
         Console.WriteLine("Executing the 'cheep' command.");
-        CheepWrite(message.Split());
-    }
-    
-    void CheepWrite(string[] args)
-    {
-        if (args.Length == 0)
-        {
-            Console.WriteLine("Error: You did not apply content");
-            return;
-        }
             
-        db.AddCheep(new Chirp.CSVDB.Cheep(userName, string.Join(" ", args), timestamp));
-
-    }
-    
-    void Cheep(string[] args)
-    {
-        if (args.Length == 0) {
-            Console.WriteLine("Error: You did not apply content");
-            return;
-        }
-        using (StreamWriter sw = new StreamWriter(filePath, true)) {
-            string[] data = { userName, string.Join(" ", args), timestamp.ToString() };
-            sw.WriteLine(string.Join(",", data));
-        }
+        db.AddCheep(new Cheep(userName, message, timestamp));
     }
 }
 
