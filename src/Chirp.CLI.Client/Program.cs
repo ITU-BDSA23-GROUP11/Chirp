@@ -59,8 +59,7 @@ namespace Chirp.CLI
                 Console.WriteLine("Error: You did not apply content");
                 return;
             }
-
-            //string[] data = { userName, "\"" + string.Join(" ", args) + "\"", timestamp };
+            
             db.AddCheep(new Chirp.CSVDB.Cheep(userName, string.Join(" ", args), timestamp));
 
         }
