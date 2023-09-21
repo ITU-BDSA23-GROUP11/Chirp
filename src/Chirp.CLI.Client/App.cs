@@ -6,6 +6,7 @@ public class App
     {
         //Initialize client and run program with argument
         Program client = new Program();
-        client.Main(args);
+        client.Start(args);
+        
     }
 }
