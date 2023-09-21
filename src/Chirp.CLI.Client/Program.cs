@@ -1,68 +1,52 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using CsvHelper;
+using System.CommandLine;
+using System.CommandLine.NamingConventionBinder;
 using Chirp.CSVDB;
 
-namespace Chirp.CLI
+class Program
 {
-    class Program
+    static string filePath = @"chirp_db.csv";
+    IDatabaseRepository db = new CsvDatabase(filePath);
+    string userName = Environment.UserName;
+    long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    int count = 0;
+    
+    public void Start(string[] args)
     {
-        static string filePath = @"chirp_db.csv";
-        static IDatabaseRepository db = new CsvDatabase(filePath);
-        static string userName = Environment.UserName;
-        static long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+        var rootCommand = new RootCommand("A simple command-line program");
 
-        public record Cheep(string Author, string Message, long Timestamp);
+        // defines the "read" command
+        var readCommand = new Command("read", "Execute the read command");
+        readCommand.Handler = CommandHandler.Create(ReadCommand);
 
-        public static void Main(string[] args)
+        // defines the "cheep" command
+        var cheepCommand = new Command("cheep", "Execute the cheep command");
+        var messageOption = new Option<string>("--message", "The message to cheep");
+        cheepCommand.AddOption(messageOption);
+        cheepCommand.Handler = CommandHandler.Create(CheepCommand);
+        
+        // adds commands
+        rootCommand.AddCommand(readCommand);
+        rootCommand.AddCommand(cheepCommand);
+
+        // parses the command line arguments and invokes the appropriate command
+        rootCommand.Invoke(args);
+    }
+
+    void ReadCommand()
+    {
+        Console.WriteLine("Executing the 'read' command.");
+        var cheeps = db.GetCheeps();
+        foreach (var cheep in cheeps)
         {
-            try
-            {
-                switch (args[0])
-                {
-                    case "read":
-                        Read();
-                        break;
-
-                    case "cheep":
-                        CheepWrite(args.Skip(1).ToArray());
-                        break;
-
-                    default:
-                        Console.WriteLine("Error: Invalid command.");
-                        break;
-                }
-            }
-            catch (IndexOutOfRangeException e)
-            {
-                Console.WriteLine("Error: " + e.Message);
-                Console.WriteLine("It appears that you did not specify a command.");
-                Console.WriteLine("* Try: read or cheep");
-            }
+            Console.WriteLine(cheep);
         }
+    }
 
-        static void Read()
-        {
-            var cheeps = db.GetCheeps();
-            foreach(var cheep in cheeps)
-            {
-                Console.WriteLine(cheep);
-            }
-        }
-
-        static void CheepWrite(string[] args)
-        {
-            if (args.Length == 0)
-            {
-                Console.WriteLine("Error: You did not apply content");
-                return;
-            }
-            //string[] data = { userName, "\"" + string.Join(" ", args) + "\"", timestamp };
-            db.AddCheep(new Chirp.CSVDB.Cheep(userName, string.Join(" ", args), timestamp));
+    void CheepCommand(string message)
+    {
+        Console.WriteLine(message);
+        Console.WriteLine("Executing the 'cheep' command.");
             
-        }
-
+        db.AddCheep(new Cheep(userName, message, timestamp));
     }
 }

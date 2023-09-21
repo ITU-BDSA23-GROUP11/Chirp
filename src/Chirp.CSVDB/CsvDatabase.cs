@@ -1,9 +1,5 @@
-using System.Collections;
 using CsvHelper;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
-
 
 namespace Chirp.CSVDB
 
@@ -21,7 +17,7 @@ namespace Chirp.CSVDB
 
         public void AddCheep(Cheep cheep)
         {
-            using (var sw = new StreamWriter(_filePath, append: true))
+            using (var sw = new StreamWriter(@_filePath, append: true))
             using (var csv = new CsvWriter(sw, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecord(cheep);
@@ -39,17 +35,11 @@ namespace Chirp.CSVDB
                 while (csv.Read())
                 {
                     var cheep = csv.GetRecord<Cheep>();
-                    cheepsList.Add($"{cheep.Author} @ {TimeStampConversion(cheep.Timestamp)}: {cheep.Message}");
+                    cheepsList.Add($"{cheep.Author} @ {Conversion.TimeStampConversion(cheep.Timestamp)}: {cheep.Message}");
                 }
             }
 
             return cheepsList;
-        }
-        static string TimeStampConversion(long unix)
-        {
-            DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix);
-            string Date = dto.ToString("dd/MM/yyyy HH:mm:ss");
-            return Date;
         }
     }
 }
