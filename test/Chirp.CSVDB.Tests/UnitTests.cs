@@ -1,6 +1,6 @@
 namespace Chirp.CSVDB.Tests;
 
-public class Tests
+public class UnitTests
 {
     [Theory]
     [InlineData("18/09/23 14:38:59", 1695040739, true)]
