@@ -9,14 +9,15 @@
 
     <ItemGroup>
         <PackageReference Include="CsvHelper" Version="30.0.1" />
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+        <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Chirp.CSVDB\Chirp.CSVDB.csproj" />
     </ItemGroup>
-    
-    <ItemGroup>
-        <Content Include="..\..\data\chirp_db.csv" Link="chirp_db.csv" CopyToOutputDirectory="Always" CopyToPublishDirectory="Always" />
-    </ItemGroup>
 
+    <ItemGroup>
+        <Content Include="..\..\data\chirp_db.csv" Link="chirp_db.csv" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
 </Project>
