@@ -2,6 +2,7 @@ using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
+using Chirp.Utilities.Models;
 
 namespace Chirp.CLI.Client;
 

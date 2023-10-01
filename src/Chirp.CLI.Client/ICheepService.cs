@@ -1,6 +1,6 @@
-namespace Chirp.CLI.Client;
+using Chirp.Utilities.Models;
 
-public record Cheep(string Author, string Message, long Timestamp);
+namespace Chirp.CLI.Client;
 
 public interface ICheepService
 {

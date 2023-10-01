@@ -1,10 +1,9 @@
 using CsvHelper;
 using System.Globalization;
+using Chirp.Utilities.Models;
 
 namespace Chirp.CSVDB
 {
-    public record Cheep(string Author, string Message, long Timestamp);
-
     public class CsvDatabase : IDatabaseRepository
     {
         private static CsvDatabase _instance;

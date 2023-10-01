@@ -11,4 +11,8 @@
         <PackageReference Include="CsvHelper" Version="30.0.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Chirp.Utilities\Chirp.Utilities.csproj" />
+    </ItemGroup>
+
 </Project>

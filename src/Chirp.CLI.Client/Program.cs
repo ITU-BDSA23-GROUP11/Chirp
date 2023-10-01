@@ -1,5 +1,6 @@
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
+using Chirp.Utilities.Models;
 
 namespace Chirp.CLI.Client;
 
