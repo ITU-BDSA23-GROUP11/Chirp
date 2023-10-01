@@ -1,13 +1,11 @@
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using Chirp.CSVDB;
+
+namespace Chirp.CLI.Client;
 
 class Program
 {
-    static string filePath = @"chirp_db.csv";
-    IDatabaseRepository db = new CsvDatabase(filePath);
-    string userName = Environment.UserName;
-    long timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+    private readonly ICheepService _cheepService = new CheepHttpService();
     
     public void Start(string[] args)
     {
@@ -34,8 +32,10 @@ class Program
     void ReadCommand()
     {
         Console.WriteLine("Executing the 'read' command.");
-        var cheeps = db.GetCheeps();
-        foreach (var cheep in cheeps)
+        
+        var cheeps = _cheepService.ReadCheeps();
+        
+        foreach (var cheep in cheeps.Result)
         {
             Console.WriteLine(cheep);
         }
@@ -46,6 +46,6 @@ class Program
         Console.WriteLine(message);
         Console.WriteLine("Executing the 'cheep' command.");
             
-        db.AddCheep(new Cheep(userName, message, timestamp));
+        _cheepService.WriteCheep(new Cheep(Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds()));
     }
 }
