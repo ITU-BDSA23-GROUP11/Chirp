@@ -1,6 +1,14 @@
+using Chirp.CSVDB;
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapGet("/cheeps", () => CsvDatabase.Instance.GetCheeps());
+
+app.MapPost("/cheep", (Cheep cheep) =>
+{
+    CsvDatabase.Instance.AddCheep(cheep);
+    return Results.Ok("Cheep added");
+});
 
 app.Run();

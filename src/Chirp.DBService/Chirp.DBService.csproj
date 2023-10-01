@@ -4,7 +4,10 @@
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <RootNamespace>DBService</RootNamespace>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Chirp.CSVDB\Chirp.CSVDB.csproj" />
+    </ItemGroup>
 
 </Project>
