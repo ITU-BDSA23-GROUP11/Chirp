@@ -6,10 +6,12 @@ namespace Chirp.CLI.Client;
 
 class Program
 {
-    private readonly ICheepService _cheepService = CheepCsvService.GetInstance();
+    private readonly ICheepService _cheepService = CheepHttpService.GetInstance();
     
     public void Start(string[] args)
     {
+        Console.WriteLine(args);
+        
         var rootCommand = new RootCommand("A simple command-line program");
 
         // defines the "read" command

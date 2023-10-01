@@ -15,8 +15,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Chirp.CSVDB\Chirp.CSVDB.csproj" />
-      <ProjectReference Include="..\Chirp.Utilities\Chirp.Utilities.csproj" />
+        <ProjectReference Include="..\Chirp.CSVDB\Chirp.CSVDB.csproj" />
+        <ProjectReference Include="..\Chirp.Utilities\Chirp.Utilities.csproj" />
     </ItemGroup>
     
 </Project>
