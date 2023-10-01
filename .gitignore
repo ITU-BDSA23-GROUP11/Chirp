@@ -1,6 +1,7 @@
 ### Chirp ###
 *.tar.gz
 *.zip
+.DS_Store
 
 ### Csharp ###
 # User-specific files
