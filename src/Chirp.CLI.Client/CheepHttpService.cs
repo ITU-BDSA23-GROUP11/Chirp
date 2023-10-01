@@ -8,11 +8,21 @@ namespace Chirp.CLI.Client;
 
 public class CheepHttpService : ICheepService
 {
+    private static CheepHttpService? _instance;
     private readonly HttpClient _httpClient;
 
-    public CheepHttpService()
+    public static CheepHttpService GetInstance()
     {
-        
+        if (_instance == null)
+        {
+            _instance = new CheepHttpService();
+        }
+
+        return _instance;
+    }
+
+    private CheepHttpService()
+    {
         _httpClient = new HttpClient();
         _httpClient.BaseAddress = new Uri("http://localhost:5174");
         _httpClient.DefaultRequestHeaders.Accept.Clear();

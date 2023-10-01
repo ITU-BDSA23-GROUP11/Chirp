@@ -6,7 +6,7 @@ namespace Chirp.CLI.Client;
 
 class Program
 {
-    private readonly ICheepService _cheepService = new CheepHttpService();
+    private readonly ICheepService _cheepService = CheepCsvService.GetInstance();
     
     public void Start(string[] args)
     {
@@ -46,7 +46,7 @@ class Program
     {
         Console.WriteLine(message);
         Console.WriteLine("Executing the 'cheep' command.");
-            
+        
         _cheepService.WriteCheep(new Cheep(Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds()));
     }
 }
