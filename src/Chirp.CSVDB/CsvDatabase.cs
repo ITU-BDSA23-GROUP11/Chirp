@@ -1,18 +1,40 @@
 using CsvHelper;
+using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 namespace Chirp.CSVDB
-
 {
     public record Cheep(string Author, string Message, long Timestamp);
 
     public class CsvDatabase : IDatabaseRepository
     {
+        private static CsvDatabase _instance;
+        private static readonly object _lock = new object();
+
         private string _filePath;
 
-        public CsvDatabase(string filePath)
+        private CsvDatabase(string filePath)
         {
             _filePath = filePath;
+        }
+
+        public static CsvDatabase Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new CsvDatabase("chirp_db.csv");
+                        }
+                    }
+                }
+                return _instance;
+            }
         }
 
         public void AddCheep(Cheep cheep)
@@ -25,7 +47,7 @@ namespace Chirp.CSVDB
             }
         }
 
-        public List<String> GetCheeps()
+        public List<string> GetCheeps()
         {
             List<string> cheepsList = new List<string>();
 
