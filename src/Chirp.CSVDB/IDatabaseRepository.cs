@@ -4,6 +4,6 @@
     {
         void AddCheep(Cheep cheep);
         
-        List<string> GetCheeps();
+        List<Cheep> GetCheeps();
     }
 }

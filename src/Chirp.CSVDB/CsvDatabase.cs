@@ -1,7 +1,5 @@
 using CsvHelper;
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 
 namespace Chirp.CSVDB
 {
@@ -29,7 +27,7 @@ namespace Chirp.CSVDB
                     {
                         if (_instance == null)
                         {
-                            _instance = new CsvDatabase("chirp_db.csv");
+                            _instance = new CsvDatabase("../../data/chirp_db.csv");
                         }
                     }
                 }
@@ -47,9 +45,9 @@ namespace Chirp.CSVDB
             }
         }
 
-        public List<string> GetCheeps()
+        public List<Cheep> GetCheeps()
         {
-            List<string> cheepsList = new List<string>();
+            List<Cheep> cheepsList = new List<Cheep>();
 
             using (StreamReader sr = new StreamReader(_filePath))
             using (var csv = new CsvReader(sr, CultureInfo.InvariantCulture))
@@ -57,7 +55,8 @@ namespace Chirp.CSVDB
                 while (csv.Read())
                 {
                     var cheep = csv.GetRecord<Cheep>();
-                    cheepsList.Add($"{cheep.Author} @ {Conversion.TimeStampConversion(cheep.Timestamp)}: {cheep.Message}");
+                    
+                    if (cheep != null) cheepsList.Add(cheep);
                 }
             }
 
