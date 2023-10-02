@@ -17,9 +17,13 @@ namespace Chirp.CSVDB
                 _filePath = "./chirp_db.csv";
                 if (!File.Exists(_filePath))
                 {
-                    File.Create(filePath).Close();
-                    File.WriteAllText(filePath, "Author,Message,Timestamp");
+                    File.Create(_filePath).Close();
+                    File.WriteAllText(_filePath, "Author,Message,Timestamp");
                 }
+            }
+            else
+            {
+                Console.WriteLine("");
             }
         }
 
@@ -27,7 +31,7 @@ namespace Chirp.CSVDB
         {
             if (_instance == null)
             {
-                _instance = new CsvDatabase("../../data/chirp_db.csv");
+                _instance = new CsvDatabase("../../dat/chirp_db.csv");
             }
 
             return _instance;
