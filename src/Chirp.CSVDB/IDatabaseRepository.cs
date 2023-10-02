@@ -1,8 +1,11 @@
-﻿namespace Chirp.CSVDB
+﻿using Chirp.Utilities.Models;
+
+namespace Chirp.CSVDB
 {
     public interface IDatabaseRepository
     {
         void AddCheep(Cheep cheep);
-        List<string> GetCheeps();
+        
+        List<Cheep> GetCheeps();
     }
 }
