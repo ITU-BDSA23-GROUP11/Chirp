@@ -6,7 +6,7 @@ namespace Chirp.CLI.Client;
 public class CheepCsvService : ICheepService
 {
     private static CheepCsvService? _instance;
-    private readonly IDatabaseRepository db = CsvDatabase.Instance;
+    private readonly IDatabaseRepository db = CsvDatabase.GetInstance;
 
     public static CheepCsvService GetInstance()
     {
