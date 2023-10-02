@@ -6,37 +6,31 @@ namespace Chirp.CSVDB
 {
     public class CsvDatabase : IDatabaseRepository
     {
-        private static CsvDatabase _instance;
-        private static readonly object _lock = new object();
-
-        private string _filePath;
+        private static CsvDatabase? _instance;
+        private readonly string _filePath;
 
         private CsvDatabase(string filePath)
         {
             _filePath = filePath;
+            if (!File.Exists(filePath))
+            {
+                File.WriteAllText(filePath, "Author,Message,Timestamp");
+            }
         }
 
-        public static CsvDatabase GetInstance
+        public static CsvDatabase GetInstance()
         {
-            get
+            if (_instance == null)
             {
-                if (_instance == null)
-                {
-                    lock (_lock)
-                    {
-                        if (_instance == null)
-                        {
-                            _instance = new CsvDatabase("../../data/chirp_db.csv");
-                        }
-                    }
-                }
-                return _instance;
+                _instance = new CsvDatabase("../../data/chirp_db.csv");
             }
+
+            return _instance;
         }
 
         public void AddCheep(Cheep cheep)
         {
-            using (var sw = new StreamWriter(@_filePath, append: true))
+            using (var sw = new StreamWriter(_filePath, append: true))
             using (var csv = new CsvWriter(sw, CultureInfo.InvariantCulture))
             {
                 csv.WriteRecord(cheep);
