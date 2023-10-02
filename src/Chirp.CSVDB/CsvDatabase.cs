@@ -15,7 +15,11 @@ namespace Chirp.CSVDB
             if (!File.Exists(filePath))
             {
                 _filePath = "./chirp_db.csv";
-                File.WriteAllText(filePath, "Author,Message,Timestamp");
+                if (!File.Exists(_filePath))
+                {
+                    File.Create(filePath).Close();
+                    File.WriteAllText(filePath, "Author,Message,Timestamp");
+                }
             }
         }
 
