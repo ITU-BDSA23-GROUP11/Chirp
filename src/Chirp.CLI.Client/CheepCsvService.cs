@@ -6,7 +6,7 @@ namespace Chirp.CLI.Client;
 public class CheepCsvService : ICheepService
 {
     private static CheepCsvService? _instance;
-    private readonly IDatabaseRepository db = CsvDatabase.GetInstance;
+    private readonly IDatabaseRepository _db = CsvDatabase.GetInstance();
 
     public static CheepCsvService GetInstance()
     {
@@ -25,11 +25,11 @@ public class CheepCsvService : ICheepService
     
     public async Task<Cheep[]> ReadCheeps()
     {
-        return db.GetCheeps().ToArray();
+        return await Task.Run(() => _db.GetCheeps().ToArray());
     }
 
     public async Task WriteCheep(Cheep cheep)
     {
-        db.AddCheep(cheep);
+        await Task.Run(() => _db.AddCheep(cheep));
     }
 }

@@ -7,8 +7,6 @@ namespace Chirp.CSVDB
     public class CsvDatabase : IDatabaseRepository
     {
         private static CsvDatabase? _instance;
-        private static readonly object _lock = new object();
-
         private readonly string _filePath;
 
         private CsvDatabase(string filePath)
@@ -20,22 +18,14 @@ namespace Chirp.CSVDB
             }
         }
 
-        public static CsvDatabase GetInstance
+        public static CsvDatabase GetInstance()
         {
-            get
+            if (_instance == null)
             {
-                if (_instance == null)
-                {
-                    lock (_lock)
-                    {
-                        if (_instance == null)
-                        {
-                            _instance = new CsvDatabase("../../data/chirp_db.csv");
-                        }
-                    }
-                }
-                return _instance;
+                _instance = new CsvDatabase("../../data/chirp_db.csv");
             }
+
+            return _instance;
         }
 
         public void AddCheep(Cheep cheep)
