@@ -1,4 +1,4 @@
-name: .NET Publish App
+name: .NET Publish CLI App
 permissions:
   contents: write
 on:
@@ -30,7 +30,7 @@ jobs:
         with:
           dotnet-version: 7.0.x
 
-      - name: Build Chirp CLI
+      - name: Build
         shell: bash
         run: |
           # Define some variables for things we need
@@ -50,7 +50,7 @@ jobs:
           # Delete output directory
           rm -r "$release_name"
 
-      - name: Publish Chirp CLI
+      - name: Publish
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
