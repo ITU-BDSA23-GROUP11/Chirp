@@ -8,7 +8,7 @@ app.MapGet("/cheeps", () => CsvDatabase.GetInstance.GetCheeps());
 
 app.MapPost("/cheep", (Cheep cheep) =>
 {
-    CsvDatabase.Instance.AddCheep(cheep);
+    CsvDatabase.GetInstance.AddCheep(cheep);
     return Results.Ok("Cheep added");
 });
 
