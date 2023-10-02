@@ -16,7 +16,7 @@ namespace Chirp.CSVDB
             _filePath = filePath;
         }
 
-        public static CsvDatabase Instance
+        public static CsvDatabase GetInstance
         {
             get
             {
