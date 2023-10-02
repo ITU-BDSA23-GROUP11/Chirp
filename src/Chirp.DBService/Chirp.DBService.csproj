@@ -7,7 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Chirp.CSVDB\Chirp.CSVDB.csproj" />
+        <ProjectReference Include="..\Chirp.CSVDB\Chirp.CSVDB.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\..\data\chirp_db.csv">
+            <Link>chirp_db.csv</Link>
+            <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
     </ItemGroup>
 
 </Project>
