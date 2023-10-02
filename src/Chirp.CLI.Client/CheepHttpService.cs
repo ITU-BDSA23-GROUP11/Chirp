@@ -24,7 +24,8 @@ public class CheepHttpService : ICheepService
     private CheepHttpService()
     {
         _httpClient = new HttpClient();
-        _httpClient.BaseAddress = new Uri("http://localhost:5174");
+        var env = Environment.GetEnvironmentVariable("ENVIRONMENT");
+        _httpClient.BaseAddress = new Uri(env == "development" ? "http://localhost:5174" : "https://bdsagroup11chirpremotedb.azurewebsites.net");
         _httpClient.DefaultRequestHeaders.Accept.Clear();
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
