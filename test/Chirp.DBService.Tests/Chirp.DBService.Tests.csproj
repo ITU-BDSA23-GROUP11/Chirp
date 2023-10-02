@@ -12,13 +12,13 @@
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
         <PackageReference Include="xunit" Version="2.5.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.1">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-
+    
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Chirp.CSVDB\Chirp.CSVDB.csproj" />
+      <ProjectReference Include="..\..\src\Chirp.DBService\Chirp.DBService.csproj" />
     </ItemGroup>
 
 </Project>

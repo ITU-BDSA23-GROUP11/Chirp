@@ -1,9 +1,9 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace Chirp.CSVDB;
+namespace Chirp.Utilities;
 
-public class Conversion
+public class TimeUtilities
 {
     public static string TimeStampConversion(long unix) {
         DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix).AddHours(2);//Account for time difference

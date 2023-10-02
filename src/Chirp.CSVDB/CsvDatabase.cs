@@ -1,18 +1,37 @@
 using CsvHelper;
 using System.Globalization;
+using Chirp.Utilities.Models;
 
 namespace Chirp.CSVDB
-
 {
-    public record Cheep(string Author, string Message, long Timestamp);
-
     public class CsvDatabase : IDatabaseRepository
     {
+        private static CsvDatabase _instance;
+        private static readonly object _lock = new object();
+
         private string _filePath;
 
-        public CsvDatabase(string filePath)
+        private CsvDatabase(string filePath)
         {
             _filePath = filePath;
+        }
+
+        public static CsvDatabase GetInstance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    lock (_lock)
+                    {
+                        if (_instance == null)
+                        {
+                            _instance = new CsvDatabase("../../data/chirp_db.csv");
+                        }
+                    }
+                }
+                return _instance;
+            }
         }
 
         public void AddCheep(Cheep cheep)
@@ -25,9 +44,9 @@ namespace Chirp.CSVDB
             }
         }
 
-        public List<String> GetCheeps()
+        public List<Cheep> GetCheeps()
         {
-            List<string> cheepsList = new List<string>();
+            List<Cheep> cheepsList = new List<Cheep>();
 
             using (StreamReader sr = new StreamReader(_filePath))
             using (var csv = new CsvReader(sr, CultureInfo.InvariantCulture))
@@ -35,7 +54,8 @@ namespace Chirp.CSVDB
                 while (csv.Read())
                 {
                     var cheep = csv.GetRecord<Cheep>();
-                    cheepsList.Add($"{cheep.Author} @ {Conversion.TimeStampConversion(cheep.Timestamp)}: {cheep.Message}");
+                    
+                    if (cheep != null) cheepsList.Add(cheep);
                 }
             }
 
