@@ -31,7 +31,7 @@ namespace Chirp.CSVDB
         {
             if (_instance == null)
             {
-                _instance = new CsvDatabase("../../dat/chirp_db.csv");
+                _instance = new CsvDatabase("../../data/chirp_db.csv");
             }
 
             return _instance;
