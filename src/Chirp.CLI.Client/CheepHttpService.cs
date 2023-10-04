@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using System.Net.Http.Headers;
 using System.Text;
@@ -10,25 +11,57 @@ public class CheepHttpService : ICheepService
 {
     private static CheepHttpService? _instance;
     private readonly HttpClient _httpClient;
+    private readonly string _localHost = "http://localhost:5174";
+    private readonly string _remoteHost = "https://bdsagroup11chirpremotedb.azurewebsites.net";
 
     public static CheepHttpService GetInstance()
     {
-        if (_instance == null)
-        {
-            _instance = new CheepHttpService();
-        }
-
+        _instance ??= new CheepHttpService();
         return _instance;
     }
 
     private CheepHttpService()
     {
         _httpClient = new HttpClient();
-        var env = Environment.GetEnvironmentVariable("ENVIRONMENT");
-        _httpClient.BaseAddress = new Uri(env == "development" ? "http://localhost:5174" : "https://bdsagroup11chirpremotedb.azurewebsites.net");
         _httpClient.DefaultRequestHeaders.Accept.Clear();
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
+        
+        var pings = Task.WhenAll(
+            _httpClient.GetAsync($"${_localHost}/ping"),
+            _httpClient.GetAsync($"${_remoteHost}/ping")
+        ).Result;
+
+        var localOk = pings[0].StatusCode == HttpStatusCode.OK;
+        var remoteOk = pings[1].StatusCode == HttpStatusCode.OK;
+        
+        var mode = Environment.GetEnvironmentVariable("MODE") ?? "";
+
+        if (localOk && mode != "remote")
+        {
+            _httpClient.BaseAddress = new Uri(_localHost);
+            return;
+        }
+        
+        if (remoteOk && mode != "local")
+        {
+            _httpClient.BaseAddress = new Uri(_remoteHost);
+            return;
+        }
+
+        if (localOk)
+        {
+            _httpClient.BaseAddress = new Uri(_localHost);
+            return;
+        }
+
+        if (remoteOk)
+        {
+            _httpClient.BaseAddress = new Uri(_remoteHost);
+            return;
+        }
+        
+        throw new InvalidOperationException($"Could not ping to given MODE ${mode} nor any of the backends");
     }
     
     public async Task<Cheep[]> ReadCheeps()
