@@ -2,6 +2,8 @@ using System;
 using System.Data;
 using System.Data.SQLite;
 
+//Source: https://zetcode.com/csharp/sqlite/?utm_content=cmp-true
+
 public class DBFacade
 {
     private string connectionString;
