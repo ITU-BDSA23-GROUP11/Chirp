@@ -1,103 +1,78 @@
-using Chirp.CSVDB;
-using Chirp.Utilities;
-using Chirp.Utilities.Models;
+using System;
 using System.Data;
 using System.Data.SQLite;
 
-/***
-
-STILL UNDER CONSTRUCTION!
-
-Responsible: ANBC
-
-**/
-public class DBFacade : IDatabaseRepository
+public class DBFacade
 {
-    private SQLiteConnection _connection;
-    private DBFacade? _instance; 
-    public DBFacade()
-    {  
-        _connection = new SQLiteConnection("Data Source=dump.sql");
-        _connection.Open();
-    }
-
-    public  DBFacade GetInstance()
-    {
-        if (_instance == null)
-        {
-            _instance = new DBFacade();
-        }
-
-        return _instance;
-    }
+    private string connectionString;
     
-
-    public void OpenConnection()
+    public DBFacade(string dbFilePath)
     {
-        if (_connection.State != ConnectionState.Open)
-        {
-            _connection.Open();
-        }
+        connectionString = $"Data Source={dbFilePath}";
     }
 
-    public void CloseConnection()
+    public void CreateDatabase()
     {
-        if (_connection.State != ConnectionState.Closed)
+        using (var connection = new SQLiteConnection(connectionString))
         {
-            _connection.Close();
-        }
-    }
+            connection.Open();
 
-
-    public void WriteCheep(int messageId, int authorId, string text, int pubDate)
-    {
-        OpenConnection();
-
-        using (SQLiteCommand cmd = new SQLiteCommand("INSERT INTO message (message_id, author_id, text, pub_date) VALUES (@messageId, @authorId, @text, @pubDate)", _connection))
-        {
-            cmd.Parameters.AddWithValue("@messageId", messageId);
-            cmd.Parameters.AddWithValue("@authorId", authorId);
-            cmd.Parameters.AddWithValue("@text", text);
-            cmd.Parameters.AddWithValue("@pubDate", pubDate);
-
-            cmd.ExecuteNonQuery();
-        }
-
-        CloseConnection();
-    }
-
-    public List<Cheep> ReadCheeps()
-    {
-        OpenConnection();
-
-        List<Cheep> messagesList = new List<Cheep>();
-
-        using (SQLiteCommand cmd = new SQLiteCommand("SELECT * FROM message", _connection))
-        using (SQLiteDataReader reader = cmd.ExecuteReader())
-        {
-            while (reader.Read())
+     
+            string schemaSql = System.IO.File.ReadAllText("schema.sql");        // Execute schema.sql to create tables
+            using (var cmd = new SQLiteCommand(schemaSql, connection))
             {
-                string messageId = reader.GetString(0);
-                string authorId = reader.GetString(1);
-                int pubDate = reader.GetInt32(2);
-
-                Cheep cheep = new Cheep(messageId, authorId, pubDate);
-                messagesList.Add(cheep);
+                cmd.ExecuteNonQuery();
             }
+
+
+            string dumpSql = System.IO.File.ReadAllText("dump.sql");             // Execute dump.sql to insert data
+            using (var cmd = new SQLiteCommand(dumpSql, connection))
+            {
+                cmd.ExecuteNonQuery();
+            }
+
+            connection.Close();
         }
-
-        CloseConnection();
-
-        return messagesList;
     }
 
-    public void AddCheep(Cheep cheep)
+    public void AddUser(int userId, string username, string email)
     {
-        throw new NotImplementedException();
+        using (var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            string insertSql = "INSERT INTO user (user_id, username, email) VALUES (@userId, @username, @email)";
+
+            using (var cmd = new SQLiteCommand(insertSql, connection))
+            {
+                cmd.Parameters.AddWithValue("@userId", userId);
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@email", email);
+                cmd.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
     }
 
-    public List<Cheep> GetCheeps()
+    public void AddMessage(int messageId, int authorId, string text, int pubDate)
     {
-        throw new NotImplementedException();
+        using (var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            string insertSql = "INSERT INTO message (message_id, author_id, text, pub_date) VALUES (@messageId, @authorId, @text, @pubDate)";
+
+            using (var cmd = new SQLiteCommand(insertSql, connection))
+            {
+                cmd.Parameters.AddWithValue("@messageId", messageId);
+                cmd.Parameters.AddWithValue("@authorId", authorId);
+                cmd.Parameters.AddWithValue("@text", text);
+                cmd.Parameters.AddWithValue("@pubDate", pubDate);
+                cmd.ExecuteNonQuery();
+            }
+
+            connection.Close();
+        }
     }
 }
