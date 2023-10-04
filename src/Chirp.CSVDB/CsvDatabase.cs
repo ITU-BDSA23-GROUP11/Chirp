@@ -29,11 +29,7 @@ namespace Chirp.CSVDB
 
         public static CsvDatabase GetInstance()
         {
-            if (_instance == null)
-            {
-                _instance = new CsvDatabase("../../data/chirp_db.csv");
-            }
-
+            _instance ??= new CsvDatabase("../../data/chirp_db.csv");
             return _instance;
         }
 

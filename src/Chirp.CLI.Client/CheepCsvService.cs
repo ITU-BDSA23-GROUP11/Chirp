@@ -10,11 +10,7 @@ public class CheepCsvService : ICheepService
 
     public static CheepCsvService GetInstance()
     {
-        if (_instance == null)
-        {
-            _instance = new CheepCsvService();
-        }
-
+        _instance ??= new CheepCsvService();
         return _instance;
     }
 
