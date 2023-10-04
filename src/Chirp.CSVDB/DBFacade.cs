@@ -55,7 +55,7 @@ public class DBFacade
         }
     }
 
-    public void AddMessage(int messageId, int authorId, string text, int pubDate)
+    public void AddCheep(int messageId, int authorId, string text, int pubDate)
     {
         using (var connection = new SQLiteConnection(connectionString))
         {
@@ -74,5 +74,36 @@ public class DBFacade
 
             connection.Close();
         }
+    }
+
+       public List<Tuple<string, string, int>> ReadCheeps()
+    {
+        List<Tuple<string, string, int>> messages = new List<Tuple<string, string, int>>();
+        
+        using (var connection = new SQLiteConnection(connectionString))
+        {
+            connection.Open();
+
+            string selectSql = "SELECT message.text, user.username, message.pub_date " +
+                               "FROM message " +
+                               "INNER JOIN user ON message.author_id = user.user_id"; // Only message, user and pubDate is chosen
+
+            using (var cmd = new SQLiteCommand(selectSql, connection))
+            using (var reader = cmd.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    string text = reader.GetString(0);
+                    string username = reader.GetString(1);
+                    int pubDate = reader.GetInt32(2);
+                    
+                    messages.Add(new Tuple<string, string, int>(text, username, pubDate));
+                }
+            }
+
+            connection.Close();
+        }
+
+        return messages;
     }
 }
