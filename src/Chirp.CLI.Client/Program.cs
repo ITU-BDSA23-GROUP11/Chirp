@@ -6,13 +6,13 @@ namespace Chirp.CLI.Client;
 
 class Program
 {
-    private readonly ICheepService _cheepService;
+    private readonly IWebDbService<Cheep> _idbService;
 
     public Program()
     {
         try
         {
-            _cheepService = CheepHttpService.GetInstance();
+            _idbService = CheepHttpService<Cheep>.GetInstance();
         }
         catch (InvalidOperationException e)
         {
@@ -55,7 +55,7 @@ class Program
     {
         Console.WriteLine("Executing the 'read' command.");
         
-        var cheeps = _cheepService.ReadCheeps();
+        var cheeps = _idbService.Read();
         
         foreach (var cheep in cheeps.Result)
         {
@@ -68,6 +68,6 @@ class Program
         Console.WriteLine(message);
         Console.WriteLine("Executing the 'cheep' command.");
         
-        _cheepService.WriteCheep(new Cheep(Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds()));
+        _idbService.Write(new Cheep(Environment.UserName, message, DateTimeOffset.UtcNow.ToUnixTimeSeconds()));
     }
 }
