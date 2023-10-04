@@ -26,16 +26,19 @@ public class CheepHttpService : ICheepService
         _httpClient.DefaultRequestHeaders.Accept.Clear();
         _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         _httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json; charset=utf-8");
+
+        Task<HttpResponseMessage> localPing = new HttpClient().SendAsync(new HttpRequestMessage(HttpMethod.Get, new Uri(_localHost+"/ping")));
+        Task<HttpResponseMessage> remotePing = new HttpClient().SendAsync(new HttpRequestMessage(HttpMethod.Get, new Uri(_remoteHost+"/ping")));
         
         var pings = Task.WhenAll(
-            _httpClient.GetAsync($"${_localHost}/ping"),
-            _httpClient.GetAsync($"${_remoteHost}/ping")
+            localPing,
+            remotePing
         ).Result;
 
-        var localOk = pings[0].StatusCode == HttpStatusCode.OK;
-        var remoteOk = pings[1].StatusCode == HttpStatusCode.OK;
+        bool localOk = pings[0].StatusCode == HttpStatusCode.OK;
+        bool remoteOk = pings[1].StatusCode == HttpStatusCode.OK;
         
-        var mode = Environment.GetEnvironmentVariable("MODE") ?? "";
+        var mode = Environment.GetEnvironmentVariable("SERVICES") ?? "";
 
         if (localOk && mode != "remote")
         {

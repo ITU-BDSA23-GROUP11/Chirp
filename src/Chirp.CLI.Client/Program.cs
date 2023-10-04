@@ -6,7 +6,26 @@ namespace Chirp.CLI.Client;
 
 class Program
 {
-    private readonly ICheepService _cheepService = CheepHttpService.GetInstance();
+    private readonly ICheepService _cheepService;
+
+    public Program()
+    {
+        try
+        {
+            _cheepService = CheepHttpService.GetInstance();
+        }
+        catch (InvalidOperationException e)
+        {
+            Console.WriteLine(e.Message);
+            Environment.Exit(0);
+        }
+        catch (AggregateException e)
+        {
+            Console.WriteLine("Something went wrong with the servers, please try again");
+            Environment.Exit(0);
+        }
+        
+    }
     
     public void Start(string[] args)
     {
