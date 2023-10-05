@@ -18,6 +18,6 @@ public class Cheep
             value.Cheeps.Add(this);
         }
     }
-    public string Message { get; init; } = "";
+    public string Message { get; set; } = "";
     public DateTime Timestamp { get; } = DateTime.UtcNow;
 }
