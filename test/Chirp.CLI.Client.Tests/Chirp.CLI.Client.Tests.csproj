@@ -17,8 +17,5 @@
         </PackageReference>
     </ItemGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\..\src\Chirp.CLI.Client\Chirp.CLI.Client.csproj" />
-    </ItemGroup>
 
 </Project>
