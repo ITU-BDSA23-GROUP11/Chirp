@@ -1,3 +1,6 @@
+using Chirp.DBService.Models;
+using Chirp.DBService.Repositories;
+
 public record CheepViewModel(string Author, string Message, string Timestamp);
 
 public interface ICheepService
