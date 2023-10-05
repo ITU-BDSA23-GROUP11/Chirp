@@ -10,6 +10,8 @@ public class PublicModel : PageModel
     private readonly ICheepRepository _service;
     public List<Cheep> Cheeps { get; set; }
 
+    public int AmountOfPages { get; set; }
+
     public PublicModel(ICheepRepository service)
     {
         _service = service;
@@ -18,6 +20,9 @@ public class PublicModel : PageModel
     public ActionResult OnGet()
     {
         Cheeps = _service.GetCheeps();
+        
+        //Calculate the amount of pages needed
+        AmountOfPages = (int)Math.Ceiling((double)Cheeps.Count() / 32);
         return Page();
     }
 }

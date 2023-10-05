@@ -3,6 +3,18 @@
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
+    
+    //Try to retrieve the Page parameter (if any)
+    int PageIndex = 0;
+    try
+    {
+        PageIndex = int.Parse(Request.Query["page"]);
+    }
+    catch (Exception e) when (e is FormatException ||
+                              e is ArgumentNullException)
+    {
+        //Continue running with PageIndex = 0
+    }
 }
 
 <div>
@@ -29,4 +41,11 @@
     {
         <em>There are no cheeps so far.</em>
     }
+    <!--Pagination-->
+    <div>
+        @for (int i = 1; i <= Model.AmountOfPages; i++)
+        {
+            <a href="/?page=@i">@i</a>
+        }
+    </div>
 </div>
