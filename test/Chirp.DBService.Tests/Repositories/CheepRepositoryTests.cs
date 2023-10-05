@@ -5,7 +5,7 @@ namespace Chirp.DBService.Tests.Repositories;
 
 public class CheepRepositoryTests
 {
-    private ICheepRepository _cheepRepository = new CheepRepository();
+    private readonly ICheepRepository _cheepRepository = new CheepRepository();
 
     [Fact]
     public void TestAddCheep()
