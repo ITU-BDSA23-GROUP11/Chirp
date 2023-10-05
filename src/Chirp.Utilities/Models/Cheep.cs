@@ -6,4 +6,9 @@ public class Cheep
     public required Author Author { get; set; }
     public string Message { get; set; } = "";
     public DateTime Timestamp { get; } = DateTime.UtcNow;
+
+    public Cheep(Author author)
+    {
+        Author = author;
+    }
 }
