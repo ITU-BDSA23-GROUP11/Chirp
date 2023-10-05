@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SQLite;
+using Chirp.CSVDB;
 using Chirp.Utilities.Models;
 
 //Source: https://zetcode.com/csharp/sqlite/?utm_content=cmp-true
@@ -79,7 +80,7 @@ public class DBFacade
         }
     }
 
-       public List<Cheep> ReadCheeps()
+       public List<Cheep> GetCheeps()
     {
         List<Cheep> messages = new List<Cheep>();
         
