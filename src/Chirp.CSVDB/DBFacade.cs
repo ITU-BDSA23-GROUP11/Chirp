@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SQLite;
+using Chirp.Utilities.Models;
 
 //Source: https://zetcode.com/csharp/sqlite/?utm_content=cmp-true
 
@@ -78,9 +79,9 @@ public class DBFacade
         }
     }
 
-       public List<Tuple<string, string, int>> ReadCheeps()
+       public List<Cheep> ReadCheeps()
     {
-        List<Tuple<string, string, int>> messages = new List<Tuple<string, string, int>>();
+        List<Cheep> messages = new List<Cheep>();
         
         using (var connection = new SQLiteConnection(connectionString))
         {
@@ -99,7 +100,7 @@ public class DBFacade
                     string username = reader.GetString(1);
                     int pubDate = reader.GetInt32(2);
                     
-                    messages.Add(new Tuple<string, string, int>(text, username, pubDate));
+                    messages.Add(new Cheep(text, username, pubDate));
                 }
             }
 
