@@ -7,16 +7,16 @@ using Chirp.Utilities.Models;
 
 public class DBFacade
 {
-    private string connectionString;
+    private readonly string _connectionString;
     
     public DBFacade(string dbFilePath)
     {
-        connectionString = $"Data Source={dbFilePath}";
+        _connectionString = $"Data Source={dbFilePath}";
     }
 
     public void CreateDatabase()
     {
-        using (var connection = new SQLiteConnection(connectionString))
+        using (var connection = new SQLiteConnection(_connectionString))
         {
             connection.Open();
 
@@ -40,7 +40,7 @@ public class DBFacade
 
     public void AddUser(int userId, string username, string email)
     {
-        using (var connection = new SQLiteConnection(connectionString))
+        using (var connection = new SQLiteConnection(_connectionString))
         {
             connection.Open();
 
@@ -60,7 +60,7 @@ public class DBFacade
 
     public void AddCheep(int messageId, int authorId, string text, int pubDate)
     {
-        using (var connection = new SQLiteConnection(connectionString))
+        using (var connection = new SQLiteConnection(_connectionString))
         {
             connection.Open();
 
@@ -83,7 +83,7 @@ public class DBFacade
     {
         List<Cheep> messages = new List<Cheep>();
         
-        using (var connection = new SQLiteConnection(connectionString))
+        using (var connection = new SQLiteConnection(_connectionString))
         {
             connection.Open();
 
