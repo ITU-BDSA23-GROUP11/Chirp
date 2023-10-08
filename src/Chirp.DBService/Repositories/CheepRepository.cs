@@ -4,6 +4,12 @@ namespace Chirp.DBService.Repositories;
 
 public class CheepRepository : ICheepRepository
 {
+    private readonly ChirpDBContext _chirpDbContext = new ();
+    public CheepRepository()
+    {
+        DbInitializer.SeedDatabase(_chirpDbContext);
+    }
+    
     public Cheep AddCheep(Cheep cheep)
     {
         throw new NotImplementedException();
@@ -11,7 +17,7 @@ public class CheepRepository : ICheepRepository
 
     public List<Cheep> GetCheeps()
     {
-        throw new NotImplementedException();
+        return _chirpDbContext.Cheeps.ToList();
     }
 
     public List<Cheep> GetCheepsFromAuthorName(string authorName)
