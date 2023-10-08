@@ -4,35 +4,36 @@ namespace Chirp.DBService.Repositories;
 
 public class CheepRepository : ICheepRepository
 {
+    private readonly ChirpDBContext _chirpDbContext = new ();
     public CheepRepository()
     {
-        DbInitializer.SeedDatabase(ChirpDBContext.GetInstance());
+        DbInitializer.SeedDatabase(_chirpDbContext);
     }
     
     public Cheep AddCheep(Cheep cheep)
     {
-        ChirpDBContext.GetInstance().Cheeps.Add(cheep);
-        ChirpDBContext.GetInstance().SaveChanges();
+        _chirpDbContext.Cheeps.Add(cheep);
+        _chirpDbContext.SaveChanges();
         return cheep;
     }
 
     public List<Cheep> GetCheeps()
     {
-        return ChirpDBContext.GetInstance().Cheeps.ToList();
+        return _chirpDbContext.Cheeps.ToList();
     }
     
     public List<Cheep> GetCheepsForPage(int pageNumber)
     {
-       return ChirpDBContext.GetInstance().Cheeps.Skip(pageNumber * 32).Take(32).ToList();
+       return _chirpDbContext.Cheeps.Skip(pageNumber * 32).Take(32).ToList();
     }
 
     public int GetCheepCount()
     {
-        return ChirpDBContext.GetInstance().Cheeps.Count();
+        return _chirpDbContext.Cheeps.Count();
     }
 
     public List<Cheep> GetCheepsFromAuthorName(string authorName)
     {
-        return ChirpDBContext.GetInstance().Cheeps.Where(c => c.Author.Name == authorName).ToList();
+        return _chirpDbContext.Cheeps.Where(c => c.Author.Name == authorName).ToList();
     }
 }

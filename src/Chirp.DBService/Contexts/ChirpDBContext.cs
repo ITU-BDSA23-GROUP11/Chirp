@@ -7,20 +7,8 @@ namespace Chirp.DBService;
 
 public class ChirpDBContext : DbContext
 {
-    private static ChirpDBContext? _instance;
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
-
-    public static ChirpDBContext GetInstance()
-    {
-        _instance ??= new ChirpDBContext();
-        return _instance;
-    }
-
-    private ChirpDBContext()
-    {
-        
-    }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
