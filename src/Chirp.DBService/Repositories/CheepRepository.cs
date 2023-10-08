@@ -21,6 +21,16 @@ public class CheepRepository : ICheepRepository
     {
         return _chirpDbContext.Cheeps.ToList();
     }
+    
+    public List<Cheep> GetCheepsForPage(int pageNumber)
+    {
+       return _chirpDbContext.Cheeps.Skip(pageNumber * 32).Take(32).ToList();
+    }
+
+    public int GetCheepCount()
+    {
+        return _chirpDbContext.Cheeps.Count();
+    }
 
     public List<Cheep> GetCheepsFromAuthorName(string authorName)
     {
