@@ -12,7 +12,8 @@ public class CheepRepositoryTests
     {
         Author author = new Author
         {
-            Name = "Kim"
+            Name = "Kim",
+            Email = "kim@itu.dk"
         };
         Cheep cheep = new Cheep
         {

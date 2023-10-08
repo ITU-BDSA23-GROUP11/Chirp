@@ -9,16 +9,19 @@ public class ModelsUnitTests
     {
         var author1 = new Author
         {
-            Name = "Kim"
+            Name = "Kim",
+            Email = "kim@itu.dk"
         };
         var author2 = new Author
         {
-            Name = "Kim"
+            Name = "Kim",
+            Email = "kim@itu.dk"
         };
         
         Assert.NotEqual(author1, author2);
         Assert.NotEqual(author1.Id, author2.Id);
         Assert.Equal(author1.Name, author2.Name);
+        Assert.Equal(author1.Email, author2.Email);
     }
     
     [Fact]
@@ -26,7 +29,8 @@ public class ModelsUnitTests
     {
         var author = new Author
         {
-            Name = "Kim"
+            Name = "Kim",
+            Email = "kim@itu.dk"
         };
         var cheep1 = new Cheep
         {
@@ -50,7 +54,8 @@ public class ModelsUnitTests
     {
         var author = new Author
         {
-            Name = "Kim"
+            Name = "Kim",
+            Email = "kim@itu.dk"
         };
         var cheep = new Cheep
         {

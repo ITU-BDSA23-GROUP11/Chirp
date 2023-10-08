@@ -9,7 +9,8 @@ public class ModelsIntegrationTests
     {
         var author = new Author
         {
-            Name = "Kim"
+            Name = "Kim",
+            Email = "kim@itu.dk"
         };
         var cheep = new Cheep
         {
