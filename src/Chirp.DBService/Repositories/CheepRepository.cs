@@ -12,7 +12,9 @@ public class CheepRepository : ICheepRepository
     
     public Cheep AddCheep(Cheep cheep)
     {
-        throw new NotImplementedException();
+        _chirpDbContext.Cheeps.Add(cheep);
+        _chirpDbContext.SaveChanges();
+        return cheep;
     }
 
     public List<Cheep> GetCheeps()
