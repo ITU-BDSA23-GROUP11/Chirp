@@ -22,6 +22,6 @@ public class CheepRepository : ICheepRepository
 
     public List<Cheep> GetCheepsFromAuthorName(string authorName)
     {
-        throw new NotImplementedException();
+        return _chirpDbContext.Cheeps.Where(c => c.Author.Name == authorName).ToList();
     }
 }
