@@ -12,6 +12,7 @@ public class CheepRepository : ICheepRepository
     {
         _chirpDbContext = new ChirpDBContext(isTest);
         var dbCreator = _chirpDbContext.GetService<IRelationalDatabaseCreator>();
+        dbCreator.Create();
         dbCreator.EnsureCreated();
         if (!isTest) DbInitializer.SeedDatabase(_chirpDbContext);
     }
