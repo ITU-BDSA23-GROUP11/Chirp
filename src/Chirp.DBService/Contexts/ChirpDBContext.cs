@@ -15,6 +15,7 @@ public class ChirpDBContext : DbContext
     public ChirpDBContext(bool isTest = false)
     {
         IsTest = isTest;
+        Database.EnsureCreated();
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
