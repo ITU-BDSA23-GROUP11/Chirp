@@ -20,11 +20,11 @@ public class CheepRepositoryTests
             Author = author
         };
 
-        List<Cheep> cheeps = _cheepRepository.GetCheeps();
+        List<Cheep> cheeps = _cheepRepository.GetCheepsWithAuthors();
 
         _cheepRepository.AddCheep(cheep);
 
-        List<Cheep> updatedCheeps = _cheepRepository.GetCheeps();
+        List<Cheep> updatedCheeps = _cheepRepository.GetCheepsWithAuthors();
         
         Assert.Equal(cheeps.Count+1, updatedCheeps.Count);
         Assert.Equal(cheep, updatedCheeps.Last());
@@ -34,7 +34,7 @@ public class CheepRepositoryTests
     [Fact]
     public void TestGetCheeps()
     {
-        List<Cheep> cheeps = _cheepRepository.GetCheeps();
+        List<Cheep> cheeps = _cheepRepository.GetCheepsWithAuthors();
         foreach (var cheep in cheeps)
         {
             Assert.NotNull(cheep);
@@ -46,7 +46,7 @@ public class CheepRepositoryTests
     public void TestGetCheepsFromAuthor()
     {
         var authorName = "Kim";
-        List<Cheep> cheeps = _cheepRepository.GetCheepsFromAuthorName(authorName);
+        List<Cheep> cheeps = _cheepRepository.GetCheepsFromAuthorNameWithAuthors(authorName);
         foreach (var cheep in cheeps)
         {
             Assert.Equal(authorName, cheep.Author.Name);

@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Chirp.DBService.Models;
 
 // Principal (parent)
 public class Author
 {
+    [Key]
     public Guid AuthorId { get; set; }
     public required string Name { get; set; }
     public required string Email { get; set; }

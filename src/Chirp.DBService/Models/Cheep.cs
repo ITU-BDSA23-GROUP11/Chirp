@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Chirp.DBService.Models;
 
 public class Cheep
 {
+    [Key]
     public Guid CheepId { get; set; }
     private Author _author = null!;
     public Author Author
@@ -12,7 +12,7 @@ public class Cheep
         get => _author;
         set
         {
-            if (!value.Cheeps.Any(c => c.CheepId == CheepId))
+            if (value.Cheeps.All(c => c.CheepId != CheepId))
             {
                 value.Cheeps.Add(this);
             }

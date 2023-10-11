@@ -19,7 +19,7 @@ public class PublicModel : PageModel
 
     public ActionResult OnGet()
     {
-        Cheeps = _service.GetCheeps();
+        Cheeps = _service.GetCheepsWithAuthors();
         
         //Calculate the amount of pages needed
         AmountOfPages = (int)Math.Ceiling((double)Cheeps.Count() / 32);

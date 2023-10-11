@@ -1,4 +1,5 @@
 using Chirp.DBService.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.DBService.Repositories;
 
@@ -16,11 +17,17 @@ public class CheepRepository : ICheepRepository
         _chirpDbContext.SaveChanges();
         return cheep;
     }
-
-    public List<Cheep> GetCheeps()
+    
+    public List<Cheep> GetCheepsWithoutAuthors()
     {
-        List<Cheep> cheeps = _chirpDbContext.Cheeps.ToList();
-        return cheeps;
+        return _chirpDbContext.Cheeps.ToList();
+    }
+
+    public List<Cheep> GetCheepsWithAuthors()
+    {
+        return _chirpDbContext.Cheeps
+            .Include(c => c.Author)
+            .ToList();
     }
     
     public List<Cheep> GetCheepsForPage(int pageNumber)
@@ -33,7 +40,14 @@ public class CheepRepository : ICheepRepository
         return _chirpDbContext.Cheeps.Count();
     }
 
-    public List<Cheep> GetCheepsFromAuthorName(string authorName)
+    public List<Cheep> GetCheepsFromAuthorNameWithAuthors(string authorName)
+    {
+        return _chirpDbContext.Cheeps.Where(c => c.Author.Name == authorName)
+            .Include(c => c.Author)
+            .ToList();
+    }
+
+    public List<Cheep> GetCheepsFromAuthorNameWithoutAuthors(string authorName)
     {
         return _chirpDbContext.Cheeps.Where(c => c.Author.Name == authorName).ToList();
     }
