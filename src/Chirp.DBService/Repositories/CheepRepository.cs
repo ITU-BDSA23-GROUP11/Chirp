@@ -19,7 +19,8 @@ public class CheepRepository : ICheepRepository
 
     public List<Cheep> GetCheeps()
     {
-        return _chirpDbContext.Cheeps.ToList();
+        List<Cheep> cheeps = _chirpDbContext.Cheeps.ToList();
+        return cheeps;
     }
     
     public List<Cheep> GetCheepsForPage(int pageNumber)

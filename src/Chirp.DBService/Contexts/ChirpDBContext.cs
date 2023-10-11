@@ -14,12 +14,17 @@ public class ChirpDBContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Cheep>()
-            .HasOne(c => c.Author)
-            .WithMany(a => a.Cheeps)
-            .HasPrincipalKey(a => a.AuthorId)
-            .HasForeignKey(c => c.CheepId)
+        modelBuilder.Entity<Author>()
+            .HasMany<Cheep>(a => a.Cheeps)
+            .WithOne(c => c.Author)
+            .HasForeignKey("AuthorId")
             .IsRequired();
+        // modelBuilder.Entity<Cheep>()
+        //     .HasOne(c => c.Author)
+        //     .WithMany(a => a.Cheeps)
+        //     .HasPrincipalKey(a => a.AuthorId)
+        //     .HasForeignKey(c => c.CheepId)
+        //     .IsRequired();
     }
 
     private string DbPath = Path.Combine(MiscUtilities.TryGetSolutionDirectoryInfo().FullName, "data", "chirp_db.db");
