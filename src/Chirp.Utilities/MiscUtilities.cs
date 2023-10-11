@@ -10,6 +10,6 @@ public class MiscUtilities
         {
             directory = directory.Parent;
         }
-        return directory;
+        return directory ?? new DirectoryInfo(Directory.GetCurrentDirectory());
     }
 }
