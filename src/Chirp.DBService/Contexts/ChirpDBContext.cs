@@ -44,7 +44,7 @@ public class ChirpDBContext : DbContext
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
         options
-            .UseSqlite($"Data Source={DbPath}")
-            .EnableSensitiveDataLogging();
+            .UseSqlite($"Data Source={DbPath}");
+
     }
 }
