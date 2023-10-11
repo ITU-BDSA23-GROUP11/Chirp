@@ -11,5 +11,7 @@ public interface ICheepRepository
     public int GetCheepCount();
     public List<Cheep> GetCheepsFromAuthorNameWithAuthors(string authorName);
     public List<Cheep> GetCheepsFromAuthorNameWithoutAuthors(string authorName);
+
+    public List<Cheep> GetCheepsFromAuthorNameForPage(string authorName, int pageNumber);
     public void DeleteDatabase();
 }

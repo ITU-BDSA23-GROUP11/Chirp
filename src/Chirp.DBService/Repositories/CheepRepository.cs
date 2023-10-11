@@ -19,6 +19,11 @@ public class CheepRepository : ICheepRepository
         return cheep;
     }
     
+    public int GetCheepCount()
+    {
+        return _chirpDbContext.Cheeps.Count();
+    }
+    
     public List<Cheep> GetCheepsWithoutAuthors()
     {
         return _chirpDbContext.Cheeps.ToList();
@@ -33,12 +38,10 @@ public class CheepRepository : ICheepRepository
     
     public List<Cheep> GetCheepsForPage(int pageNumber)
     {
-       return _chirpDbContext.Cheeps.Skip(pageNumber * 32).Take(32).ToList();
-    }
-
-    public int GetCheepCount()
-    {
-        return _chirpDbContext.Cheeps.Count();
+        return GetCheepsWithAuthors()
+            .Skip((pageNumber - 1) * 32)
+            .Take(32)//Refactor
+            .ToList();
     }
 
     public List<Cheep> GetCheepsFromAuthorNameWithAuthors(string authorName)
@@ -56,5 +59,13 @@ public class CheepRepository : ICheepRepository
     public void DeleteDatabase()
     {
         _chirpDbContext.Database.EnsureDeleted();
+    }
+
+    public List<Cheep> GetCheepsFromAuthorNameForPage(string authorName, int pageNumber)
+    {
+        return GetCheepsFromAuthorNameWithAuthors(authorName)
+            .Skip((pageNumber - 1) * 32)
+            .Take(32)//Refactor
+            .ToList();
     }
 }
