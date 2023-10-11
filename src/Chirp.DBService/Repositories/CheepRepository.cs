@@ -1,5 +1,7 @@
 using Chirp.DBService.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Chirp.DBService.Repositories;
 
@@ -9,6 +11,8 @@ public class CheepRepository : ICheepRepository
     public CheepRepository(bool isTest = false)
     {
         _chirpDbContext = new ChirpDBContext(isTest);
+        var dbCreator = _chirpDbContext.GetService<IRelationalDatabaseCreator>();
+        dbCreator.EnsureCreated();
         if (!isTest) DbInitializer.SeedDatabase(_chirpDbContext);
     }
     

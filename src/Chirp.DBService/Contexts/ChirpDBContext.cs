@@ -1,6 +1,7 @@
 using Chirp.DBService.Models;
 using Chirp.Utilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Chirp.DBService;
 
@@ -15,7 +16,6 @@ public class ChirpDBContext : DbContext
     public ChirpDBContext(bool isTest = false)
     {
         IsTest = isTest;
-        Database.EnsureCreated();
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
