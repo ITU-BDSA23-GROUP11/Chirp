@@ -1,7 +1,8 @@
 ### Chirp ###
 *.tar.gz
 *.zip
-.idea/.idea.Chirp
+.idea/**/*
+data/**/*.db*
 
 ### Csharp ###
 # User-specific files

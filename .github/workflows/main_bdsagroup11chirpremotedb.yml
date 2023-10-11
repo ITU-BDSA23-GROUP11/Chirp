@@ -23,16 +23,16 @@ jobs:
           include-prerelease: true
 
       - name: Build with dotnet
-        run: dotnet build src/Chirp.DBService/ --configuration Release
+        run: dotnet build src/Chirp.WebService/ --configuration Release
     
       - name: dotnet publish
-        run: dotnet publish src/Chirp.DBService/ -c Release -o ${{env.DOTNET_ROOT}}/Chirp-DBService
+        run: dotnet publish src/Chirp.WebService/ -c Release -o ${{env.DOTNET_ROOT}}/Chirp-WebService
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/Chirp-DBService
+          path: ${{env.DOTNET_ROOT}}/Chirp-WebService
 
   deploy:
     runs-on: ubuntu-latest

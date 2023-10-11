@@ -1,13 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
-        <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
+
     <ItemGroup>
-        <ProjectReference Include="..\Chirp.CSVDB\Chirp.CSVDB.csproj" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.12" />
     </ItemGroup>
+
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\Chirp.Utilities\Chirp.Utilities.csproj" />
+    </ItemGroup>
+
 
 </Project>

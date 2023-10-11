@@ -16,9 +16,11 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-    
+
     <ItemGroup>
       <ProjectReference Include="..\..\src\Chirp.DBService\Chirp.DBService.csproj" />
     </ItemGroup>
+
+
 
 </Project>

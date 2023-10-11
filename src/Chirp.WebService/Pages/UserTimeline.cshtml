@@ -1,0 +1,40 @@
+﻿@page "/{author}"
+@model Chirp.WebService.Pages.UserTimelineModel
+@{
+    ViewData["Title"] = "Chirp!";
+    Layout = "Shared/_Layout";
+    var routeName = HttpContext.GetRouteValue("author");
+}
+
+<div>
+    <h2> @routeName's Timeline </h2>
+
+    @if (Model.Cheeps.Any())
+    {
+        <ul id="messagelist" class="cheeps">
+            @foreach (var cheep in Model.Cheeps)
+            {
+                <li>
+                    <p>
+                        <strong>
+                            <a href="/@cheep.Author.Name">@cheep.Author.Name</a>
+                        </strong>
+                        @cheep.Text
+                        <small>&mdash; @cheep.Timestamp</small>
+                    </p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <em>There are no cheeps so far.</em>
+    }
+    <!--Pagination-->
+        <div>
+            @for (int i = 1; i <= Model.AmountOfPages; i++)
+            {
+                <a href="@routeName?page=@i">@i</a>
+            }
+        </div>
+</div>
