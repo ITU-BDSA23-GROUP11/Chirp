@@ -28,7 +28,7 @@ public class CheepRepositoryTests
         
         Assert.Equal(cheeps.Count+1, updatedCheeps.Count);
         Assert.Equal(cheep, updatedCheeps.Last());
-        Assert.Equal(cheep.Id, updatedCheeps.Last().Id);
+        Assert.Equal(cheep.CheepId, updatedCheeps.Last().CheepId);
     }
 
     [Fact]

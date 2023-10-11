@@ -15,10 +15,10 @@ public class ModelsIntegrationTests
         var cheep = new Cheep
         {
             Author = author,
-            Message = "Hello Message"
+            Text = "Hello Message"
         };
         
-        Assert.Equal(author.Id, cheep.Author.Id);
+        Assert.Equal(author.AuthorId, cheep.Author.AuthorId);
         Assert.Single(author.Cheeps);
         Assert.Equal(cheep, author.Cheeps.First());
     }

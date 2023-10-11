@@ -5,7 +5,7 @@ namespace Chirp.Utilities;
 
 public class TimeUtilities
 {
-    public static string TimeStampConversion(long unix) {
+    public static string TimestampConversion(long unix) {
         DateTimeOffset dto = DateTimeOffset.FromUnixTimeSeconds(unix).AddHours(2);//Account for time difference
             
         CultureInfo customCulture = new CultureInfo(CultureInfo.CurrentCulture.Name);
