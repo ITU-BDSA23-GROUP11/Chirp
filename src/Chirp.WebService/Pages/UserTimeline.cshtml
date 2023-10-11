@@ -30,4 +30,11 @@
     {
         <em>There are no cheeps so far.</em>
     }
+    <!--Pagination-->
+        <div>
+            @for (int i = 1; i <= Model.AmountOfPages; i++)
+            {
+                <a href="@routeName?page=@i">@i</a>
+            }
+        </div>
 </div>

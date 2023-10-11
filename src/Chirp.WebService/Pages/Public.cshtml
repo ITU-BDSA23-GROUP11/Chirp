@@ -3,18 +3,6 @@
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
-    
-    //Try to retrieve the Page parameter (if any)
-    int PageIndex = 0;
-    try
-    {
-        PageIndex = int.Parse(Request.Query["page"]);
-    }
-    catch (Exception e) when (e is FormatException ||
-                              e is ArgumentNullException)
-    {
-        //Continue running with PageIndex = 0
-    }
 }
 
 <div>
