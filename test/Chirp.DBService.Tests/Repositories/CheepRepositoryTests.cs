@@ -1,12 +1,26 @@
 using Chirp.DBService.Models;
 using Chirp.DBService.Repositories;
-using Moq;
 
 namespace Chirp.DBService.Tests.Repositories;
 
-public class CheepRepositoryTests
+public class CheepRepositoryFixture : IDisposable
 {
-    private readonly ICheepRepository _cheepRepository = new CheepRepository(true);
+    public readonly ICheepRepository CheepRepository = new CheepRepository(true);
+    public void Dispose()
+    {
+        CheepRepository.DeleteDatabase();
+    }
+
+}
+
+public class CheepRepositoryTests : IClassFixture<CheepRepositoryFixture>
+{
+    private readonly CheepRepositoryFixture _cheepRepositoryFixture;
+    
+    public CheepRepositoryTests(CheepRepositoryFixture cheepRepositoryFixture)
+    {
+        _cheepRepositoryFixture = cheepRepositoryFixture;
+    }
 
     [Fact]
     public void TestAddCheep()
@@ -21,11 +35,11 @@ public class CheepRepositoryTests
             Author = author
         };
 
-        List<Cheep> cheeps = _cheepRepository.GetCheepsWithAuthors();
+        List<Cheep> cheeps = _cheepRepositoryFixture.CheepRepository.GetCheepsWithAuthors();
 
-        _cheepRepository.AddCheep(cheep);
+        _cheepRepositoryFixture.CheepRepository.AddCheep(cheep);
 
-        List<Cheep> updatedCheeps = _cheepRepository.GetCheepsWithAuthors();
+        List<Cheep> updatedCheeps = _cheepRepositoryFixture.CheepRepository.GetCheepsWithAuthors();
         
         Assert.Equal(cheeps.Count+1, updatedCheeps.Count);
         Assert.Equal(cheep, updatedCheeps.Last());
@@ -35,7 +49,7 @@ public class CheepRepositoryTests
     [Fact]
     public void TestGetCheeps()
     {
-        List<Cheep> cheeps = _cheepRepository.GetCheepsWithAuthors();
+        List<Cheep> cheeps = _cheepRepositoryFixture.CheepRepository.GetCheepsWithAuthors();
         foreach (var cheep in cheeps)
         {
             Assert.NotNull(cheep);
@@ -47,7 +61,7 @@ public class CheepRepositoryTests
     public void TestGetCheepsFromAuthor()
     {
         var authorName = "Kim";
-        List<Cheep> cheeps = _cheepRepository.GetCheepsFromAuthorNameWithAuthors(authorName);
+        List<Cheep> cheeps = _cheepRepositoryFixture.CheepRepository.GetCheepsFromAuthorNameWithAuthors(authorName);
         foreach (var cheep in cheeps)
         {
             Assert.Equal(authorName, cheep.Author.Name);
