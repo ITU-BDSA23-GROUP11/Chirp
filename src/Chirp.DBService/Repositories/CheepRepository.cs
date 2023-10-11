@@ -5,9 +5,12 @@ namespace Chirp.DBService.Repositories;
 
 public class CheepRepository : ICheepRepository
 {
-    private readonly ChirpDBContext _chirpDbContext = new ();
-    public CheepRepository()
+    private readonly ChirpDBContext _chirpDbContext;
+    private bool IsTest { get; set; }
+    public CheepRepository(bool isTest = false)
     {
+        IsTest = isTest;
+        _chirpDbContext = new ChirpDBContext(isTest);
         DbInitializer.SeedDatabase(_chirpDbContext);
     }
     

@@ -1,11 +1,12 @@
 using Chirp.DBService.Models;
 using Chirp.DBService.Repositories;
+using Moq;
 
 namespace Chirp.DBService.Tests.Repositories;
 
 public class CheepRepositoryTests
 {
-    private readonly ICheepRepository _cheepRepository = new CheepRepository();
+    private readonly ICheepRepository _cheepRepository = new CheepRepository(true);
 
     [Fact]
     public void TestAddCheep()

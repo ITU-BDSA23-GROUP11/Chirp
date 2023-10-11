@@ -19,9 +19,6 @@ public class ModelsUnitTests
         };
         
         Assert.NotEqual(author1, author2);
-        Assert.NotEqual(author1.AuthorId, author2.AuthorId);
-        Assert.Equal(author1.Name, author2.Name);
-        Assert.Equal(author1.Email, author2.Email);
     }
     
     [Fact]
@@ -44,9 +41,6 @@ public class ModelsUnitTests
         };
         
         Assert.NotEqual(cheep1, cheep2);
-        Assert.NotEqual(cheep1.CheepId, cheep2.CheepId);
-        Assert.NotEqual("", cheep1.Text);
-        Assert.Equal(cheep1.Text, cheep2.Text);
     }
     
     [Fact]

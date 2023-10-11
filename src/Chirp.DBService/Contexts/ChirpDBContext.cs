@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using Chirp.DBService.Models;
 using Chirp.Utilities;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +10,12 @@ public class ChirpDBContext : DbContext
 {
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
+    private static bool IsTest { get; set; }
+
+    public ChirpDBContext(bool isTest = false)
+    {
+        IsTest = isTest;
+    }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,7 +26,7 @@ public class ChirpDBContext : DbContext
             .IsRequired();
     }
 
-    private string DbPath = Path.Combine(MiscUtilities.TryGetSolutionDirectoryInfo().FullName, "data", "chirp_db.db");
+    private string DbPath = Path.Combine(MiscUtilities.TryGetSolutionDirectoryInfo().FullName, "data", IsTest ? "chirp_test_db.db" : "chirp_db.db" );
     
     protected override void OnConfiguring(DbContextOptionsBuilder options)
     {
