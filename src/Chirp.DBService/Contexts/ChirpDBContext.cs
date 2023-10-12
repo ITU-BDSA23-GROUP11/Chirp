@@ -12,14 +12,7 @@ public class ChirpDBContext : DbContext
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
     
-    private string DbPath { get; }
-    
-    public ChirpDBContext()
-    {
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        var path = Environment.GetFolderPath(folder);
-        DbPath = Path.Join(path, "chirp_db.db");
-    }
+    private string DbPath { get; } = Path.Join(Path.GetTempPath(), "chirp_db.db");
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
