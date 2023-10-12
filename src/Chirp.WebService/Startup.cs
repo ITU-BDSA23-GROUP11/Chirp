@@ -17,8 +17,6 @@ public class Startup
         services.AddRazorPages();
         services.AddScoped<ICheepRepository, CheepRepository>();
         services.AddDbContext<ChirpDBContext>();
-
-        services.AddDatabaseDeveloperPageExceptionFilter();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -26,7 +24,6 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
-            app.UseMigrationsEndPoint();
         }
         else
         {
