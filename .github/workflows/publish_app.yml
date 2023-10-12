@@ -38,7 +38,7 @@ jobs:
           release_name="Chirp-$tag-${{ matrix.target }}"
 
           # Build everything
-          dotnet publish src/Chirp.CLI.Client/Chirp.CLI.Client.csproj --framework net7.0 --runtime "${{ matrix.target }}" --self-contained false -c Release -o "$release_name"
+          dotnet publish src/Chirp.WebService/Chirp.WebService.csproj --framework net7.0 --runtime "${{ matrix.target }}" --self-contained false -c Release -o "$release_name"
 
           # Pack files
           7z a -tzip "${release_name}.zip" "./${release_name}/*"
