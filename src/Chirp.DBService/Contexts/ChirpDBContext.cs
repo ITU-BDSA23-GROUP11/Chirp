@@ -19,7 +19,6 @@ public class ChirpDBContext : DbContext
         var folder = Environment.SpecialFolder.LocalApplicationData;
         var path = Environment.GetFolderPath(folder);
         DbPath = Path.Join(path, "chirp_db.db");
-        Console.WriteLine("ChirpDBContext database initialised at:\n"+DbPath);
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -35,6 +34,6 @@ public class ChirpDBContext : DbContext
     {
         options
             .UseSqlite($"Data Source={DbPath}");
-
+        Console.WriteLine("ChirpDBContext database initialised at:\n"+DbPath);
     }
 }
