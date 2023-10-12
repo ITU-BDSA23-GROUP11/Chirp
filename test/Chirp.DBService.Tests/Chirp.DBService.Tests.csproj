@@ -18,7 +18,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\Chirp.DBService\Chirp.DBService.csproj" />
+        <ProjectReference Include="..\..\src\Chirp.DBService\Chirp.DBService.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
     </ItemGroup>
 
 

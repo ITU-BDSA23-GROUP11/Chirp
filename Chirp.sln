@@ -1,6 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F5652059-FD91-49A9-9280-F29A964C66D4}"
+	ProjectSection(SolutionItems) = preProject
+		src\Chirp.DBService\Migrations\ChirpDBContextModelSnapshot.cs = src\Chirp.DBService\Migrations\ChirpDBContextModelSnapshot.cs
+		src\Chirp.DBService\Migrations\20231011110158_IntitialCreate.Designer.cs = src\Chirp.DBService\Migrations\20231011110158_IntitialCreate.Designer.cs
+		src\Chirp.DBService\Migrations\20231012081455_InitialCreate.cs = src\Chirp.DBService\Migrations\20231012081455_InitialCreate.cs
+		src\Chirp.DBService\Migrations\20231011110158_IntitialCreate.cs = src\Chirp.DBService\Migrations\20231011110158_IntitialCreate.cs
+		src\Chirp.DBService\Migrations\20231012081455_InitialCreate.Designer.cs = src\Chirp.DBService\Migrations\20231012081455_InitialCreate.Designer.cs
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{30A1EFEE-14BC-4970-952F-F05F508AD6AD}"
 EndProject

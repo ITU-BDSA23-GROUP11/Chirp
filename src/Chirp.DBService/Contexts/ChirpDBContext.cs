@@ -27,9 +27,9 @@ public class ChirpDBContext : DbContext
             .WithMany(a => a.Cheeps)
             .HasForeignKey("AuthorId")
             .IsRequired();
-        modelBuilder.Entity<Author>().Property(a => a.Name).HasMaxLength(50).IsRequired(); //Restriction of 
-        modelBuilder.Entity<Author>().Property(e => e.Email).HasMaxLength(50).IsRequired();
-        modelBuilder.Entity<Author>().HasIndex(a => a.Name).IsUnique();
+        modelBuilder.Entity<Author>().Property(a => a.Name).HasMaxLength(50).IsRequired(); //Restriction of maximum length
+        modelBuilder.Entity<Author>().Property(e => e.Email).HasMaxLength(50).IsRequired(); //Restriction of maximum length
+        modelBuilder.Entity<Author>().HasIndex(a => a.Name).IsUnique(); //Restrictions of uniqueness
             
     }
     

@@ -5,6 +5,10 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
+    
+    <ItemGroup>
+        <ProjectReference Include="..\Chirp.DBService\Chirp.DBService.csproj" />
+    </ItemGroup>
 
 
 </Project>
