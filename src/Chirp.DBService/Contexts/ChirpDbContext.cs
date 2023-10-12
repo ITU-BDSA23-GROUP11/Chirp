@@ -1,16 +1,14 @@
 using Chirp.DBService.Models;
-using Chirp.Utilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
-namespace Chirp.DBService;
+namespace Chirp.DBService.Contexts;
 
 // Source: https://learn.microsoft.com/en-us/ef/core/get-started/overview/first-app?tabs=netcore-cli
 
-public class ChirpDBContext : DbContext
+public class ChirpDbContext : DbContext
 {
-    public DbSet<Cheep> Cheeps { get; set; }
-    public DbSet<Author> Authors { get; set; }
+    public DbSet<Cheep> Cheeps { get; set; } = null!;
+    public DbSet<Author> Authors { get; set; } = null!;
     
     private string DbPath { get; } = Path.Join(Path.GetTempPath(), "chirp_db.db");
     

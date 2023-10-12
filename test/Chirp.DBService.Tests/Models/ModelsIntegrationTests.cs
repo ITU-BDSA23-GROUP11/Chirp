@@ -1,6 +1,6 @@
 using Chirp.DBService.Models;
 
-namespace Chirp.DBService.Tests;
+namespace Chirp.DBService.Tests.Models;
 
 public class ModelsIntegrationTests
 {

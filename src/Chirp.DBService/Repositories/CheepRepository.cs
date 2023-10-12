@@ -1,3 +1,4 @@
+using Chirp.DBService.Contexts;
 using Chirp.DBService.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -5,9 +6,9 @@ namespace Chirp.DBService.Repositories;
 
 public class CheepRepository : ICheepRepository
 {
-    private readonly ChirpDBContext _chirpDbContext;
+    private readonly ChirpDbContext _chirpDbContext;
 
-    public CheepRepository(ChirpDBContext chirpDbContext)
+    public CheepRepository(ChirpDbContext chirpDbContext)
     {
         Console.WriteLine("STARTING!!!");
         _chirpDbContext = chirpDbContext;
@@ -63,18 +64,18 @@ public class CheepRepository : ICheepRepository
     }
     
     
-    private bool disposed = false;
+    private bool _disposed;
 
-    protected virtual void Dispose(bool disposing)
+    private void Dispose(bool disposing)
     {
-        if (!disposed)
+        if (!_disposed)
         {
             if (disposing)
             {
                 _chirpDbContext.Dispose();
             }
         }
-        disposed = true;
+        _disposed = true;
     }
 
     public void Dispose()

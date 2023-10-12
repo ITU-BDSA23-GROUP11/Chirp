@@ -17,9 +17,6 @@
 
 
 
-    <ItemGroup>
-      <ProjectReference Include="..\Chirp.Utilities\Chirp.Utilities.csproj" />
-    </ItemGroup>
 
 
 </Project>

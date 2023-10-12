@@ -1,3 +1,4 @@
+using Chirp.DBService.Contexts;
 using Chirp.DBService.Models;
 using Chirp.DBService.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +11,7 @@ public class CheepRepositoryTests
 
     public CheepRepositoryTests()
     {
-        ChirpDBContext context = new ChirpDBContext();
+        ChirpDbContext context = new ChirpDbContext();
         context.Database.Migrate();
         DbInitializer.SeedDatabase(context);
         _cheepRepository = new CheepRepository(context);
