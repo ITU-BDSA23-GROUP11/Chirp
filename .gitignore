@@ -3,7 +3,6 @@
 *.zip
 .idea/**/*
 data/*.db*
-src/**/Migrations/*.cs
 
 ### Csharp ###
 # User-specific files
