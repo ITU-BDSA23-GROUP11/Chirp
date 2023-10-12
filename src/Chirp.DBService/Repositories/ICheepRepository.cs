@@ -2,7 +2,7 @@ using Chirp.DBService.Models;
 
 namespace Chirp.DBService.Repositories;
 
-public interface ICheepRepository
+public interface ICheepRepository : IDisposable
 {
     public void DeleteCheep(Cheep cheep);
     public Cheep AddCheep(Cheep cheep);

@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup11chirpremotedb
+name: Build and deploy ASP.Net Core app to Azure Web App - bdsagroup11chirprazor
 
 on:
   push:
@@ -24,15 +24,15 @@ jobs:
 
       - name: Build with dotnet
         run: dotnet build src/Chirp.WebService/ --configuration Release
-    
+
       - name: dotnet publish
-        run: dotnet publish src/Chirp.WebService/ -c Release -o ${{env.DOTNET_ROOT}}/Chirp-WebService
+        run: dotnet publish src/Chirp.WebService/ -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/Chirp-WebService
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'bdsagroup11chirpremotedb'
+          app-name: 'bdsagroup11chirprazor'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_77EEBC0A25564E6C924D57F87BDF3828 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B7AAC984F1044D6B830D0D837F78AEEE }}
           package: .

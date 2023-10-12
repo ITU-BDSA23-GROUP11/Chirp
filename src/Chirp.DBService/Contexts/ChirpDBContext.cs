@@ -10,15 +10,7 @@ public class ChirpDBContext : DbContext
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
     
-    private string DbPath { get; }
-    
-    public ChirpDBContext()
-    {
-        var folder = Environment.SpecialFolder.LocalApplicationData;
-        var path = Environment.GetFolderPath(folder);
-        DbPath = Path.Join(path, "chirp_db.db");
-        Console.WriteLine("ChirpDBContext database initialised at:\n"+DbPath);
-    }
+    private string DbPath { get; } = Path.Join(Path.GetTempPath(), "chirp_db.db");
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +29,6 @@ public class ChirpDBContext : DbContext
     {
         options
             .UseSqlite($"Data Source={DbPath}");
-
+        Console.WriteLine("ChirpDBContext database initialised at:\n"+DbPath);
     }
 }
