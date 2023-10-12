@@ -1,7 +1,6 @@
 using Chirp.DBService.Models;
 using Chirp.Utilities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Chirp.DBService;
 
@@ -11,12 +10,6 @@ public class ChirpDBContext : DbContext
 {
     public DbSet<Cheep> Cheeps { get; set; }
     public DbSet<Author> Authors { get; set; }
-    private static bool IsTest { get; set; }
-
-    public ChirpDBContext(bool isTest = false)
-    {
-        IsTest = isTest;
-    }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -36,7 +29,7 @@ public class ChirpDBContext : DbContext
             {
                 Directory.CreateDirectory(path);
             }
-            return Path.Combine(path, IsTest ? "chirp_test_db.db" : "chirp_db.db");
+            return Path.Combine(path, "chirp_db.db");
         }
     }
 

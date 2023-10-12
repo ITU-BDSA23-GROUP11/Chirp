@@ -1,26 +1,41 @@
-using Chirp.DBService.Repositories;
+using Chirp.DBService;
+using Microsoft.EntityFrameworkCore;
 
-var builder = WebApplication.CreateBuilder(args);
+namespace Chirp.WebService;
 
-// Add services to the container.
-builder.Services.AddRazorPages();
-builder.Services.AddScoped<ICheepRepository, CheepRepository>();
+// Used https://github.com/dotnet/AspNetCore.Docs/blob/main/aspnetcore/data/ef-rp/intro/samples/cu50 as inspiration
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+public class Program
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
+    public static void Main(string[] args)
+    {
+        IHost host = Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(builder =>
+        {
+            builder.UseStartup<Startup>();
+        }).Build();
+        
+        BootstrapDb(host);
+        
+        host.Run();
+    }
+
+    private static void BootstrapDb(IHost host)
+    {
+        using (var scope = host.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+
+            try
+            {
+                var chirpDbContext = services.GetRequiredService<ChirpDBContext>();
+                chirpDbContext.Database.Migrate();
+                DbInitializer.SeedDatabase(chirpDbContext);
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred creating the DB.");
+            }
+        }
+    }
 }
-
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-app.MapRazorPages();
-
-app.Run();
