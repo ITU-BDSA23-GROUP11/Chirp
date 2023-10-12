@@ -11,7 +11,6 @@ public class CheepRepository : ICheepRepository
     {
         Console.WriteLine("STARTING!!!");
         _chirpDbContext = chirpDbContext;
-        _chirpDbContext.Database.EnsureCreated();
         _chirpDbContext.Database.Migrate();
     }
     
