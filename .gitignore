@@ -2,7 +2,7 @@
 *.tar.gz
 *.zip
 .idea/**/*
-data/**/*.db*
+data/*.db*
 
 ### Csharp ###
 # User-specific files
