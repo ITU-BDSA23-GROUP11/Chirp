@@ -13,14 +13,7 @@
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.12" />
-    </ItemGroup>
-
-
-
-    <ItemGroup>
-      <ProjectReference Include="..\Chirp.Utilities\Chirp.Utilities.csproj" />
-    </ItemGroup>
-    
+    </ItemGroup>    
     
     <ItemGroup>
         <ExcludeFromCodeCoverage Include="src\Chirp.DBService\Migrations"/>
