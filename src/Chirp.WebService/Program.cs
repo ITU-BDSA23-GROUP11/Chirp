@@ -28,7 +28,6 @@ public class Program
             try
             {
                 var chirpDbContext = services.GetRequiredService<ChirpDbContext>();
-                // chirpDbContext.Database.EnsureCreated();
                 chirpDbContext.Database.Migrate();
                 DbInitializer.SeedDatabase(chirpDbContext);
             }

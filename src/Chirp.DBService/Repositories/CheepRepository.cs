@@ -10,9 +10,7 @@ public class CheepRepository : ICheepRepository
 
     public CheepRepository(ChirpDbContext chirpDbContext)
     {
-        Console.WriteLine("STARTING!!!");
         _chirpDbContext = chirpDbContext;
-        _chirpDbContext.Database.Migrate();
     }
     
     public Cheep AddCheep(Cheep cheep)
@@ -80,7 +78,6 @@ public class CheepRepository : ICheepRepository
 
     public void Dispose()
     {
-        Console.WriteLine("DISPOSING!!!");
         Dispose(true);
         GC.SuppressFinalize(this);
     }

@@ -11,9 +11,9 @@ public class CheepRepositoryTests
 
     public CheepRepositoryTests()
     {
-        ChirpDbContext context = new ChirpDbContext();
-        context.Database.Migrate();
-        DbInitializer.SeedDatabase(context);
+        DbContextOptionsBuilder<ChirpDbContext> dbContextOptionsBuilder = new DbContextOptionsBuilder<ChirpDbContext>();
+        dbContextOptionsBuilder.UseSqlite("Filename=:memory:");
+        ChirpDbContext context = new ChirpDbContext(dbContextOptionsBuilder.Options);
         _cheepRepository = new CheepRepository(context);
     }
 

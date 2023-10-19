@@ -10,7 +10,9 @@ public class ChirpDbContext : DbContext
     public DbSet<Cheep> Cheeps { get; set; } = null!;
     public DbSet<Author> Authors { get; set; } = null!;
     
-    private string DbPath { get; } = Path.Join(Path.GetTempPath(), "chirp_db.db");
+    public ChirpDbContext(DbContextOptions<ChirpDbContext> options)
+        : base(options)
+    { }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -19,12 +21,5 @@ public class ChirpDbContext : DbContext
             .WithMany(a => a.Cheeps)
             .HasForeignKey("AuthorId")
             .IsRequired();
-    }
-    
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-    {
-        options
-            .UseSqlite($"Data Source={DbPath}");
-        Console.WriteLine("ChirpDBContext database initialised at:\n"+DbPath);
     }
 }
