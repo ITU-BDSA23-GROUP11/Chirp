@@ -1,16 +1,20 @@
-using Chirp.DBService.Contexts;
-using Chirp.DBService.Models;
+using Chirp.Core.DTO;
+using Chirp.Infrastructure.Models;
+using Chirp.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Chirp.Core.Repositories;
 
-namespace Chirp.DBService.Repositories;
+namespace Chirp.Infrastructure.Repositories;
 
 public class CheepRepository : ICheepRepository
 {
-    private readonly ChirpDbContext _chirpDbContext;
+    private readonly ChirpDBContext _chirpDbContext;
 
-    public CheepRepository(ChirpDbContext chirpDbContext)
+    public CheepRepository(ChirpDBContext chirpDbContext)
     {
+        Console.WriteLine("STARTING!!!");
         _chirpDbContext = chirpDbContext;
+        //_chirpDbContext.Database.Migrate();
     }
     
     public Cheep AddCheep(Cheep cheep)
@@ -59,5 +63,27 @@ public class CheepRepository : ICheepRepository
             .Skip((pageNumber - 1) * 32)
             .Take(32)//Refactor
             .ToList();
+    }
+    
+    
+    private bool disposed = false;
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (!disposed)
+        {
+            if (disposing)
+            {
+                _chirpDbContext.Dispose();
+            }
+        }
+        disposed = true;
+    }
+
+    public void Dispose()
+    {
+        Console.WriteLine("DISPOSING!!!");
+        Dispose(true);
+        GC.SuppressFinalize(this);
     }
 }

@@ -1,5 +1,5 @@
-﻿using Chirp.DBService.Models;
-using Chirp.DBService.Repositories;
+﻿using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

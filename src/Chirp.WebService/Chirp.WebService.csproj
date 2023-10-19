@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Chirp.DBService\Chirp.DBService.csproj" />
+      <ProjectReference Include="..\Chirp.Infrastructure\Chirp.Infrastructure.csproj" />
     </ItemGroup>
 
 
