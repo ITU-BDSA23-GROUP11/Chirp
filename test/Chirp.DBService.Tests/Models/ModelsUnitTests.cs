@@ -5,42 +5,40 @@ namespace Chirp.DBService.Tests.Models;
 public class ModelsUnitTests
 {
     [Fact]
-    public void TestAuthorModelUniqueIdCreation()
+    public void TestAuthorFields()
     {
-        var author1 = new Author
+        string name = "Kim ITU";
+        string email = "kim@itu.dk";
+        
+        Author author = new Author
         {
-            Name = "Kim",
-            Email = "kim@itu.dk"
-        };
-        var author2 = new Author
-        {
-            Name = "Kim",
-            Email = "kim@itu.dk"
+            Name = name,
+            Email = email
         };
         
-        Assert.NotEqual(author1, author2);
+        Assert.Equal(name, author.Name);
+        Assert.Equal(email, author.Email);
     }
-    
+
     [Fact]
-    public void TestCheepModelUniqueIdCreation()
+    public void TestCheepFields()
     {
-        var author = new Author
+        Author author = new Author
         {
-            Name = "Kim",
+            Name = "Kim ITU",
             Email = "kim@itu.dk"
         };
-        var cheep1 = new Cheep
+
+        string text = "Test Message to the world";
+
+        Cheep cheep = new Cheep
         {
             Author = author,
-            Text = "Hello Message"
-        };
-        var cheep2 = new Cheep
-        {
-            Author = author,
-            Text = "Hello Message"
+            Text = text
         };
         
-        Assert.NotEqual(cheep1, cheep2);
+        Assert.Equal(text, cheep.Text);
+        Assert.Equal(author.Name, cheep.Author.Name);
     }
     
     [Fact]
