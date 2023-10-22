@@ -17,7 +17,8 @@ public class CheepRepository : ICheepRepository
         //_chirpDbContext.Database.Migrate();
     }
     
-    public Cheep AddCheep(Cheep cheep)
+    /*
+    public Cheep AddCheep(CheepDto cheep)
     {
         _chirpDbContext.Cheeps.Add(cheep);
         _chirpDbContext.SaveChanges();
@@ -29,35 +30,59 @@ public class CheepRepository : ICheepRepository
         _chirpDbContext.Cheeps.Remove(cheep);
         _chirpDbContext.SaveChanges();
     }
+    */
     
     public int GetCheepCount()
     {
         return _chirpDbContext.Cheeps.Count();
     }
 
-    public List<Cheep> GetCheepsWithAuthors()
+    public List<CheepDto> GetCheepsWithAuthors()
     {
-        return _chirpDbContext.Cheeps
-            .Include(c => c.Author)
-            .ToList();
+        List<CheepDto> cheeps = new List<CheepDto>();
+        
+        //Convert to Data-Transfer-Objects
+        foreach (Cheep c in _chirpDbContext.Cheeps.Include(c => c.Author).ToList())
+        {
+            CheepDto cdto = new CheepDto();
+            cdto.Text = c.Text;
+            cdto.Timestamp = c.Timestamp;
+            cdto.AuthorName = c.Author.Name;
+
+            cheeps.Add(cdto);
+        }
+
+        return cheeps;
     }
     
-    public List<Cheep> GetCheepsForPage(int pageNumber)
+    public List<CheepDto> GetCheepsForPage(int pageNumber)
     {
         return GetCheepsWithAuthors()
             .Skip((pageNumber - 1) * 32)
-            .Take(32)//Refactor
+            .Take(32)
             .ToList();
     }
 
-    public List<Cheep> GetCheepsFromAuthorNameWithAuthors(string authorName)
+    public List<CheepDto> GetCheepsFromAuthorNameWithAuthors(string authorName)
     {
-        return _chirpDbContext.Cheeps.Where(c => c.Author.Name == authorName)
+        List<Cheep> fetchedCheeps = _chirpDbContext.Cheeps.Where(c => c.Author.Name == authorName)
             .Include(c => c.Author)
             .ToList();
+
+        List<CheepDto> cheeps = new List<CheepDto>();
+
+        foreach (Cheep c in fetchedCheeps)
+        {
+            CheepDto cdto = new CheepDto();
+            cdto.Timestamp = c.Timestamp;
+            cdto.Text = c.Text;
+            cdto.AuthorName = c.Author.Name;
+        }
+
+        return cheeps;
     }
 
-    public List<Cheep> GetCheepsFromAuthorNameForPage(string authorName, int pageNumber)
+    public List<CheepDto> GetCheepsFromAuthorNameForPage(string authorName, int pageNumber)
     {
         return GetCheepsFromAuthorNameWithAuthors(authorName)
             .Skip((pageNumber - 1) * 32)
