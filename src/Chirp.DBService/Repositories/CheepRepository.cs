@@ -60,25 +60,4 @@ public class CheepRepository : ICheepRepository
             .Take(32)//Refactor
             .ToList();
     }
-    
-    
-    private bool _disposed;
-
-    private void Dispose(bool disposing)
-    {
-        if (!_disposed)
-        {
-            if (disposing)
-            {
-                _chirpDbContext.Dispose();
-            }
-        }
-        _disposed = true;
-    }
-
-    public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
 }
