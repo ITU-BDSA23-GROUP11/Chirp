@@ -1,60 +1,54 @@
+using Bogus;
 using Chirp.DBService.Models;
+using Chirp.DBService.Tests.Utilities;
 
-namespace Chirp.DBService.Tests;
+namespace Chirp.DBService.Tests.Models;
 
 public class ModelsUnitTests
 {
     [Fact]
-    public void TestAuthorModelUniqueIdCreation()
+    public void TestAuthorFields()
     {
-        var author1 = new Author
+        string name = "Kim ITU";
+        string email = "kim@itu.dk";
+        
+        Author author = new Author
         {
-            Name = "Kim",
-            Email = "kim@itu.dk"
-        };
-        var author2 = new Author
-        {
-            Name = "Kim",
-            Email = "kim@itu.dk"
+            Name = name,
+            Email = email
         };
         
-        Assert.NotEqual(author1, author2);
+        Assert.Equal(name, author.Name);
+        Assert.Equal(email, author.Email);
+        Assert.Equal(Guid.Empty, author.AuthorId);
+        Assert.Empty(author.Cheeps);
     }
-    
+
     [Fact]
-    public void TestCheepModelUniqueIdCreation()
+    public void TestCheepFields()
     {
-        var author = new Author
-        {
-            Name = "Kim",
-            Email = "kim@itu.dk"
-        };
-        var cheep1 = new Cheep
-        {
-            Author = author,
-            Text = "Hello Message"
-        };
-        var cheep2 = new Cheep
+        Author author = DataGenerator.GenerateAuthorFaker().Generate();
+
+        string text = new Faker().Random.Words();
+
+        Cheep cheep = new Cheep
         {
             Author = author,
-            Text = "Hello Message"
+            Text = text
         };
         
-        Assert.NotEqual(cheep1, cheep2);
+        Assert.Equal(text, cheep.Text);
+        Assert.Equal(author.Name, cheep.Author.Name);
     }
     
     [Fact]
     public void TestCheepModelCorrectTimestamp()
     {
-        var author = new Author
-        {
-            Name = "Kim",
-            Email = "kim@itu.dk"
-        };
+        var author = DataGenerator.GenerateAuthorFaker().Generate();
         var cheep = new Cheep
         {
             Author = author,
-            Text = "Hello Message"
+            Text = new Faker().Random.Words()
         };
         var timeNowMinusOneSecond = DateTime.UtcNow.Add(TimeSpan.FromSeconds(-1)).ToFileTimeUtc();
         var cheepTime = cheep.Timestamp.ToFileTimeUtc();

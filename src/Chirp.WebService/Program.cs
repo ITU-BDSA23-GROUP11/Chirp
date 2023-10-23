@@ -1,4 +1,4 @@
-using Chirp.DBService;
+using Chirp.DBService.Contexts;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.WebService;
@@ -27,8 +27,7 @@ public class Program
 
             try
             {
-                var chirpDbContext = services.GetRequiredService<ChirpDBContext>();
-                // chirpDbContext.Database.EnsureCreated();
+                var chirpDbContext = services.GetRequiredService<ChirpDbContext>();
                 chirpDbContext.Database.Migrate();
                 DbInitializer.SeedDatabase(chirpDbContext);
             }

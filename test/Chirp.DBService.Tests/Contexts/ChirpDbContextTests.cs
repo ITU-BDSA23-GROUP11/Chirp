@@ -1,0 +1,113 @@
+using Bogus;
+using Chirp.DBService.Contexts;
+using Chirp.DBService.Models;
+using Chirp.DBService.Tests.Fixtures;
+using Chirp.DBService.Tests.Utilities;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+
+namespace Chirp.DBService.Tests.Contexts;
+
+public class ChirpDbContextTests : IClassFixture<ChirpDbContextFixture>
+{
+    private readonly ChirpDbContextFixture _fixture;
+
+    public ChirpDbContextTests(ChirpDbContextFixture fixture)
+    {
+        _fixture = fixture;
+    }
+    
+    [Fact]
+    public void TestModelsIdGenerationUnique()
+    {
+        ChirpDbContext context = _fixture.GetContext();
+
+        List<Author> authors = DataGenerator.GenerateAuthorFaker(false).GenerateBetween(1, 10);
+        List<Cheep> cheeps = DataGenerator.GenerateCheepFaker(authors, false).GenerateBetween(50, 100);
+        
+        // Guids should not have been set yet
+        Guid emptyGuid = Guid.Empty;
+        foreach (Author author in authors)
+        {
+            Assert.Equal(emptyGuid, author.AuthorId);
+        }
+        foreach (Cheep cheep in cheeps)
+        {
+            Assert.Equal(emptyGuid, cheep.CheepId);
+        }
+        
+        context.Authors.AddRange(authors);
+        context.Cheeps.AddRange(cheeps);
+        context.SaveChanges();
+        
+        // Guids should now be set and unique
+        List<Guid> authorIds = new List<Guid>();
+        foreach (Author author in authors)
+        {
+            Assert.NotEqual(emptyGuid, author.AuthorId);
+            Assert.True(!authorIds.Contains(author.AuthorId));
+            authorIds.Add(author.AuthorId);
+        }
+        
+        List<Guid> cheepIds = new List<Guid>();
+        foreach (Cheep cheep in cheeps)
+        {
+            Assert.NotEqual(emptyGuid, cheep.CheepId);
+            Assert.True(!cheepIds.Contains(cheep.CheepId));
+            cheepIds.Add(cheep.CheepId);
+        }
+    }
+
+    [Fact]
+    public void TestGetCheeps()
+    {
+        ChirpDbContext context = _fixture.GetContext();
+
+        List<Cheep> cheeps = context.Cheeps.ToList();
+        foreach (var cheep in cheeps)
+        {
+            Assert.NotNull(cheep);
+            Assert.IsType<Cheep>(cheep);
+        }
+        
+        Assert.Equal(_fixture.Data.Cheeps.Count, cheeps.Count);
+    }
+    
+    [Fact]
+    public void TestGetAuthors()
+    {
+        ChirpDbContext context = _fixture.GetContext();
+
+        List<Author> authors = context.Authors.ToList();
+        foreach (var author in authors)
+        {
+            Assert.NotNull(author);
+            Assert.IsType<Author>(author);
+        }
+        Assert.Equal(_fixture.Data.Authors.Count, authors.Count);
+    }
+    
+    [Fact]
+    public void TestAddCheepAndAuthor()
+    {
+        ChirpDbContext context = _fixture.GetContext();
+
+        DataGenerator.GenerateAuthorFaker(false).Generate();
+        
+        Author author = DataGenerator.GenerateAuthorFaker(false).Generate();
+        
+        Cheep cheep = new Cheep
+        {
+            Author = author,
+            Text = new Faker().Random.Words(),
+            Timestamp = new Faker().Date.Past()
+        };
+
+        EntityEntry<Author> addedAuthor = context.Authors.Add(author);
+        EntityEntry<Cheep> addedCheep = context.Cheeps.Add(cheep);
+        
+        Assert.Equal(author.Name, addedAuthor.Entity.Name);
+        Assert.Equal(author.Name, addedCheep.Entity.Author.Name);
+        Assert.Equal(cheep.Author, author);
+        Assert.Equal(cheep.Text, addedCheep.Entity.Text);
+    }
+}
