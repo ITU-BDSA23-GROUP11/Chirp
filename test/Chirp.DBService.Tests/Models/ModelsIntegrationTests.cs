@@ -1,4 +1,6 @@
+using Bogus;
 using Chirp.DBService.Models;
+using Chirp.DBService.Tests.Utilities;
 
 namespace Chirp.DBService.Tests.Models;
 
@@ -7,15 +9,12 @@ public class ModelsIntegrationTests
     [Fact]
     public void TestAuthorAndCheepModelCorrectCreation()
     {
-        var author = new Author
-        {
-            Name = "Kim",
-            Email = "kim@itu.dk"
-        };
+        var author = DataGenerator.GenerateAuthorFaker().Generate();
         var cheep = new Cheep
         {
             Author = author,
-            Text = "Hello Message"
+            Text = new Faker().Random.Words(),
+            Timestamp = new Faker().Date.Past()
         };
         
         Assert.Equal(author.AuthorId, cheep.Author.AuthorId);

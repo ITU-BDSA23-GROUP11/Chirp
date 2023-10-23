@@ -12,10 +12,7 @@ public class Cheep
         get => _author;
         set
         {
-            if (value.Cheeps.All(c => c.CheepId != CheepId))
-            {
-                value.Cheeps.Add(this);
-            }
+            value.Cheeps.Add(this);
             _author = value;
         }
     }

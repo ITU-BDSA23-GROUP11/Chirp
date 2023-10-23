@@ -1,4 +1,6 @@
+using Bogus;
 using Chirp.DBService.Models;
+using Chirp.DBService.Tests.Utilities;
 
 namespace Chirp.DBService.Tests.Models;
 
@@ -18,18 +20,16 @@ public class ModelsUnitTests
         
         Assert.Equal(name, author.Name);
         Assert.Equal(email, author.Email);
+        Assert.Equal(Guid.Empty, author.AuthorId);
+        Assert.Empty(author.Cheeps);
     }
 
     [Fact]
     public void TestCheepFields()
     {
-        Author author = new Author
-        {
-            Name = "Kim ITU",
-            Email = "kim@itu.dk"
-        };
+        Author author = DataGenerator.GenerateAuthorFaker().Generate();
 
-        string text = "Test Message to the world";
+        string text = new Faker().Random.Words();
 
         Cheep cheep = new Cheep
         {
@@ -44,15 +44,11 @@ public class ModelsUnitTests
     [Fact]
     public void TestCheepModelCorrectTimestamp()
     {
-        var author = new Author
-        {
-            Name = "Kim",
-            Email = "kim@itu.dk"
-        };
+        var author = DataGenerator.GenerateAuthorFaker().Generate();
         var cheep = new Cheep
         {
             Author = author,
-            Text = "Hello Message"
+            Text = new Faker().Random.Words()
         };
         var timeNowMinusOneSecond = DateTime.UtcNow.Add(TimeSpan.FromSeconds(-1)).ToFileTimeUtc();
         var cheepTime = cheep.Timestamp.ToFileTimeUtc();

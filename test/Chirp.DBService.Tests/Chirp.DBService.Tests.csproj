@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Bogus" Version="34.0.2" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2"/>
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
         <PackageReference Include="Moq" Version="4.20.69" />
@@ -20,7 +21,9 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Chirp.DBService\Chirp.DBService.csproj" />
+
     </ItemGroup>
+
 
 
 
