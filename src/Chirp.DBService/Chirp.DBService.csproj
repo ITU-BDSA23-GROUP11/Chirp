@@ -18,12 +18,5 @@
     <ItemGroup>
         <ExcludeFromCodeCoverage Include="src\Chirp.DBService\Migrations"/>
     </ItemGroup>
-    <ItemGroup>
-        <ExcludeFromCodeCoverage Include="src\Chirp.DBService\DdInitializer.cs"/>
-    </ItemGroup>
-
-
-
-
 
 </Project>
