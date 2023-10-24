@@ -1,16 +1,11 @@
 namespace Chirp.Core.Repositories;
-using Chirp.Core.DTO;
+using Dto;
 
-public interface ICheepRepository : IDisposable
+public interface ICheepRepository
 {
-    /*
-    public void DeleteCheep(CheepDto cheep);
-    public CheepDto AddCheep(CheepDto cheep);
-    */
-    public List<CheepDto> GetCheepsWithAuthors();
-    public List<CheepDto> GetCheepsForPage(int pageNumber);
+    public CheepDto AddCheep(AddCheepDto cheep);
     public int GetCheepCount();
-    public List<CheepDto> GetCheepsFromAuthorNameWithAuthors(string authorName);
-
-    public List<CheepDto> GetCheepsFromAuthorNameForPage(string authorName, int pageNumber);
+    public int GetAuthorCheepCount(string authorName);
+    public List<CheepDto> GetCheepsForPage(int pageNumber);
+    public List<CheepDto> GetAuthorCheepsForPage(string authorName, int pageNumber);
 }

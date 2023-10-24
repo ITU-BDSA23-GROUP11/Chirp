@@ -1,16 +1,16 @@
 using Bogus;
-using Chirp.DBService.Models;
-using Chirp.DBService.Tests.Utilities;
+using Chirp.Infrastructure.Models;
+using Chirp.Infrastructure.Tests.Utilities;
 
-namespace Chirp.DBService.Tests.Models;
+namespace Chirp.Infrastructure.Tests.Models;
 
 public class ModelsUnitTests
 {
     [Fact]
     public void TestAuthorFields()
     {
-        string name = "Kim ITU";
-        string email = "kim@itu.dk";
+        string name = new Faker().Name.FullName();
+        string email = new Faker().Internet.Email(name);
         
         Author author = new Author
         {

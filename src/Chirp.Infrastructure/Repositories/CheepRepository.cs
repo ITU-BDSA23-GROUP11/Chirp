@@ -1,114 +1,84 @@
-using Chirp.Core.DTO;
+using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
-using Chirp.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Contexts;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Chirp.Infrastructure.Repositories;
 
 public class CheepRepository : ICheepRepository
 {
-    private readonly ChirpDBContext _chirpDbContext;
+    private readonly ChirpDbContext _chirpDbContext;
 
-    public CheepRepository(ChirpDBContext chirpDbContext)
+    public CheepRepository(ChirpDbContext chirpDbContext)
     {
-        Console.WriteLine("STARTING!!!");
         _chirpDbContext = chirpDbContext;
-        //_chirpDbContext.Database.Migrate();
     }
     
-    /*
-    public Cheep AddCheep(CheepDto cheep)
+    public CheepDto AddCheep(AddCheepDto cheep)
     {
-        _chirpDbContext.Cheeps.Add(cheep);
+        Author author = _chirpDbContext.Authors.First(a => a.AuthorId == cheep.AuthorId);
+
+        Cheep newCheep = new Cheep
+        {
+            Author = author,
+            Text = cheep.Text,
+        };
+        
+        _chirpDbContext.Cheeps.Add(newCheep);
         _chirpDbContext.SaveChanges();
-        return cheep;
+
+        return new CheepDto
+        {
+            AuthorName = newCheep.Author.Name,
+            Text = newCheep.Text,
+            Timestamp = newCheep.Timestamp
+        };
     }
-    
-    public void DeleteCheep(Cheep cheep)
-    {
-        _chirpDbContext.Cheeps.Remove(cheep);
-        _chirpDbContext.SaveChanges();
-    }
-    */
     
     public int GetCheepCount()
     {
         return _chirpDbContext.Cheeps.Count();
     }
-
-    public List<CheepDto> GetCheepsWithAuthors()
+    
+    public int GetAuthorCheepCount(string authorName)
     {
-        List<CheepDto> cheeps = new List<CheepDto>();
-        
-        //Convert to Data-Transfer-Objects
-        foreach (Cheep c in _chirpDbContext.Cheeps.Include(c => c.Author).ToList())
-        {
-            CheepDto cdto = new CheepDto();
-            cdto.Text = c.Text;
-            cdto.Timestamp = c.Timestamp;
-            cdto.AuthorName = c.Author.Name;
-
-            cheeps.Add(cdto);
-        }
-
-        return cheeps;
+        return _chirpDbContext.Cheeps.Count(c => c.Author.Name == authorName);
     }
     
     public List<CheepDto> GetCheepsForPage(int pageNumber)
     {
-        return GetCheepsWithAuthors()
+        return _chirpDbContext
+            .Cheeps
+            .Include(c => c.Author)
             .Skip((pageNumber - 1) * 32)
             .Take(32)
+            .Select<Cheep, CheepDto>(c =>
+                new CheepDto {
+                    AuthorName = c.Author.Name,
+                    Text = c.Text,
+                    Timestamp = c.Timestamp
+                }
+            )
             .ToList();
     }
 
-    public List<CheepDto> GetCheepsFromAuthorNameWithAuthors(string authorName)
+    public List<CheepDto> GetAuthorCheepsForPage(string authorName, int pageNumber)
     {
-        List<Cheep> fetchedCheeps = _chirpDbContext.Cheeps.Where(c => c.Author.Name == authorName)
+        return _chirpDbContext
+            .Cheeps
+            .Where(c => c.Author.Name == authorName)
             .Include(c => c.Author)
-            .ToList();
-
-        List<CheepDto> cheeps = new List<CheepDto>();
-
-        foreach (Cheep c in fetchedCheeps)
-        {
-            CheepDto cdto = new CheepDto();
-            cdto.Timestamp = c.Timestamp;
-            cdto.Text = c.Text;
-            cdto.AuthorName = c.Author.Name;
-        }
-
-        return cheeps;
-    }
-
-    public List<CheepDto> GetCheepsFromAuthorNameForPage(string authorName, int pageNumber)
-    {
-        return GetCheepsFromAuthorNameWithAuthors(authorName)
             .Skip((pageNumber - 1) * 32)
-            .Take(32)//Refactor
+            .Take(32)
+            .Select<Cheep, CheepDto>(c =>
+                new CheepDto {
+                    AuthorName = c.Author.Name,
+                    Text = c.Text,
+                    Timestamp = c.Timestamp
+                }
+            )
             .ToList();
-    }
-    
-    
-    private bool disposed = false;
-
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!disposed)
-        {
-            if (disposing)
-            {
-                _chirpDbContext.Dispose();
-            }
-        }
-        disposed = true;
-    }
-
-    public void Dispose()
-    {
-        Console.WriteLine("DISPOSING!!!");
-        Dispose(true);
-        GC.SuppressFinalize(this);
     }
 }

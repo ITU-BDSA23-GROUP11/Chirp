@@ -1,6 +1,6 @@
 using Chirp.Core.Repositories;
-using Chirp.Infrastructure.Repositories;
 using Chirp.Infrastructure.Contexts;
+using Chirp.Infrastructure.Repositories;
 
 namespace Chirp.WebService;
 
@@ -17,7 +17,8 @@ public class Startup
     {
         services.AddRazorPages();
         services.AddScoped<ICheepRepository, CheepRepository>();
-        services.AddDbContext<ChirpDBContext>();
+        services.AddSingleton(Configuration);
+        services.AddDbContext<ChirpDbContext>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
