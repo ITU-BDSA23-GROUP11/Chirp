@@ -3,7 +3,6 @@ using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Contexts;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Chirp.Infrastructure.Repositories;
 
