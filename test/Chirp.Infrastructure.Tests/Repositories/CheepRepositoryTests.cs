@@ -62,7 +62,7 @@ public class CheepRepositoryTests
         foreach (Author author in _mockCheepRepository.TestAuthors)
         {
             int authorCheepCount = _mockCheepRepository.CheepRepository.GetAuthorCheepCount(author.Name);
-            Assert.Equal(_mockCheepRepository.TestAuthors.First(a => a.AuthorId == author.AuthorId).Cheeps.Count, authorCheepCount);
+            Assert.Equal(_mockCheepRepository.TestAuthors.Single(a => a.AuthorId == author.AuthorId).Cheeps.Count, authorCheepCount);
         }
     }
     

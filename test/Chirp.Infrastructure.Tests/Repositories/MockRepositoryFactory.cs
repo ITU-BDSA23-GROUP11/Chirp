@@ -8,6 +8,8 @@ using Moq;
 
 namespace Chirp.Infrastructure.Tests.Repositories;
 
+// Source: https://learn.microsoft.com/en-us/ef/ef6/fundamentals/testing/mocking
+
 public struct MockCheepRepository
 {
     public ICheepRepository CheepRepository;

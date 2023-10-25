@@ -93,8 +93,6 @@ public class ChirpDbContextTests : IClassFixture<ChirpDbContextFixture>
     public void TestAddCheepAndAuthor()
     {
         ChirpDbContext context = _fixture.GetContext();
-
-        DataGenerator.GenerateAuthorFaker(false).Generate();
         
         Author author = DataGenerator.GenerateAuthorFaker(false).Generate();
         
