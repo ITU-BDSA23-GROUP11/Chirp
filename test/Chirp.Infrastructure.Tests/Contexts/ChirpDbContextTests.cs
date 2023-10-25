@@ -1,11 +1,10 @@
 using Bogus;
-using Chirp.DBService.Contexts;
-using Chirp.DBService.Models;
-using Chirp.DBService.Tests.Fixtures;
-using Chirp.DBService.Tests.Utilities;
+using Chirp.Infrastructure.Contexts;
+using Chirp.Infrastructure.Models;
+using Chirp.Infrastructure.Tests.Utilities;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
-namespace Chirp.DBService.Tests.Contexts;
+namespace Chirp.Infrastructure.Tests.Contexts;
 
 public class ChirpDbContextTests : IClassFixture<ChirpDbContextFixture>
 {
@@ -55,6 +54,10 @@ public class ChirpDbContextTests : IClassFixture<ChirpDbContextFixture>
             Assert.True(!cheepIds.Contains(cheep.CheepId));
             cheepIds.Add(cheep.CheepId);
         }
+        
+        context.Cheeps.RemoveRange(cheeps);
+        context.Authors.RemoveRange(authors);
+        context.SaveChanges();
     }
 
     [Fact]
@@ -90,8 +93,6 @@ public class ChirpDbContextTests : IClassFixture<ChirpDbContextFixture>
     public void TestAddCheepAndAuthor()
     {
         ChirpDbContext context = _fixture.GetContext();
-
-        DataGenerator.GenerateAuthorFaker(false).Generate();
         
         Author author = DataGenerator.GenerateAuthorFaker(false).Generate();
         

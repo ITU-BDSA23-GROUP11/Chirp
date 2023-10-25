@@ -1,8 +1,8 @@
 using Bogus;
-using Chirp.DBService.Models;
-using Chirp.DBService.Tests.Utilities;
+using Chirp.Infrastructure.Models;
+using Chirp.Infrastructure.Tests.Utilities;
 
-namespace Chirp.DBService.Tests.Models;
+namespace Chirp.Infrastructure.Tests.Models;
 
 public class ModelsIntegrationTests
 {

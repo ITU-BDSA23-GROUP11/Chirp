@@ -1,5 +1,7 @@
-using Chirp.DBService.Contexts;
-using Chirp.DBService.Models;
+using Chirp.Infrastructure.Models;
+using Chirp.Infrastructure.Contexts;
+
+namespace Chirp.Infrastructure;
 
 public static class DbInitializer
 {

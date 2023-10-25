@@ -1,10 +1,9 @@
-using Chirp.DBService.Contexts;
-using Chirp.DBService.Models;
-using Chirp.DBService.Tests.Utilities;
+using Chirp.Infrastructure.Contexts;
+using Chirp.Infrastructure.Tests.Utilities;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace Chirp.DBService.Tests.Fixtures;
+namespace Chirp.Infrastructure.Tests.Contexts;
 
 public class ChirpDbContextFixture : IDisposable
 {
@@ -22,7 +21,7 @@ public class ChirpDbContextFixture : IDisposable
 
         using var context = new ChirpDbContext(_options);
         if (context.Database.EnsureCreated())
-        {
+        {   
             context.Authors.AddRange(Data.Authors);
             context.Cheeps.AddRange(Data.Cheeps);
             context.SaveChanges();

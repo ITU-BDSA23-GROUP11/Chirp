@@ -1,5 +1,6 @@
-using Chirp.DBService.Contexts;
 using Microsoft.EntityFrameworkCore;
+using Chirp.Infrastructure;
+using Chirp.Infrastructure.Contexts;
 
 namespace Chirp.WebService;
 

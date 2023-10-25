@@ -1,5 +1,5 @@
-﻿using Chirp.DBService.Models;
-using Chirp.DBService.Repositories;
+﻿using Chirp.Core.Dto;
+using Chirp.Core.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -11,7 +11,7 @@ public class PublicModel : PageModel
 
     public int PageNumber { get; set; }
 
-    public List<Cheep> Cheeps { get; set; } = new List<Cheep>();
+    public List<CheepDto> Cheeps { get; set; } = new List<CheepDto>();
 
     public int AmountOfPages { get; set; }
 

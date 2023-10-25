@@ -1,7 +1,7 @@
 using Bogus;
-using Chirp.DBService.Models;
+using Chirp.Infrastructure.Models;
 
-namespace Chirp.DBService.Tests.Utilities;
+namespace Chirp.Infrastructure.Tests.Utilities;
 
 public class DataGenerator
 {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Chirp.DBService.Models;
+namespace Chirp.Infrastructure.Models;
 
 public class Cheep
 {
