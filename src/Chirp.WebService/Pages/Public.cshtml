@@ -18,13 +18,17 @@
             @foreach (var cheep in Model.Cheeps)
             {
                 <li>
-                    <p>
-                        <strong>
-                            <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
-                        </strong>
-                        @cheep.Text
-                        <small>&mdash; @cheep.Timestamp</small>
-                    </p>
+                   <p>
+                       <strong>
+                           <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
+                       </strong>
+                       @cheep.Text
+                       <small>&mdash; @cheep.Timestamp</small>
+                       <form method="post" action="/cheeps/delete/CheepId" style="display:inline;">
+                           <input type="submit" value="Delete" style="background:none;border:none;color:red;padding:0;margin-left:10px;cursor:pointer;"/>
+                       </form>
+                   </p>
+                        
                 </li>
             }
         </ul>
