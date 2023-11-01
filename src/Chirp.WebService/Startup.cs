@@ -2,6 +2,8 @@ using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
@@ -28,7 +30,8 @@ public class Startup
             // the default policy
             options.FallbackPolicy = options.DefaultPolicy;
         });
-        services.AddRazorPages(options => {
+        services
+            .AddRazorPages(options => {
                 options.Conventions.AllowAnonymousToPage("/Index");
             })
             .AddMvcOptions(options => { })
@@ -60,7 +63,6 @@ public class Startup
         {
             endpoints.MapRazorPages();
             endpoints.MapControllers();
-            
         });
     }
 }
