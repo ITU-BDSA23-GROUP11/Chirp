@@ -1,4 +1,6 @@
 ﻿@page "/"
+@attribute [AllowAnonymous]
+@using Microsoft.AspNetCore.Authorization
 @model Chirp.WebService.Pages.PublicModel
 @{
     ViewData["Title"] = "Chirp!";

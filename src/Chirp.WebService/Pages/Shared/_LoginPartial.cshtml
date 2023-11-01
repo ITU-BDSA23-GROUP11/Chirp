@@ -1,0 +1,17 @@
+@using Chirp.WebService.Extensions
+@* ReSharper disable Mvc.AreaNotResolved *@
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <div>
+        <a href="/@(User.GetUserFullName())">my timeline</a> |
+        <a href="/">public timeline</a> |
+        <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">logout [@(User.GetUserFullName())]</a>
+    </div>
+}
+else
+{
+    <div>
+        <a href="/">public timeline</a> |
+        <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignIn">login</a>
+    </div>
+}
