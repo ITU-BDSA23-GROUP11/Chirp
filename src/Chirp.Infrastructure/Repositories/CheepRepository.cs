@@ -79,7 +79,7 @@ public class CheepRepository : ICheepRepository
                     Timestamp = c.Timestamp
                 }
             )
-            .OrderBy(c => c.Timestamp)
+            .OrderByDescending(c => c.Timestamp)
             .ToList();
     }
 }
