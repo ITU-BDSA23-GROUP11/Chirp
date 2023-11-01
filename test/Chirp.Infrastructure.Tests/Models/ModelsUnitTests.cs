@@ -114,4 +114,19 @@ public class ModelsUnitTests
         Assert.Contains("Email must be less than 100 characters", exception.Message);
     }
 
+    [Fact]
+    public void ExceptionTestCheepLengthMax()
+    {
+        var author = DataGenerator.GenerateAuthorFaker().Generate();
+        Cheep cheep = new Cheep
+        {
+            Author = author,
+            Text = new string('a', 161)
+        };
+
+        var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
+            (() => Validator.ValidateObject(cheep, new ValidationContext(cheep), true));
+        Assert.Contains("Cheeps must contain less than 160 characters", exception.Message);
+    }
+
 }
