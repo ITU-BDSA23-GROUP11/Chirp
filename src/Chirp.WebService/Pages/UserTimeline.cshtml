@@ -11,6 +11,12 @@
 <div>
     <h2> @routeName's Timeline </h2>
     
+    <form method="post" class="addCheepForm">
+        <label>New Cheep</label>
+        <input type="text" name="CheepText" placeholder="Write New Cheep" />
+        <input type="submit" value="SUBMIT"/>
+    </form>
+    
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">

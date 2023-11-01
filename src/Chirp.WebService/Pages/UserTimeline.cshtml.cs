@@ -1,5 +1,6 @@
 ﻿using Chirp.Core.Dto;
 using Chirp.Core.Repositories;
+using Chirp.WebService.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -40,5 +41,20 @@ public class UserTimelineModel : PageModel
         Cheeps = _service.GetAuthorCheepsForPage(author, PageNumber);
         
         return Page();   
+    }
+
+    public ActionResult OnPost(string cheepText)
+    {
+        if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            _service.AddCheep(new AddCheepDto
+            {
+                AuthorEmail = User.GetUserEmail(),
+                AuthorName = User.GetUserFullName(),
+                Text = cheepText
+            });
+        }
+        
+        return OnGet(User.GetUserFullName());
     }
 }

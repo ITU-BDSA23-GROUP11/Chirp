@@ -17,7 +17,13 @@ public class CheepRepository : ICheepRepository
     
     public CheepDto AddCheep(AddCheepDto cheep)
     {
-        Author author = _chirpDbContext.Authors.First(a => a.AuthorId == cheep.AuthorId);
+        Author author =
+            _chirpDbContext.Authors.FirstOrDefault(a => a.Name == cheep.AuthorName && a.Email == cheep.AuthorEmail) ??
+            new Author
+            {
+                Email = cheep.AuthorEmail,
+                Name = cheep.AuthorName
+            };
 
         Cheep newCheep = new Cheep
         {
