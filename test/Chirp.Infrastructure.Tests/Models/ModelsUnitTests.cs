@@ -1,6 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using Bogus;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure.Tests.Utilities;
+using ValidationResult = Bogus.ValidationResult;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
 
 namespace Chirp.Infrastructure.Tests.Models;
 
@@ -54,5 +59,33 @@ public class ModelsUnitTests
         var cheepTime = cheep.Timestamp.ToFileTimeUtc();
         
         Assert.True(cheepTime > timeNowMinusOneSecond);
+    }
+    
+    [Fact]
+    public void TestNameLengthMin()
+    {
+        var author = new Author
+        {
+            Name = "1234",
+            Email = "test@email.com"
+        };
+        
+        var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
+            (() => Validator.ValidateObject(author, new ValidationContext(author), true));
+        Assert.Contains("Username must contain more than 5 characters", exception.Message);
+    }
+
+    [Fact]
+    public void TestNameLengthMax()
+    {
+        var author = new Author { 
+            Name = new string('a', 51),
+            Email = "test@email.com"
+            
+        };
+
+        var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
+            (() => Validator.ValidateObject(author, new ValidationContext(author), true));
+        Assert.Contains("Username must contain less than 50 characters", exception.Message);
     }
 }
