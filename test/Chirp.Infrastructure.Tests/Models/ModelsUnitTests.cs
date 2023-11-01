@@ -16,13 +16,13 @@ public class ModelsUnitTests
     {
         string name = new Faker().Name.FullName();
         string email = new Faker().Internet.Email(name);
-        
+
         Author author = new Author
         {
             Name = name,
             Email = email
         };
-        
+
         Assert.Equal(name, author.Name);
         Assert.Equal(email, author.Email);
         Assert.Equal(Guid.Empty, author.AuthorId);
@@ -41,11 +41,11 @@ public class ModelsUnitTests
             Author = author,
             Text = text
         };
-        
+
         Assert.Equal(text, cheep.Text);
         Assert.Equal(author.Name, cheep.Author.Name);
     }
-    
+
     [Fact]
     public void TestCheepModelCorrectTimestamp()
     {
@@ -57,35 +57,50 @@ public class ModelsUnitTests
         };
         var timeNowMinusOneSecond = DateTime.UtcNow.Add(TimeSpan.FromSeconds(-1)).ToFileTimeUtc();
         var cheepTime = cheep.Timestamp.ToFileTimeUtc();
-        
+
         Assert.True(cheepTime > timeNowMinusOneSecond);
     }
-    
+
     [Fact]
-    public void TestNameLengthMin()
+    public void ExceptionTestNameLengthMin()
     {
         var author = new Author
         {
             Name = "1234",
             Email = "test@email.com"
         };
-        
+
         var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
             (() => Validator.ValidateObject(author, new ValidationContext(author), true));
         Assert.Contains("Username must contain more than 5 characters", exception.Message);
     }
 
     [Fact]
-    public void TestNameLengthMax()
+    public void ExceptionTestNameLengthMax()
     {
-        var author = new Author { 
+        var author = new Author
+        {
             Name = new string('a', 51),
             Email = "test@email.com"
-            
+
         };
 
         var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
             (() => Validator.ValidateObject(author, new ValidationContext(author), true));
         Assert.Contains("Username must contain less than 50 characters", exception.Message);
     }
+
+    [Fact]
+    public void ExceptionTestEmailFormat()
+    {
+        var author = new Author
+        {
+            Name = "testingEmail",
+            Email = "FailMail"
+        };
+        var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
+            (() => Validator.ValidateObject(author, new ValidationContext(author), true));
+        Assert.Contains("Invalid email format.", exception.Message);
+    }
+
 }
