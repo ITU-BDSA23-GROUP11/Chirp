@@ -60,6 +60,7 @@ public class CheepRepository : ICheepRepository
                     Timestamp = c.Timestamp
                 }
             )
+            .OrderByDescending(c => c.Timestamp)
             .ToList();
     }
 
@@ -78,6 +79,7 @@ public class CheepRepository : ICheepRepository
                     Timestamp = c.Timestamp
                 }
             )
+            .OrderByDescending(c => c.Timestamp)
             .ToList();
     }
 }
