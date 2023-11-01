@@ -18,8 +18,7 @@ public class Cheep
         }
     }
     [Required]
-    [MinLength(1, ErrorMessage = "Cheep must contain more than 1 character")]
-    [MaxLength(160, ErrorMessage = "Cheeps must contain less than 160 characters")]
+    [MaxLength(160, ErrorMessage = "Cheeps must contain less than 160 characters")] //Defined minimum length is not required
     public string Text { get; set; } = "";
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }

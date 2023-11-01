@@ -129,4 +129,19 @@ public class ModelsUnitTests
         Assert.Contains("Cheeps must contain less than 160 characters", exception.Message);
     }
 
+    [Fact]
+    public void ExceptionTestCheepLengthMin()
+    {
+        var author = DataGenerator.GenerateAuthorFaker().Generate();
+        Cheep cheep = new Cheep
+        {
+            Author = author,
+            Text = ""
+        };
+
+        var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
+            (() => Validator.ValidateObject(cheep, new ValidationContext(cheep), true));
+        Assert.Contains("The Text field is required", exception.Message);
+    }
+
 }
