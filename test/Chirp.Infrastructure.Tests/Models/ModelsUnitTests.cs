@@ -2,10 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Bogus;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure.Tests.Utilities;
-using ValidationResult = Bogus.ValidationResult;
-using System.Collections.Generic;
-using System.Linq;
-using Xunit;
 
 namespace Chirp.Infrastructure.Tests.Models;
 
@@ -101,6 +97,21 @@ public class ModelsUnitTests
         var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
             (() => Validator.ValidateObject(author, new ValidationContext(author), true));
         Assert.Contains("Invalid email format.", exception.Message);
+    }
+
+    [Fact]
+    public void ExceptionTestEmailLength()
+    {
+        var author = new Author
+        {
+            Name = "testingEmail",
+            Email = "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm" +
+                    "mmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
+                    "aiiiiiiiiiiiiiiiiiiiiiilllllllllllllllllllll@email.com"
+        };
+        var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
+            (() => Validator.ValidateObject(author, new ValidationContext(author), true));
+        Assert.Contains("Email must be less than 100 characters", exception.Message);
     }
 
 }
