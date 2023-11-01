@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal;
@@ -14,18 +15,22 @@ public class ChirpDbContext : DbContext
     
     private readonly IConfiguration? _configuration;
     
+    [ExcludeFromCodeCoverage]
     public ChirpDbContext()
     { }
     
+    [ExcludeFromCodeCoverage]
     public ChirpDbContext(IConfiguration configuration)
     {
         _configuration = configuration;
     }
 
+    [ExcludeFromCodeCoverage]
     public ChirpDbContext(DbContextOptions<ChirpDbContext> options)
         : base(options)
     { }
     
+    [ExcludeFromCodeCoverage]
     public ChirpDbContext(DbContextOptions<ChirpDbContext> options, IConfiguration configuration)
         : base(options)
     {
@@ -44,6 +49,7 @@ public class ChirpDbContext : DbContext
         modelBuilder.Entity<Author>().HasIndex(a => a.Name).IsUnique(); //Restrictions of uniqueness
     }
 
+    [ExcludeFromCodeCoverage]
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (_configuration != null)
