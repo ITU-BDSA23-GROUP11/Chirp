@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal;
 using Microsoft.Extensions.Configuration;
 
 namespace Chirp.Infrastructure.Contexts;
@@ -55,10 +56,16 @@ public class ChirpDbContext : DbContext
             optionsBuilder.UseSqlite($"Data Source={connectionString}", b => b.MigrationsAssembly("Chirp.Infrastructure"));
             Console.WriteLine("ChirpDBContext database initialised at: "+connectionString);
         }
-        else
+        else if (optionsBuilder.Options.FindExtension<SqliteOptionsExtension>() != null)
         {
             base.OnConfiguring(optionsBuilder);
         }
+        else
+        {
+            optionsBuilder.UseSqlite("Filesystem:memory:");
+        }
         
     }
+    
+    
 }
