@@ -1,5 +1,7 @@
 ﻿@page "/{author}"
+@using Microsoft.AspNetCore.Authorization
 @model Chirp.WebService.Pages.UserTimelineModel
+@attribute [AllowAnonymous]
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
