@@ -1,5 +1,6 @@
+using Chirp.WebService.Tests.Utilities;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
+using Xunit.Abstractions;
 
 namespace Chirp.WebService.Tests.PublicTimeline;
 
@@ -7,22 +8,25 @@ public class PublicTimelineIntegrationTest : IClassFixture<WebApplicationFactory
 {
     private readonly WebApplicationFactory<Program> factory;
     private readonly HttpClient usableClient;
+    private readonly ITestOutputHelper output;
 
-    public PublicTimelineIntegrationTest(WebApplicationFactory<Program> _factory)
+    public PublicTimelineIntegrationTest(WebApplicationFactory<Program> _factory, ITestOutputHelper _output)
     {
         factory = _factory;
         usableClient = factory.CreateClient(new WebApplicationFactoryClientOptions
             { AllowAutoRedirect = true, HandleCookies = true });
+        this.output = _output;
     }
-    
-    [Theory]
-    //[InlineData("Helge")]
-    [InlineData("https://www.itu.dk/")]
-    public async void PrivateTimelineDisplayedTest(String url)
+
+    [Fact]  
+    public async void CanEstablishConnection()
     {
         //Act
-        var response = usableClient.GetAsync(url).Result.StatusCode;
-
-        Console.WriteLine(response.ToString());
+        var rsp = await usableClient.GetAsync("/");
+        rsp.EnsureSuccessStatusCode();
+        
+        //Assert
+        Assert.Equal("OK", rsp.StatusCode.ToString());
     }
+    
 }
