@@ -45,6 +45,19 @@ public class PublicTimelineIntegrationTest : IClassFixture<WebApplicationFactory
 
         Assert.Equal(32, amountOfListItems);
     }
+
+    [Theory]
+    [InlineData("Helge")]
+    [InlineData("SampleUser")]
+    public async void PrivateTimelinesAreDisplayed(String page)
+    {
+        //Act
+        var rsp = await usableClient.GetAsync("/" + page);
+        string htmlContent = await rsp.Content.ReadAsStringAsync();
+        
+        //Check that the page contains the parameter name
+        Assert.Contains(page, htmlContent);
+    }
     
     
     
