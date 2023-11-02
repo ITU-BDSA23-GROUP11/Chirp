@@ -1,5 +1,6 @@
 using Chirp.WebService.Tests.Utilities;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Graph;
 using Xunit.Abstractions;
 
 namespace Chirp.WebService.Tests.PublicTimeline;
@@ -28,5 +29,7 @@ public class PublicTimelineIntegrationTest : IClassFixture<WebApplicationFactory
         //Assert
         Assert.Equal("OK", rsp.StatusCode.ToString());
     }
+    
+    
     
 }
