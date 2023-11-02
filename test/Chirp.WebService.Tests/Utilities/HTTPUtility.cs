@@ -1,5 +1,3 @@
-using System.Net;
-
 namespace Chirp.WebService.Tests.Utilities;
 
 public class HTTPUtility
@@ -16,7 +14,7 @@ public class HTTPUtility
                 return response.IsSuccessStatusCode;
             }
         }
-        catch (HttpRequestException ex)
+        catch (InvalidOperationException ex)
         {
             Console.WriteLine("A connection error happened during WebService testing");
             return false;
