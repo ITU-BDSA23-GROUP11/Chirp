@@ -3,15 +3,15 @@ using Xunit.Abstractions;
 using System.Net.Http;
 using HtmlAgilityPack;
 
-namespace Chirp.WebService.Tests.PublicTimeline;
+namespace Chirp.WebService.Tests.IntegrationTests;
 
-public class PublicTimelineIntegrationTest : IClassFixture<WebApplicationFactory<Program>>
+public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
 {
     private readonly WebApplicationFactory<Program> factory;
     private readonly HttpClient usableClient;
     private readonly ITestOutputHelper output;//For debug purposes
 
-    public PublicTimelineIntegrationTest(WebApplicationFactory<Program> _factory, ITestOutputHelper _output)
+    public IntegrationTests(WebApplicationFactory<Program> _factory, ITestOutputHelper _output)
     {
         factory = _factory;
         usableClient = factory.CreateClient(new WebApplicationFactoryClientOptions
@@ -71,7 +71,4 @@ public class PublicTimelineIntegrationTest : IClassFixture<WebApplicationFactory
         //Check that the page contains the parameter name
         Assert.Contains(page, htmlContent);
     }
-    
-    
-    
 }
