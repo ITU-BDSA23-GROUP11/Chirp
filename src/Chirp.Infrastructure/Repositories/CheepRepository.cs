@@ -92,8 +92,13 @@ public class CheepRepository : ICheepRepository
             .ToList();
     }
 
-    public void DeleteCheep(CheepDto cheep)
+    public void DeleteCheep(Guid cheepId)
     {
-        
-    }
+        var cheepToDelete = _chirpDbContext.Cheeps.Find(cheepId);
+        if (cheepToDelete != null)
+        {
+            _chirpDbContext.Cheeps.Remove(cheepToDelete);
+            _chirpDbContext.SaveChanges();
+        }
+}
 }
