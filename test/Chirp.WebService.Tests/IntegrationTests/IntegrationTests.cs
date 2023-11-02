@@ -1,29 +1,23 @@
 using Microsoft.AspNetCore.Mvc.Testing;
-using Xunit.Abstractions;
-using System.Net.Http;
 using HtmlAgilityPack;
 
 namespace Chirp.WebService.Tests.IntegrationTests;
 
 public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
 {
-    private readonly WebApplicationFactory<Program> factory;
-    private readonly HttpClient usableClient;
-    private readonly ITestOutputHelper output;//For debug purposes
+    private readonly HttpClient _usableClient;
 
-    public IntegrationTests(WebApplicationFactory<Program> _factory, ITestOutputHelper _output)
+    public IntegrationTests(WebApplicationFactory<Program> factory)
     {
-        factory = _factory;
-        usableClient = factory.CreateClient(new WebApplicationFactoryClientOptions
+        _usableClient = factory.CreateClient(new WebApplicationFactoryClientOptions
             { AllowAutoRedirect = true, HandleCookies = true });
-        this.output = _output;
     }
 
     [Fact]  
     public async void CanEstablishConnection()
     {
         //Act
-        var rsp = await usableClient.GetAsync("/");
+        var rsp = await _usableClient.GetAsync("/");
         rsp.EnsureSuccessStatusCode();
         
         //Assert
@@ -34,20 +28,20 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     public async void FrontPageTheSameAsPage1()
     {
         //Act
-        var frontPageRsp = await usableClient.GetAsync("/");
-        var Page1Rsp = await usableClient.GetAsync("/?page=1");
+        var frontPageRsp = await _usableClient.GetAsync("/");
+        var page1Rsp = await _usableClient.GetAsync("/?page=1");
 
         string frontPageContent = await frontPageRsp.Content.ReadAsStringAsync();
-        string Page1RspContent = await Page1Rsp.Content.ReadAsStringAsync();
+        string page1RspContent = await page1Rsp.Content.ReadAsStringAsync();
 
-        Assert.Equal(frontPageContent, Page1RspContent);
+        Assert.Equal(frontPageContent, page1RspContent);
     }
     
     [Fact]
     public async void FrontPageContains32Cheeps()
     {
         //Arrange & Act
-        var rsp = await usableClient.GetAsync("/");
+        var rsp = await _usableClient.GetAsync("/");
         string htmlContent = await rsp.Content.ReadAsStringAsync();
 
         //Parse the htmlContent to a HTMLDocument
@@ -65,7 +59,7 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
     public async void PrivateTimelinesAreDisplayed(String page)
     {
         //Act
-        var rsp = await usableClient.GetAsync("/" + page);
+        var rsp = await _usableClient.GetAsync("/" + page);
         string htmlContent = await rsp.Content.ReadAsStringAsync();
         
         //Check that the page contains the parameter name
