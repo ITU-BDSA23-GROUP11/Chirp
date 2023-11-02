@@ -31,6 +31,19 @@ public class PublicTimelineIntegrationTest : IClassFixture<WebApplicationFactory
     }
 
     [Fact]
+    public async void FrontPageTheSameAsPage1()
+    {
+        //Act
+        var frontPageRsp = await usableClient.GetAsync("/");
+        var Page1Rsp = await usableClient.GetAsync("/?page=1");
+
+        string frontPageContent = await frontPageRsp.Content.ReadAsStringAsync();
+        string Page1RspContent = await Page1Rsp.Content.ReadAsStringAsync();
+
+        Assert.Equal(frontPageContent, Page1RspContent);
+    }
+    
+    [Fact]
     public async void FrontPageContains32Cheeps()
     {
         //Arrange & Act
