@@ -34,6 +34,8 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
         string frontPageContent = await frontPageRsp.Content.ReadAsStringAsync();
         string page1RspContent = await page1Rsp.Content.ReadAsStringAsync();
 
+        Assert.Contains("Chirp!", frontPageContent);
+        Assert.Contains("Chirp!", page1RspContent);
         Assert.Equal(frontPageContent, page1RspContent);
     }
     
