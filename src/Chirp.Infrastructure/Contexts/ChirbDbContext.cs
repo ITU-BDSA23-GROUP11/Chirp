@@ -1,8 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Sqlite.Infrastructure.Internal;
-using Microsoft.Extensions.Configuration;
 
 namespace Chirp.Infrastructure.Contexts;
 
@@ -13,29 +11,13 @@ public class ChirpDbContext : DbContext
     public virtual DbSet<Cheep> Cheeps { get; set; } = null!;
     public virtual DbSet<Author> Authors { get; set; } = null!;
     
-    private readonly IConfiguration? _configuration;
-    
     [ExcludeFromCodeCoverage]
-    public ChirpDbContext()
-    { }
-    
-    [ExcludeFromCodeCoverage]
-    public ChirpDbContext(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
+    public ChirpDbContext() {}
 
     [ExcludeFromCodeCoverage]
     public ChirpDbContext(DbContextOptions<ChirpDbContext> options)
         : base(options)
     { }
-    
-    [ExcludeFromCodeCoverage]
-    public ChirpDbContext(DbContextOptions<ChirpDbContext> options, IConfiguration configuration)
-        : base(options)
-    {
-        _configuration = configuration;
-    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -45,27 +27,4 @@ public class ChirpDbContext : DbContext
             .HasForeignKey("AuthorId")
             .IsRequired();
     }
-
-    [ExcludeFromCodeCoverage]
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        if (_configuration != null)
-        {
-            string rawConnectionString = (_configuration.GetConnectionString("ChirpDb") ?? "{TEMP_DIR}/chirp_db.db").Replace("{TEMP_DIR}", Path.GetTempPath());
-            string connectionString = Path.DirectorySeparatorChar+Path.Join(rawConnectionString.Split("/"));
-            optionsBuilder.UseSqlite($"Data Source={connectionString}", b => b.MigrationsAssembly("Chirp.Infrastructure"));
-            Console.WriteLine("ChirpDBContext database initialised at: "+connectionString);
-        }
-        else if (optionsBuilder.Options.FindExtension<SqliteOptionsExtension>() != null)
-        {
-            base.OnConfiguring(optionsBuilder);
-        }
-        else
-        {
-            optionsBuilder.UseSqlite("Filesystem:memory:");
-        }
-        
-    }
-    
-    
 }

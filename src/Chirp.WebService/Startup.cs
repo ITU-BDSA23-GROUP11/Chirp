@@ -2,12 +2,10 @@ using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.Extensions.Options;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace Chirp.WebService;
 
@@ -34,11 +32,16 @@ public class Startup
             .AddRazorPages(options => {
                 options.Conventions.AllowAnonymousToPage("/Index");
             })
-            .AddMvcOptions(options => { })
+            .AddMvcOptions(_ => { })
             .AddMicrosoftIdentityUI();
         services.AddScoped<ICheepRepository, CheepRepository>();
         services.AddSingleton(Configuration);
-        services.AddDbContext<ChirpDbContext>();
+        services.AddDbContext<ChirpDbContext>(options =>
+        {
+            SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder(Configuration.GetConnectionString("ChirpSqlDb"));
+            sqlConnectionString.Password = Configuration["DB:Password"];
+            options.UseSqlServer(sqlConnectionString.ConnectionString);
+        });
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
