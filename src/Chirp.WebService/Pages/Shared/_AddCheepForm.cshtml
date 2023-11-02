@@ -1,10 +1,11 @@
 @using Chirp.WebService.Extensions
+
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
     <div class="cheepbox">
         <h3>What's on your mind @(User.GetUserFullName())?</h3>
-        <form method="post">
-            <input style="float: left" type="text" name="CheepText">
+        <form asp-controller="Cheep" asp-action="Create">
+            <input style="float: left" type="text" name="cheepText">
             <input type="submit" value="Share">
         </form>
     </div>
