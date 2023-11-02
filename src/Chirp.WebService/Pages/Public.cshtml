@@ -1,7 +1,7 @@
 ﻿@page "/"
 @attribute [AllowAnonymous]
 @using Microsoft.AspNetCore.Authorization
-@using Chirp.WebService.Controllers
+@using Chirp.Infrastructure/Repositories/CheepRepository.cs
 @model Chirp.WebService.Pages.PublicModel
 @{
     ViewData["Title"] = "Chirp!";
@@ -25,7 +25,7 @@
                        </strong>
                        @cheep.Text
                        <small>&mdash; @cheep.Timestamp</small>
-                       <form method="post" asp-action="DeleteCheep" asp-route-id="@cheep.CheepId" style="display:inline;">
+                       <form method="post" asp-controller="Cheep" asp-action="DeleteCheep" asp-route-id="@cheep.CheepId" style="display:inline;">
                            <input type="hidden" name="cheepId" value="@cheep.CheepId"/>
                            <input type="submit" value="Delete" style="background:none;border:none;color: red;padding:0;margin-left: 10px;cursor:pointer"/>
                            </form>
