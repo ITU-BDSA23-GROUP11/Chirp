@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Contexts;
+using Chirp.Infrastructure.Models;
+using Chirp.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +13,7 @@ namespace Chirp.WebService.Controllers
 {
     public class CheepController : Controller
     {
+        private readonly ICheepRepository _cheepRepository;
         // // GET: Cheep
         // public ActionResult Index()
         // {
@@ -84,21 +89,14 @@ namespace Chirp.WebService.Controllers
         //     return View();
         // }
         //
-        // // POST: Cheep/Delete/5
-        // [HttpPost]
-        // [ValidateAntiForgeryToken]
-        // public ActionResult Delete(int id, IFormCollection collection)
-        // {
-        //     try
-        //     {
-        //         // TODO: Add delete logic here
-        //
-        //         return RedirectToAction(nameof(Index));
-        //     }
-        //     catch
-        //     {
-        //         return View();
-        //     }
-        // }
+        // POST: Cheep/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [HttpPost]
+        public IActionResult DeleteCheep(Guid id)
+        {
+            _cheepRepository.DeleteCheep(id);
+            return RedirectToAction(); // Replace "Index" with the name of your view that shows the list of cheeps.
+        }
     }
 }

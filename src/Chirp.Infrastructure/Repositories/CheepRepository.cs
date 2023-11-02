@@ -36,6 +36,7 @@ public class CheepRepository : ICheepRepository
 
         return new CheepDto
         {
+            CheepId = newCheep.CheepId,
             AuthorName = newCheep.Author.Name,
             Text = newCheep.Text,
             Timestamp = newCheep.Timestamp
@@ -61,6 +62,7 @@ public class CheepRepository : ICheepRepository
             .Take(32)
             .Select<Cheep, CheepDto>(c =>
                 new CheepDto {
+                    CheepId = c.CheepId,
                     AuthorName = c.Author.Name,
                     Text = c.Text,
                     Timestamp = c.Timestamp
@@ -80,6 +82,7 @@ public class CheepRepository : ICheepRepository
             .Take(32)
             .Select<Cheep, CheepDto>(c =>
                 new CheepDto {
+                    CheepId = c.CheepId,
                     AuthorName = c.Author.Name,
                     Text = c.Text,
                     Timestamp = c.Timestamp
@@ -88,4 +91,14 @@ public class CheepRepository : ICheepRepository
             .OrderByDescending(c => c.Timestamp)
             .ToList();
     }
+
+    public void DeleteCheep(Guid cheepId)
+    {
+        var cheepToDelete = _chirpDbContext.Cheeps.Find(cheepId);
+        if (cheepToDelete != null)
+        {
+            _chirpDbContext.Cheeps.Remove(cheepToDelete);
+            _chirpDbContext.SaveChanges();
+        }
+}
 }
