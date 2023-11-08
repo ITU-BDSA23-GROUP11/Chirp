@@ -110,11 +110,11 @@ public class CheepRepository : ICheepRepository
             return new List<CheepDto>();
         }
     }
-    public bool DeleteCheep(Guid cheepId, String author)
+    public bool DeleteCheep(String cheepId, String author)
     {
         Cheep cheepToDelete = _chirpDbContext.Cheeps
             .Include(c => c.Author)
-            .First(c => c.CheepId == cheepId);
+            .First(c => c.CheepId.ToString() == cheepId);
         if (!cheepToDelete.Author.Name.Equals(author))
         {
             return false;

@@ -54,12 +54,15 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(Guid id)
+        //public IActionResult Delete(Guid id)
+        public IActionResult Delete(IFormCollection collection)
         {
             try
             {
-                if (User.Identity != null && User.Identity.IsAuthenticated)
+                if (User.Identity != null)
                 {
+                    String id = collection["cheepId"].ToString();
+                    Console.WriteLine(id);
                     bool isDeleted = _service.DeleteCheep(id, User.GetUserFullName());
                     
                     if (!isDeleted)
