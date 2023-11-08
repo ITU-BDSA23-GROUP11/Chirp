@@ -50,15 +50,36 @@ namespace Chirp.WebService.Controllers
                 return BadRequest("Unknown Error Occurred");
             }
         }
-
-        // POST: Cheep/Delete/5
+        // POST: Cheep/Delete
         [HttpPost]
+        [Route("Cheep/Delete")]
         [ValidateAntiForgeryToken]
-        [HttpPost]
-        public IActionResult DeleteCheep(Guid id)
+        //public IActionResult Delete(Guid id)
+        public IActionResult Delete(IFormCollection collection)
         {
-            _service.DeleteCheep(id);
-            return RedirectToAction(); // Replace "Index" with the name of your view that shows the list of cheeps.
+            try
+            {
+                if (User.Identity != null)
+                {
+                    String id = collection["cheepId"].ToString();
+                    Console.WriteLine(id);
+                    bool isDeleted = _service.DeleteCheep(id, User.GetUserFullName());
+                    
+                    if (!isDeleted)
+                    {
+                        return NotFound("ERROR: Cheep was not found");
+                    }
+                    return Redirect(Request.GetPathUrl());
+                } 
+                return Unauthorized();
+            }
+            catch
+            {
+                return BadRequest("An unknown error occured");
+            }
+       
         }
+        
+        
     }
 }

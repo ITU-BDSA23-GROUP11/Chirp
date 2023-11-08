@@ -1,5 +1,6 @@
 ﻿@page "/"
 @attribute [AllowAnonymous]
+@using Chirp.WebService.Extensions
 @using Microsoft.AspNetCore.Authorization
 @using Chirp.Infrastructure/Repositories/CheepRepository.cs
 @model Chirp.WebService.Pages.PublicModel
@@ -19,18 +20,25 @@
             @foreach (var cheep in Model.Cheeps)
             {
                 <li>
-                   <p>
-                       <strong>
-                           <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
-                       </strong>
-                       @cheep.Text
-                       <small>&mdash; @cheep.Timestamp</small>
-                       <form method="post" asp-controller="Cheep" asp-action="DeleteCheep" asp-route-id="@cheep.CheepId" style="display:inline;">
-                           <input type="hidden" name="cheepId" value="@cheep.CheepId"/>
-                           <input type="submit" value="Delete" style="background:none;border:none;color: red;padding:0;margin-left: 10px;cursor:pointer"/>
-                           </form>
-                   </p>
+                    <p>
+                        <strong>
+                            <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
+                        </strong>
+                        @cheep.Text
+                        <small>&mdash; @cheep.Timestamp</small>
                         
+                            @if (User.GetUserFullName().Equals(cheep.AuthorName))
+                            {
+                                <form asp-controller="Cheep" asp-action="Delete" style="display:inline;">
+                                    <input type="hidden" name="cheepId" value="@cheep.CheepId"/>
+                                    <input name="__RequestVerificationToken" type="hidden"/>
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" style="background:none;border:none;color: red;padding:0;margin-left: 10px;cursor:pointer">
+                                        Delete
+                                    </button>
+                                </form>
+                            }
+                    </p>
                 </li>
             }
         </ul>
