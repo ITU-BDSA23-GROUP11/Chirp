@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Infrastructure", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.Infrastructure.Tests", "test\Chirp.Infrastructure.Tests\Chirp.Infrastructure.Tests.csproj", "{33F68211-DE4F-4690-A0CB-21E1D6B4A37F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Chirp.WebService.Tests", "test\Chirp.WebService.Tests\Chirp.WebService.Tests.csproj", "{7A88E6F5-9E82-4A7D-B16A-EB1B222A6647}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,11 +36,16 @@ Global
 		{33F68211-DE4F-4690-A0CB-21E1D6B4A37F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33F68211-DE4F-4690-A0CB-21E1D6B4A37F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33F68211-DE4F-4690-A0CB-21E1D6B4A37F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A88E6F5-9E82-4A7D-B16A-EB1B222A6647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A88E6F5-9E82-4A7D-B16A-EB1B222A6647}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A88E6F5-9E82-4A7D-B16A-EB1B222A6647}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A88E6F5-9E82-4A7D-B16A-EB1B222A6647}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{C2240EEB-1A25-448C-A9CF-22876913767A} = {F5652059-FD91-49A9-9280-F29A964C66D4}
 		{0A6C714D-9E14-4A8C-9161-5CFB33C9F518} = {F5652059-FD91-49A9-9280-F29A964C66D4}
 		{BF3DB63B-98A7-4805-A1E0-4F1E18B585EC} = {F5652059-FD91-49A9-9280-F29A964C66D4}
 		{33F68211-DE4F-4690-A0CB-21E1D6B4A37F} = {30A1EFEE-14BC-4970-952F-F05F508AD6AD}
+		{7A88E6F5-9E82-4A7D-B16A-EB1B222A6647} = {30A1EFEE-14BC-4970-952F-F05F508AD6AD}
 	EndGlobalSection
 EndGlobal
