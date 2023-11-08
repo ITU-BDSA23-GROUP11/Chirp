@@ -9,7 +9,7 @@ public class HttpExtensionsTest
     [Fact]
     public void TestGetPathUrl()
     {
-        foreach (DataGenerator.UrlOriginAndReferer urlOriginAndReferer in DataGenerator.GenerateUrlOriginAndReferer())
+        foreach (DataGenerator.FakeUrlOriginAndReferer urlOriginAndReferer in DataGenerator.GenerateUrlOriginAndReferer())
         {
             Mock<HttpRequest> mockHttpRequest = new Mock<HttpRequest>();
             mockHttpRequest.Setup(r => r.Headers["Origin"]).Returns(urlOriginAndReferer.Origin);
