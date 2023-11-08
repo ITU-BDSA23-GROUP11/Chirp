@@ -25,12 +25,8 @@
                        </strong>
                        @cheep.Text
                        <small>&mdash; @cheep.Timestamp</small>
-                       <form method="post" asp-controller="Cheep" asp-action="DeleteCheep" asp-route-id="@cheep.CheepId" style="display:inline;">
-                           <input type="hidden" name="cheepId" value="@cheep.CheepId"/>
-                           <input type="submit" value="Delete" style="background:none;border:none;color: red;padding:0;margin-left: 10px;cursor:pointer"/>
-                           </form>
                    </p>
-                        
+                    <partial name="Shared/_deleteCheepsForm"/>
                 </li>
             }
         </ul>
