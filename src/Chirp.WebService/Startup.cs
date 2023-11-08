@@ -39,7 +39,11 @@ public class Startup
         services.AddDbContext<ChirpDbContext>(options =>
         {
             SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder(Configuration.GetConnectionString("ChirpSqlDb"));
-            sqlConnectionString.Password = Configuration["DB:Password"];
+            string? password = Configuration["DB:Password"];
+            if (password != null)
+            {
+                sqlConnectionString.Password = password;
+            }
             options.UseSqlServer(sqlConnectionString.ConnectionString);
         });
     }
