@@ -1,9 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+      <UserSecretsId>365bc041-0e0a-47fa-bd99-859a974ec9a8</UserSecretsId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,6 +12,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.13">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="Microsoft.Identity.Web" Version="2.15.3" />
       <PackageReference Include="Microsoft.Identity.Web.MicrosoftGraph" Version="2.15.3" />
       <PackageReference Include="Microsoft.Identity.Web.UI" Version="2.15.3" />
