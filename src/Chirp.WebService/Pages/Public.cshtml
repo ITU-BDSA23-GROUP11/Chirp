@@ -19,14 +19,14 @@
             @foreach (var cheep in Model.Cheeps)
             {
                 <li>
-                   <p>
-                       <strong>
-                           <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
-                       </strong>
-                       @cheep.Text
-                       <small>&mdash; @cheep.Timestamp</small>
-                   </p>
-                    <partial name="Shared/_deleteCheepsForm"/>
+                    <p>
+                        <strong>
+                            <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
+                        </strong>
+                        @cheep.Text
+                        <small>&mdash; @cheep.Timestamp</small>
+                        <partial name="Shared/_deleteCheepsForm"/>
+                    </p>
                 </li>
             }
         </ul>

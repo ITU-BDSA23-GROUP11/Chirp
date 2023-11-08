@@ -15,10 +15,7 @@ Run the following to pull the docker image
 #### 2. Run the image in a container
 Replacing `<YOUR_POSTGRES_PASSWORD>` with a strong password, run
 ```
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YOUR_POSTGRES_PASSWORD>" \                                                 
-   -p 1433:1433 --name azure-sql-server \
-   -d \
-   mcr.microsoft.com/azure-sql-edge
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YOUR_POSTGRES_PASSWORD>" -p 1433:1433 --name azure-sql-server -d mcr.microsoft.com/azure-sql-edge
 ```
 
 #### 3. Init secrets

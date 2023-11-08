@@ -1,11 +1,9 @@
-@using Chirp.WebService.Extensions
-
 
 
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
     <div class="deleteButton">
-    <form method="post" asp-controller="Cheep" asp-action="DeleteCheep" style="display:inline;">
+    <form asp-controller="Cheep" asp-action="DeleteCheep" style="display:inline;">
         <input type="hidden" name="cheepId"/>
         <input type="submit" value="Delete" style="background:none;border:none;color: red;padding:0;margin-left: 10px;cursor:pointer"/>
     </form>

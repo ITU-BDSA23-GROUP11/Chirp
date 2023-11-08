@@ -1,5 +1,6 @@
 using Chirp.Core.Repositories;
 using Chirp.Core.Dto;
+using Chirp.Infrastructure.Models;
 using Chirp.WebService.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -52,13 +53,36 @@ namespace Chirp.WebService.Controllers
         }
 
         // POST: Cheep/Delete/5
-        [HttpPost]
+        [HttpDelete]
+        [Route("Cheep/Delete/{cheepId}")]
         [ValidateAntiForgeryToken]
-        [HttpPost]
         public IActionResult DeleteCheep(Guid id)
         {
-            _service.DeleteCheep(id);
-            return RedirectToAction(); // Replace "Index" with the name of your view that shows the list of cheeps.
+            try
+            {
+                if (User.Identity != null && User.Identity.IsAuthenticated)
+                {
+                    bool isDeleted = _service.DeleteCheep(id);
+
+                    if (!isDeleted)
+                    {
+                        return NotFound("ERROR: Cheep was not found");
+                    }
+                }
+                else
+                {
+                    return Unauthorized();
+                }
+
+                return RedirectToAction(Request.GetPathUrl());
+            }
+            catch
+            {
+                return BadRequest("An unknown error occured");
+            }
+       
         }
+        
+        
     }
 }
