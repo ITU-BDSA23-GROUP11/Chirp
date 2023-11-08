@@ -1,6 +1,5 @@
 using Chirp.Core.Repositories;
 using Chirp.Core.Dto;
-using Chirp.Infrastructure.Models;
 using Chirp.WebService.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -62,7 +61,7 @@ namespace Chirp.WebService.Controllers
                 if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
                     bool isDeleted = _service.DeleteCheep(id);
-
+                    
                     if (!isDeleted)
                     {
                         return NotFound("ERROR: Cheep was not found");
@@ -73,7 +72,7 @@ namespace Chirp.WebService.Controllers
                     return Unauthorized();
                 }
 
-                return RedirectToAction(Request.GetPathUrl());
+                return Redirect(Request.GetPathUrl());
             }
             catch
             {
