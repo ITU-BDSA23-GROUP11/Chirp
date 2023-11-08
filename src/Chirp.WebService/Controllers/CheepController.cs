@@ -51,10 +51,9 @@ namespace Chirp.WebService.Controllers
                 return BadRequest("Unknown Error Occurred");
             }
         }
-
-        // POST: Cheep/Delete/5
+        // POST: Cheep/Delete
         [HttpDelete]
-        [Route("Cheep/Delete/{cheepId}")]
+        [Route("Cheep/Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteCheep(Guid id)
         {
