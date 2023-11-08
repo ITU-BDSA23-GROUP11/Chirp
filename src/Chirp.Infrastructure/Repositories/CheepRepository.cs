@@ -48,38 +48,58 @@ public class CheepRepository : ICheepRepository
     
     public List<CheepDto> GetCheepsForPage(int pageNumber)
     {
-        return _chirpDbContext
-            .Cheeps
-            .Include(c => c.Author)
-            .Skip((pageNumber - 1) * 32)
-            .Take(32)
-            .Select<Cheep, CheepDto>(c =>
-                new CheepDto {
-                    AuthorName = c.Author.Name,
-                    Text = c.Text,
-                    Timestamp = c.Timestamp
-                }
-            )
-            .OrderByDescending(c => c.Timestamp)
-            .ToList();
+        return FetchWithErrorHandling(() =>
+        {
+            return _chirpDbContext
+                .Cheeps
+                .Include(c => c.Author)
+                .Skip(int.Max(pageNumber - 1, 0) * 32)
+                .Take(32)
+                .Select<Cheep, CheepDto>(c =>
+                    new CheepDto
+                    {
+                        AuthorName = c.Author.Name,
+                        Text = c.Text,
+                        Timestamp = c.Timestamp
+                    }
+                )
+                .OrderByDescending(c => c.Timestamp)
+                .ToList();
+        });
     }
 
     public List<CheepDto> GetAuthorCheepsForPage(string authorName, int pageNumber)
     {
-        return _chirpDbContext
-            .Cheeps
-            .Where(c => c.Author.Name == authorName)
-            .Include(c => c.Author)
-            .Skip((pageNumber - 1) * 32)
-            .Take(32)
-            .Select<Cheep, CheepDto>(c =>
-                new CheepDto {
-                    AuthorName = c.Author.Name,
-                    Text = c.Text,
-                    Timestamp = c.Timestamp
-                }
-            )
-            .OrderByDescending(c => c.Timestamp)
-            .ToList();
+        return FetchWithErrorHandling(() =>
+        { 
+            return _chirpDbContext
+                .Cheeps
+                .Where(c => c.Author.Name == authorName)
+                .Include(c => c.Author)
+                .Skip(int.Max(pageNumber - 1, 0) * 32)
+                .Take(32)
+                .Select<Cheep, CheepDto>(c =>
+                    new CheepDto
+                    {
+                        AuthorName = c.Author.Name,
+                        Text = c.Text,
+                        Timestamp = c.Timestamp
+                    }
+                )
+                .OrderByDescending(c => c.Timestamp)
+                .ToList();
+        });
+    }
+
+    private List<CheepDto> FetchWithErrorHandling(Func<List<CheepDto>> fetchFunction)
+    {
+        try
+        {
+            return fetchFunction();
+        }
+        catch
+        {
+            return new List<CheepDto>();
+        }
     }
 }

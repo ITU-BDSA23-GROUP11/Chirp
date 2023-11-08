@@ -1,9 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Contexts;
-using Microsoft.Identity.Web;
-using Microsoft.Identity.Web.UI;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace Chirp.WebService;
 
