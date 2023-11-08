@@ -60,6 +60,7 @@ public class CheepRepository : ICheepRepository
             return _chirpDbContext
                 .Cheeps
                 .Include(c => c.Author)
+                .OrderByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
                 .Select<Cheep, CheepDto>(c =>
@@ -70,7 +71,6 @@ public class CheepRepository : ICheepRepository
                         Timestamp = c.Timestamp
                     }
                 )
-                .OrderByDescending(c => c.Timestamp)
                 .ToList();
         });
     }
@@ -83,6 +83,7 @@ public class CheepRepository : ICheepRepository
                 .Cheeps
                 .Where(c => c.Author.Name == authorName)
                 .Include(c => c.Author)
+                .OrderByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
                 .Select<Cheep, CheepDto>(c =>
@@ -93,7 +94,6 @@ public class CheepRepository : ICheepRepository
                         Timestamp = c.Timestamp
                     }
                 )
-                .OrderByDescending(c => c.Timestamp)
                 .ToList();
         });
     }
