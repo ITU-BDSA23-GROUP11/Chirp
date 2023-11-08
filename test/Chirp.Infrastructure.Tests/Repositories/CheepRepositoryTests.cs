@@ -91,4 +91,26 @@ public class CheepRepositoryTests
             }
         }
     }
+
+    [Fact]
+    public void TestCheepsSortedByTimestamp()
+    {
+        //Arrange
+        int pages = Convert.ToInt32(
+            Math.Ceiling(Convert.ToDecimal(_mockCheepRepository.CheepRepository.GetCheepCount() / 32)));
+
+        List<CheepDto> allCheeps = new List<CheepDto>();
+
+        //Act
+        for (int i = 1; i <= pages; i++)
+        {
+            allCheeps.AddRange(_mockCheepRepository.CheepRepository.GetCheepsForPage(i));
+        }
+        
+        //allCheeps should now hold all cheeps in a sorted order -> newest cheep first
+        List<CheepDto> sorted = allCheeps.OrderByDescending(c => c.Timestamp).ToList(); 
+        
+        //Assert
+        Assert.Equal(sorted, allCheeps);
+    }
 }
