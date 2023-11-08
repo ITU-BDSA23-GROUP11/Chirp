@@ -12,11 +12,12 @@
       <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.13" />
       <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
       <PackageReference Include="System.Net.Http" Version="4.3.4" />
-      <PackageReference Include="xunit" Version="2.6.0" />
+      <PackageReference Include="xunit" Version="2.6.1" />
     </ItemGroup>
     
     <ItemGroup>
       <ProjectReference Include="..\..\src\Chirp.WebService\Chirp.WebService.csproj" />
+      <ProjectReference Include="..\Chirp.Infrastructure.Tests\Chirp.Infrastructure.Tests.csproj" />
     </ItemGroup>
 
 </Project>
