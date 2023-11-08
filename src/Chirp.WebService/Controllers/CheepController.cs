@@ -51,8 +51,8 @@ namespace Chirp.WebService.Controllers
             }
         }
         // POST: Cheep/Delete
-        [HttpDelete]
-        [Route("Delete")]
+        [HttpPost]
+        [Route("Cheep/Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult Delete(Guid id)
         {
@@ -60,17 +60,15 @@ namespace Chirp.WebService.Controllers
             {
                 if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
-                    bool isDeleted = _service.DeleteCheep(id, User.Identity.Name);
+                    bool isDeleted = _service.DeleteCheep(id, User.GetUserFullName());
                     
                     if (!isDeleted)
                     {
                         return NotFound("ERROR: Cheep was not found");
                     }
-                }
-                
-                {
-                    return Unauthorized();
-                }
+                    return Redirect(Request.GetPathUrl());
+                } 
+                return Unauthorized();
             }
             catch
             {

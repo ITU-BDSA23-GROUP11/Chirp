@@ -1,7 +1,6 @@
 ﻿@page "/{author}"
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
-@using Microsoft.Graph.ExternalConnectors
+@using Chirp.WebService.Extensions
 @model Chirp.WebService.Pages.UserTimelineModel
 @attribute [AllowAnonymous]
 
@@ -13,7 +12,6 @@
 
 <div>
     <h2> @routeName's Timeline </h2>
-    
     @* <form method="post" class="addCheepForm"> *@
     @*     <label>New Cheep</label> *@
     @*     <input type="text" name="CheepText" placeholder="Write New Cheep" /> *@
@@ -34,7 +32,7 @@
                         </strong>
                         @cheep.Text
                         <small>&mdash; @cheep.Timestamp</small>
-                        @if (User.Identity.Name.Equals(cheep.AuthorName))
+                        @if (User.GetUserFullName().Equals(cheep.AuthorName))
                         {
                             <form asp-controller="Cheep" asp-action="Delete" method="post" style="display:inline;">
                                 <input type="hidden" name="cheepId" value="@cheep.CheepId"/>
