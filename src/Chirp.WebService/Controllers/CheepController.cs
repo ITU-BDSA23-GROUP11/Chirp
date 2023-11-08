@@ -60,19 +60,17 @@ namespace Chirp.WebService.Controllers
             {
                 if (User.Identity != null && User.Identity.IsAuthenticated)
                 {
-                    bool isDeleted = _service.DeleteCheep(id);
+                    bool isDeleted = _service.DeleteCheep(id, User.Identity.Name);
                     
                     if (!isDeleted)
                     {
                         return NotFound("ERROR: Cheep was not found");
                     }
                 }
-                else
+                
                 {
                     return Unauthorized();
                 }
-
-                return Redirect(Request.GetPathUrl());
             }
             catch
             {

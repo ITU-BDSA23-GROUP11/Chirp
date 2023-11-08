@@ -25,7 +25,17 @@
                         </strong>
                         @cheep.Text
                         <small>&mdash; @cheep.Timestamp</small>
-                        <partial name="Shared/_deleteCheepsForm"/>
+                           @if (User.Identity.Name.Equals(cheep.AuthorName))
+                           {
+                               <form asp-controller="Cheep" asp-action="Delete" method="post" style="display:inline;">
+                                   <input type="hidden" name="cheepId" value="@cheep.CheepId"/>
+                                   <input name="__RequestVerificationToken" type="hidden"/>
+                                   @Html.AntiForgeryToken()
+                                   <button type="submit" style="background:none;border:none;color: red;padding:0;margin-left: 10px;cursor:pointer">
+                                       Delete
+                                   </button>
+                               </form>
+                           }
                     </p>
                 </li>
             }

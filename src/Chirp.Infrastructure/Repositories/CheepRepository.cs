@@ -3,6 +3,7 @@ using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Contexts;
+using Microsoft.Identity.Client;
 
 namespace Chirp.Infrastructure.Repositories;
 
@@ -109,9 +110,13 @@ public class CheepRepository : ICheepRepository
             return new List<CheepDto>();
         }
     }
-    public bool DeleteCheep(Guid cheepId)
+    public bool DeleteCheep(Guid cheepId, String author)
     {
         Cheep cheepToDelete = _chirpDbContext.Cheeps.First(c => c.CheepId == cheepId);
+        if (cheepToDelete.Author.Equals(author))
+        {
+            return false;
+        }
 
         _chirpDbContext.Cheeps.Remove(cheepToDelete);
         _chirpDbContext.SaveChanges();
