@@ -52,9 +52,9 @@ namespace Chirp.WebService.Controllers
         }
         // POST: Cheep/Delete
         [HttpDelete]
-        [Route("Cheep/Delete")]
+        [Route("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteCheep(Guid id)
+        public IActionResult Delete(Guid id)
         {
             try
             {

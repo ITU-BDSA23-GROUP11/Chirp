@@ -4,7 +4,7 @@
 @if (User.Identity != null && User.Identity.IsAuthenticated)
 {
     <div class="deleteButton">
-    <form asp-controller="Cheep" asp-action="DeleteCheep" method="post" style="display:inline;">
+    <form asp-controller="Cheep" asp-action="Delete" method="post" style="display:inline;">
                 <input type="hidden" name="cheepId" />
                 <input name="__RequestVerificationToken" type="hidden" />
                 @Html.AntiForgeryToken()
