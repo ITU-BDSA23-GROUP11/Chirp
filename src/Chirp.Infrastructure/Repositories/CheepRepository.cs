@@ -111,12 +111,7 @@ public class CheepRepository : ICheepRepository
     }
     public bool DeleteCheep(Guid cheepId)
     {
-        Cheep cheepToDelete = _chirpDbContext.Cheeps.FirstOrDefault(c => c.CheepId == cheepId);
-
-        if (cheepToDelete == null)
-        {
-            return false; 
-        }
+        Cheep cheepToDelete = _chirpDbContext.Cheeps.First(c => c.CheepId == cheepId);
 
         _chirpDbContext.Cheeps.Remove(cheepToDelete);
         _chirpDbContext.SaveChanges();
