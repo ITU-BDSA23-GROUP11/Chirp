@@ -16,7 +16,8 @@ public class CheepRepositoryTests
 
         AddCheepDto cheep = new AddCheepDto
         {
-            AuthorId = author.AuthorId,
+            AuthorName = author.Name,
+            AuthorEmail = author.Email,
             Text = new Faker().Random.Words()
         };
         
