@@ -1,6 +1,7 @@
 ﻿@page "/"
 @attribute [AllowAnonymous]
 @using Microsoft.AspNetCore.Authorization
+@using Chirp.Infrastructure/Repositories/CheepRepository.cs
 @model Chirp.WebService.Pages.PublicModel
 @{
     ViewData["Title"] = "Chirp!";
@@ -9,6 +10,8 @@
 
 <div>
     <h2> Public Timeline </h2>
+    
+    <partial name="Shared/_AddCheepForm"/>
 
     @if (Model.Cheeps.Any())
     {
@@ -16,13 +19,18 @@
             @foreach (var cheep in Model.Cheeps)
             {
                 <li>
-                    <p>
-                        <strong>
-                            <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
-                        </strong>
-                        @cheep.Text
-                        <small>&mdash; @cheep.Timestamp</small>
-                    </p>
+                   <p>
+                       <strong>
+                           <a href="/@cheep.AuthorName">@cheep.AuthorName</a>
+                       </strong>
+                       @cheep.Text
+                       <small>&mdash; @cheep.Timestamp</small>
+                       <form method="post" asp-controller="Cheep" asp-action="DeleteCheep" asp-route-id="@cheep.CheepId" style="display:inline;">
+                           <input type="hidden" name="cheepId" value="@cheep.CheepId"/>
+                           <input type="submit" value="Delete" style="background:none;border:none;color: red;padding:0;margin-left: 10px;cursor:pointer"/>
+                           </form>
+                   </p>
+                        
                 </li>
             }
         </ul>
