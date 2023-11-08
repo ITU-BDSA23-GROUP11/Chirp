@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure;
 using Chirp.Infrastructure.Contexts;
@@ -20,6 +21,7 @@ public class Program
         host.Run();
     }
 
+    [ExcludeFromCodeCoverage]
     private static void BootstrapDb(IHost host)
     {
         using (var scope = host.Services.CreateScope())
