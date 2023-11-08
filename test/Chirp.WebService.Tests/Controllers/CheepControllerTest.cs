@@ -1,6 +1,4 @@
 using Chirp.Infrastructure.Tests.Repositories;
-using Microsoft.Graph;
-using Moq;
 
 namespace Chirp.WebService.Tests.Controllers;
 
