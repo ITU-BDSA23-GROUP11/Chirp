@@ -23,6 +23,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Chirp.Infrastructure\Chirp.Infrastructure.csproj" />
+      <ProjectReference Include="..\Chirp.Tests.Core\Chirp.Tests.Core.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Bogus;
 using Chirp.Infrastructure.Models;
-using Chirp.Infrastructure.Tests.Utilities;
+using Chirp.Tests.Core;
 
 namespace Chirp.Infrastructure.Tests.Models;
 

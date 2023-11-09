@@ -1,5 +1,5 @@
 using Chirp.Infrastructure.Contexts;
-using Chirp.Infrastructure.Tests.Utilities;
+using Chirp.Tests.Core;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
