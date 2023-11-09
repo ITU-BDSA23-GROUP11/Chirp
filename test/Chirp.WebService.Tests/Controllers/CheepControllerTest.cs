@@ -70,7 +70,7 @@ public class CheepControllerTest
     [Fact]
     public void TestDeleteCheep_SuccessfulDeletion()
     {
-        var existingCheepId = "existing-cheep-id";
+        var existingCheepId = "11cb9f11-c511-47e1-42c5-08dbe13254e3";
         IFormCollection formCollection = new FormCollection(new Dictionary<string, StringValues>
         {
             { "cheepId", existingCheepId }
@@ -78,12 +78,13 @@ public class CheepControllerTest
         );
 
 
-    var result = _cheepController.Delete(formCollection);
+        var result = _cheepController.Delete(formCollection);
         Assert.IsType<RedirectResult>(result);
 
 
     }
+    */
 
-*/
+
 
 }
