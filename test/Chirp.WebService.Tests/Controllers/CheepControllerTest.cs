@@ -89,4 +89,24 @@ public class CheepControllerTest
         //Assert
         Assert.True(actionResult is BadRequestObjectResult);
     }
+
+    [Fact]
+    public void TestCreateTooLongCheepReturnsBad()
+    {
+        //Arrange
+        string newCheep = new Faker().Random.String(161, 200);
+
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                {"cheepText", newCheep}
+            }
+        );
+        
+        //Act
+        ActionResult actionResult = _cheepController.Create(collection);
+        
+        //Assert
+        Assert.True(actionResult is UnauthorizedResult);
+    }
 }
