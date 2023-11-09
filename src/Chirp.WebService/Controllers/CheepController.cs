@@ -26,8 +26,7 @@ namespace Chirp.WebService.Controllers
                 {
                     string? cheepText = collection["cheepText"];
 
-                    if (cheepText == null)
-                    {
+                    if (String.IsNullOrEmpty(cheepText)){
                         return BadRequest("Invalid input");
                     }
                     

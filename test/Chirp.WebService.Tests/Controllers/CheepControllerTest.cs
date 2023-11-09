@@ -71,4 +71,22 @@ public class CheepControllerTest
         //Assert
         Assert.True(actionResult is UnauthorizedResult);
     }
+
+    [Fact]
+    public void TestCreateEmptyCheepReturnsBad()
+    {
+        //Arrange
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                { "cheepText", ""}
+            }
+        );
+        
+        //Act
+        ActionResult actionResult = _cheepController.Create(collection);
+        
+        //Assert
+        Assert.True(actionResult is BadRequestObjectResult);
+    }
 }
