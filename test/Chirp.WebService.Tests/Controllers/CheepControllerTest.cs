@@ -4,6 +4,7 @@ using Chirp.Infrastructure.Tests.Repositories;
 using Chirp.WebService.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Graph;
 using Moq;
 
 namespace Chirp.WebService.Tests.Controllers;
@@ -13,7 +14,7 @@ public class CheepControllerTest
     private readonly MockCheepRepository _mockCheepRepository = MockRepositoryFactory.GetMockCheepRepository();
     private readonly CheepController _cheepController;
     
-    protected CheepControllerTest()
+    public CheepControllerTest()
     {
         var mockController = new Mock<CheepController>(_mockCheepRepository.CheepRepository);
         mockController.CallBase = true;
@@ -50,4 +51,18 @@ public class CheepControllerTest
         //THIS CURRENTLY FAILS BECAUSE THE CHEEP IS NOT CREATED -> BAD REQUEST
         Assert.Equal(newCheepText, newCheeps[0].Text);
     }
+
+    [Fact]
+    public void TestDeleteCheep_BadRequest()
+    {
+        // Arrange
+        var formCollection = new FormCollection(new Dictionary<string, StringValues>());
+
+        //Act
+        var result = _cheepController.Delete(formCollection);
+
+        //Assert
+        Assert.IsType<BadRequestObjectResult>(result);
+    }
+
 }
