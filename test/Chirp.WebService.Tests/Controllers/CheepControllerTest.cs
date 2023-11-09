@@ -1,36 +1,53 @@
+using Bogus;
 using Chirp.Core.Dto;
 using Chirp.Infrastructure.Tests.Repositories;
 using Chirp.WebService.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Moq;
 
 namespace Chirp.WebService.Tests.Controllers;
 
 public class CheepControllerTest
 {
-    private static MockCheepRepository _mockRepository = MockRepositoryFactory.GetMockCheepRepository();
-    private static CheepController _cheepController = new CheepController(_mockRepository.CheepRepository);
+    private readonly MockCheepRepository _mockCheepRepository = MockRepositoryFactory.GetMockCheepRepository();
+    private readonly CheepController _cheepController;
+    
+    protected CheepControllerTest()
+    {
+        var mockController = new Mock<CheepController>(_mockCheepRepository.CheepRepository);
+        mockController.CallBase = true;
+        mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => true);
+            
+        string firstName = new Faker().Name.FirstName();
+        string lastName = new Faker().Name.LastName();
+        mockController.As<IController>().Setup(bc => bc.GetUserFullName).Returns(() => $"{firstName} {lastName}");
+        mockController.As<IController>().Setup(bc => bc.GetUserEmail).Returns(() => new Faker().Internet.Email(firstName,lastName));
+        mockController.As<IController>().Setup(bc => bc.GetPathUrl).Returns(() => new Faker().Internet.UrlWithPath());
 
+        _cheepController = mockController.Object;
+    }
+    
     [Fact]
     public void TestCreateCheep()
     {
         //Arrange
-        string uniqueContent = Guid.NewGuid().ToString();//Generate unique cheep content
-        Dictionary<string, StringValues> formData = new Dictionary<String, StringValues>();
-        formData.Add("cheepText", uniqueContent);
+        string newCheepText = new Faker().Random.Words(); //Generate unique/random cheep content
         
         IFormCollection collection = new FormCollection(
-            formData,
-            null
+            new Dictionary<string, StringValues>
+            {
+                {"cheepText", newCheepText}
+            }
         );
 
         //Act
         ActionResult actionResult = _cheepController.Create(collection);
         
         //Assert
-        List<CheepDto> newCheeps = _mockRepository.CheepRepository.GetCheepsForPage(1);
+        List<CheepDto> newCheeps = _mockCheepRepository.CheepRepository.GetCheepsForPage(0);
         
         //THIS CURRENTLY FAILS BECAUSE THE CHEEP IS NOT CREATED -> BAD REQUEST
-        Assert.Equal(uniqueContent, newCheeps[0].Text);
+        Assert.Equal(newCheepText, newCheeps[0].Text);
     }
 }
