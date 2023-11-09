@@ -12,10 +12,11 @@ public class CheepControllerTest
 {
     private readonly MockCheepRepository _mockCheepRepository = MockRepositoryFactory.GetMockCheepRepository();
     private readonly CheepController _cheepController;
+    private Mock<CheepController> mockController;
     
     public CheepControllerTest()
     {
-        var mockController = new Mock<CheepController>(_mockCheepRepository.CheepRepository);
+        mockController = new Mock<CheepController>(_mockCheepRepository.CheepRepository);
         mockController.CallBase = true;
         mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => true);
             
@@ -29,7 +30,7 @@ public class CheepControllerTest
     }
     
     [Fact]
-    public void TestCreateCheep()
+    public void TestCreateReturnsRedirect()
     {
         //Arrange
         string newCheepText = new Faker().Random.Words(); //Generate unique/random cheep content
@@ -46,5 +47,28 @@ public class CheepControllerTest
         
         //Assert
         Assert.True(actionResult is RedirectResult);
+    }
+
+    [Fact]
+    public void TestCreateReturnsUnauthorized()
+    {
+        //Arrange
+        //Simulate a non-authenticated user
+        mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => false);
+
+        String newCheep = new Faker().Random.Words();
+
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                { "cheepText", newCheep }
+            }
+        );
+        
+        //Act
+        ActionResult actionResult = _cheepController.Create(collection);
+        
+        //Assert
+        Assert.True(actionResult is UnauthorizedResult);
     }
 }
