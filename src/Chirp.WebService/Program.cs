@@ -41,24 +41,29 @@ public class Program
             // the default policy
             options.FallbackPolicy = options.DefaultPolicy;
         });
+        services.AddHttpClient();
         services
-            .AddRazorPages(options => {
+            .AddRazorPages(options =>
+            {
                 options.Conventions.AllowAnonymousToPage("/Index");
             })
             .AddMvcOptions(_ => { })
             .AddMicrosoftIdentityUI();
+        
         services.AddScoped<ICheepRepository, CheepRepository>();
         services.AddSingleton(configuration);
-        services.AddDbContext<ChirpDbContext>(options =>
+        
+        var sqlConnectionString = new SqlConnectionStringBuilder(configuration.GetConnectionString("ChirpSqlDb"));
+        string? password = configuration["DB:Password"];
+        
+        if (string.IsNullOrEmpty(sqlConnectionString.Password) && password != null)
         {
-            SqlConnectionStringBuilder sqlConnectionString = new SqlConnectionStringBuilder(configuration.GetConnectionString("ChirpSqlDb"));
-            string? password = configuration["DB:Password"];
-            if (password != null)
-            {
-                sqlConnectionString.Password = password;
-            }
-            options.UseSqlServer(sqlConnectionString.ConnectionString);
-        });
+            // Add local password
+            sqlConnectionString.Password = password;
+        }
+        
+        services.AddDbContext<ChirpDbContext>(options =>
+            options.UseSqlServer(sqlConnectionString.ConnectionString));
     }
     
     [ExcludeFromCodeCoverage]
