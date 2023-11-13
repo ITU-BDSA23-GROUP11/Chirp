@@ -1,24 +1,31 @@
 using Chirp.Infrastructure.Contexts;
 using Chirp.Tests.Core;
-using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Testcontainers.SqlEdge;
 
 namespace Chirp.Infrastructure.Tests.Contexts;
 
 public class ChirpDbContextFixture : IDisposable
 {
-    private readonly SqliteConnection _connection;
     private readonly DbContextOptions<ChirpDbContext> _options;
+    private readonly SqlEdgeContainer _container;
     public DataGenerator.AuthorCheepsData Data = DataGenerator.GenerateAuthorsAndCheeps(generateIds:false);
 
     public ChirpDbContextFixture()
     {
-        _connection = new SqliteConnection("Filename=:memory:");
-        _connection.Open();
+        // Start up test container
+        _container = new SqlEdgeBuilder()
+            .WithImage("mcr.microsoft.com/azure-sql-edge")
+            .Build();
+        
+        _container.StartAsync().Wait();
+        
+        // Build options
         _options = new DbContextOptionsBuilder<ChirpDbContext>()
-            .UseSqlite(_connection)
+            .UseSqlServer(_container.GetConnectionString())
             .Options;
 
+        // Add mock data to DB
         using var context = new ChirpDbContext(_options);
         if (context.Database.EnsureCreated())
         {   
@@ -30,5 +37,8 @@ public class ChirpDbContextFixture : IDisposable
 
     public ChirpDbContext GetContext() => new (_options);
     
-    public void Dispose() => _connection.Close();
+    public void Dispose()
+    {
+        _container.StopAsync().Wait();
+    }
 }
