@@ -1,5 +1,8 @@
+using Chirp.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Mvc.Testing;
 using HtmlAgilityPack;
+using Microsoft.EntityFrameworkCore;
+using Testcontainers.SqlEdge;
 
 namespace Chirp.WebService.Tests.IntegrationTests;
 
@@ -9,8 +12,53 @@ public class IntegrationTests : IClassFixture<WebApplicationFactory<Program>>
 
     public IntegrationTests(WebApplicationFactory<Program> factory)
     {
-        _usableClient = factory.CreateClient(new WebApplicationFactoryClientOptions
-            { AllowAutoRedirect = true, HandleCookies = true });
+        // Start up test container
+        var container = new SqlEdgeBuilder()
+            .WithImage("mcr.microsoft.com/azure-sql-edge")
+            .Build();
+        
+        container.StartAsync().Wait();
+
+        // Set up services
+        factory
+            .WithWebHostBuilder(builder =>
+            {
+                builder.ConfigureServices(services =>
+                {
+                    var dbContext = services.SingleOrDefault(
+                        d => d.ServiceType ==
+                             typeof(DbContextOptions<ChirpDbContext>));
+
+                    if (dbContext != null) services.Remove(dbContext);
+
+                    services.AddDbContext<ChirpDbContext>(opts =>
+                    {
+                        opts.UseSqlServer(container.GetConnectionString());
+                    });
+                });
+            });
+        
+        // Ensure DB is created
+        using (var scope = factory.Services.CreateScope())
+        {
+            var services = scope.ServiceProvider;
+
+            try
+            {
+                var chirpDbContext = services.GetRequiredService<ChirpDbContext>();
+                chirpDbContext.Database.Migrate();
+            }
+            catch (Exception ex)
+            {
+                var logger = services.GetRequiredService<ILogger<Program>>();
+                logger.LogError(ex, "An error occurred creating the DB.");
+            }
+        }
+        
+        // Build client
+        _usableClient = factory
+            .CreateClient(new WebApplicationFactoryClientOptions
+                { AllowAutoRedirect = true, HandleCookies = true });
     }
 
     [Fact]  
