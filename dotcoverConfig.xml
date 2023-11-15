@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AnalyseParams>
+  <Output>analysis.xml</Output>
+  <ReportType>DetailedXML</ReportType>
+  <Filters>
+    <ExcludeFilters>
+      <FilterEntry>
+        <ModuleMask>Chirp.Infrastructure.Tests</ModuleMask>
+      </FilterEntry>
+      <FilterEntry>
+        <ModuleMask>Chirp.Tests.Core</ModuleMask>
+      </FilterEntry>
+      <FilterEntry>
+        <ModuleMask>Chirp.WebService.Tests</ModuleMask>
+      </FilterEntry>
+      <FilterEntry>
+        <ModuleMask>Chirp.Infrastructure</ModuleMask>
+        <ClassMask>Chirp.Infrastructure.Migrations.*</ClassMask>
+      </FilterEntry>
+      <FilterEntry>
+        <ModuleMask>Chirp.WebService</ModuleMask>
+        <ClassMask>Chirp.WebService.Program</ClassMask>
+      </FilterEntry>
+      <FilterEntry>
+        <ModuleMask>Chirp.Infrastructure</ModuleMask>
+        <ClassMask>Chirp.Infrastructure.DbInitializer</ClassMask>
+      </FilterEntry>
+      <FilterEntry>
+        <ModuleMask>testhost</ModuleMask>
+      </FilterEntry>
+    </ExcludeFilters>
+  </Filters>
+</AnalyseParams>
