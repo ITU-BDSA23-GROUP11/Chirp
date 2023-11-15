@@ -37,8 +37,8 @@ jobs:
           filename: 'coverage/*/coverage.cobertura.xml'
           badge: true
           format: markdown
-          hide_branch_rate: false
-          hide_complexity: false
+          hide_branch_rate: true
+          hide_complexity: true
           indicators: true
           output: both
           thresholds: ${{ env.thresholds }}
