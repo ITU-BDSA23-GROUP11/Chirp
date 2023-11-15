@@ -115,4 +115,14 @@ public class CheepRepositoryTests
         //Assert
         Assert.Equal(sorted, allCheeps);
     }
+
+    [Fact]
+    public void TestFetchWithErrorHandling()
+    {
+        var cheeps = MockRepositoryFactory
+            .GetMockCheepRepository(true)
+            .CheepRepository
+            .GetCheepsForPage(0);
+        Assert.Empty(cheeps);
+    }
 }
