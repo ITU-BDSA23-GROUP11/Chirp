@@ -1,5 +1,4 @@
 using Bogus;
-using Chirp.Infrastructure.Tests.Repositories;
 using Chirp.Tests.Core;
 using Chirp.WebService.Controllers;
 using Microsoft.AspNetCore.Mvc;
