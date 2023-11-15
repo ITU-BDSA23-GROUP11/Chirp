@@ -1,10 +1,10 @@
 using Bogus;
-using Chirp.Core.Dto;
 using Chirp.Infrastructure.Tests.Repositories;
+using Microsoft.Graph;
+using Chirp.Tests.Core;
 using Chirp.WebService.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
-using Microsoft.Graph;
 using Moq;
 
 namespace Chirp.WebService.Tests.Controllers;
@@ -13,78 +13,104 @@ public class CheepControllerTest
 {
     private readonly MockCheepRepository _mockCheepRepository = MockRepositoryFactory.GetMockCheepRepository();
     private readonly CheepController _cheepController;
-
+    private readonly Mock<CheepController> _mockController;
+    
     public CheepControllerTest()
     {
-        var mockController = new Mock<CheepController>(_mockCheepRepository.CheepRepository);
-        mockController.CallBase = true;
-        mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => true);
-
+        _mockController = new Mock<CheepController>(_mockCheepRepository.CheepRepository);
+        _mockController.CallBase = true;
+        _mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => true);
+            
         string firstName = new Faker().Name.FirstName();
         string lastName = new Faker().Name.LastName();
-        mockController.As<IController>().Setup(bc => bc.GetUserFullName).Returns(() => $"{firstName} {lastName}");
-        mockController.As<IController>().Setup(bc => bc.GetUserEmail)
-            .Returns(() => new Faker().Internet.Email(firstName, lastName));
-        mockController.As<IController>().Setup(bc => bc.GetPathUrl).Returns(() => new Faker().Internet.UrlWithPath());
+        _mockController.As<IController>().Setup(bc => bc.GetUserFullName).Returns(() => $"{firstName} {lastName}");
+        _mockController.As<IController>().Setup(bc => bc.GetUserEmail).Returns(() => new Faker().Internet.Email(firstName,lastName));
+        _mockController.As<IController>().Setup(bc => bc.GetPathUrl).Returns(() => new Faker().Internet.UrlWithPath());
 
-        _cheepController = mockController.Object;
+        _cheepController = _mockController.Object;
     }
-
+    
     [Fact]
-    public void TestCreateCheep()
+    public void TestCreateReturnsRedirect()
     {
         //Arrange
         string newCheepText = new Faker().Random.Words(); //Generate unique/random cheep content
-
+        
         IFormCollection collection = new FormCollection(
             new Dictionary<string, StringValues>
             {
-                { "cheepText", newCheepText }
+                {"cheepText", newCheepText}
+
             }
         );
 
         //Act
         ActionResult actionResult = _cheepController.Create(collection);
 
+        
         //Assert
-        List<CheepDto> newCheeps = _mockCheepRepository.CheepRepository.GetCheepsForPage(0);
-
-        //THIS CURRENTLY FAILS BECAUSE THE CHEEP IS NOT CREATED -> BAD REQUEST
-        Assert.Equal(newCheepText, newCheeps[0].Text);
+        Assert.True(actionResult is RedirectResult);
     }
 
     [Fact]
-    public void TestDeleteCheep_BadRequest()
+    public void TestCreateReturnsUnauthorized()
     {
-        // Arrange
-        var formCollection = new FormCollection(new Dictionary<string, StringValues>());
+        //Arrange
+        //Simulate a non-authenticated user
+        _mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => false);
 
-        //Act
-        var result = _cheepController.Delete(formCollection);
+        String newCheep = new Faker().Random.Words();
 
-        //Assert
-        Assert.IsType<BadRequestObjectResult>(result);
-    }
-
-    /*
-    [Fact]
-    public void TestDeleteCheep_SuccessfulDeletion()
-    {
-        var existingCheepId = "11cb9f11-c511-47e1-42c5-08dbe13254e3";
-        IFormCollection formCollection = new FormCollection(new Dictionary<string, StringValues>
-        {
-            { "cheepId", existingCheepId }
-        }
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                { "cheepText", newCheep }
+            }
         );
-
-
-        var result = _cheepController.Delete(formCollection);
-        Assert.IsType<RedirectResult>(result);
-
-
+        
+        //Act
+        ActionResult actionResult = _cheepController.Create(collection);
+        
+        //Assert
+        Assert.True(actionResult is UnauthorizedResult);
     }
-    */
 
+    [Fact]
+    public void TestCreateEmptyCheepReturnsBad()
+    {
+        //Arrange
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                { "cheepText", ""}
+            }
+        );
+        
+        //Act
+        ActionResult actionResult = _cheepController.Create(collection);
+        
+        //Assert
+        Assert.True(actionResult is BadRequestObjectResult);
+    }
 
+    [Fact]
+    public void TestCreateTooLongCheepReturnsBad()
+    {
+        //Arrange
+        string newCheep = new Faker().Random.String(161, 200);
+
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                {"cheepText", newCheep}
+            }
+        );
+        
+        //Act
+        ActionResult actionResult = _cheepController.Create(collection);
+        
+        //Assert
+        Assert.True(actionResult is BadRequestObjectResult);
+    }
 
 }

@@ -1,6 +1,7 @@
 using Bogus;
 using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
+using Chirp.Tests.Core;
 using Moq;
 
 namespace Chirp.Infrastructure.Tests.Repositories;

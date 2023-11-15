@@ -2,11 +2,10 @@ using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure.Repositories;
-using Chirp.Infrastructure.Tests.Utilities;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace Chirp.Infrastructure.Tests.Repositories;
+namespace Chirp.Tests.Core;
 
 // Source: https://learn.microsoft.com/en-us/ef/ef6/fundamentals/testing/mocking
 

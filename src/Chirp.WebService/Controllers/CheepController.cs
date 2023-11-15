@@ -26,11 +26,16 @@ namespace Chirp.WebService.Controllers
                 {
                     string? cheepText = collection["cheepText"];
 
-                    if (cheepText == null)
+                    if (String.IsNullOrEmpty(cheepText))
                     {
                         return BadRequest("Invalid input");
                     }
-                    
+
+                    if (cheepText.Length > 160)
+                    {
+                        return BadRequest("Invalid input - too long");
+                    }
+
                     _service.AddCheep(new AddCheepDto
                     {
                         AuthorEmail = GetUserEmail(),

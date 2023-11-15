@@ -10,9 +10,11 @@
 
     <ItemGroup>
         <PackageReference Include="Bogus" Version="34.0.2" />
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
         <PackageReference Include="coverlet.collector" Version="6.0.0"/>
         <PackageReference Include="Moq" Version="4.20.69" />
+        <PackageReference Include="Testcontainers" Version="3.6.0" />
+        <PackageReference Include="Testcontainers.SqlEdge" Version="3.6.0" />
         <PackageReference Include="xunit" Version="2.6.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
             <PrivateAssets>all</PrivateAssets>
@@ -23,6 +25,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Chirp.Infrastructure\Chirp.Infrastructure.csproj" />
+      <ProjectReference Include="..\Chirp.Tests.Core\Chirp.Tests.Core.csproj" />
     </ItemGroup>
 
 </Project>

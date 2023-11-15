@@ -39,6 +39,7 @@ public class CheepRepository : ICheepRepository
         {
             CheepId = newCheep.CheepId,
             AuthorName = newCheep.Author.Name,
+            AuthorEmail = newCheep.Author.Email,
             Text = newCheep.Text,
             Timestamp = newCheep.Timestamp
         };
@@ -68,6 +69,7 @@ public class CheepRepository : ICheepRepository
                     new CheepDto {
                         CheepId = c.CheepId,
                         AuthorName = c.Author.Name,
+                        AuthorEmail = c.Author.Email,
                         Text = c.Text,
                         Timestamp = c.Timestamp
                     }
@@ -91,6 +93,7 @@ public class CheepRepository : ICheepRepository
                     new CheepDto {
                         CheepId = c.CheepId,
                         AuthorName = c.Author.Name,
+                        AuthorEmail = c.Author.Email,
                         Text = c.Text,
                         Timestamp = c.Timestamp
                     }
