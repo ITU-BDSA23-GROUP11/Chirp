@@ -1,13 +1,9 @@
 @using Chirp.WebService.Extensions
 @model Chirp.Core.Dto.CheepDto
-    
-@{
-    var userCheepIds = User.GetUserCheepIds(User.GetUserFullName());
-}
 
-@if (userCheepIds.Contains(Model.CheepId.ToString())) {
-    
-     <form asp-controller="Cheep" asp-action="Delete" method="post" style="display:inline;">
+@if (User.GetUserEmail().Equals(Model.AuthorEmail))
+{
+     <form asp-controller="Cheep" asp-action="Delete" style="display:inline;">
          <input type="hidden" name="cheepId" value="@Model.CheepId"/>
          <input name="__RequestVerificationToken" type="hidden"/>
          @Html.AntiForgeryToken()
