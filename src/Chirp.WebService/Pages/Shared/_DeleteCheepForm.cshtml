@@ -1,0 +1,17 @@
+@page "/{author}"
+@using Microsoft.AspNetCore.Authorization
+@model Chirp.WebService.Pages.UserTimelineModel
+@attribute [AllowAnonymous]
+
+
+@foreach (var cheep in Model.Cheeps)
+{
+    <form asp-controller="Cheep" asp-action="Delete" method="post" style="display:inline;">
+        <input type="hidden" name="cheepId" value="@cheep.CheepId"/>
+        <input name="__RequestVerificationToken" type="hidden"/>
+        @Html.AntiForgeryToken()
+        <button type="submit" style="background:none;border:none;color: red;padding:0;margin-left: 10px;cursor:pointer">
+            Delete
+        </button>
+    </form>
+}
