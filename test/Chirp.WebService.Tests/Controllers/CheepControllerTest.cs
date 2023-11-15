@@ -106,6 +106,6 @@ public class CheepControllerTest
         ActionResult actionResult = _cheepController.Create(collection);
         
         //Assert
-        Assert.True(actionResult is UnauthorizedResult);
+        Assert.True(actionResult is BadRequestObjectResult);
     }
 }
