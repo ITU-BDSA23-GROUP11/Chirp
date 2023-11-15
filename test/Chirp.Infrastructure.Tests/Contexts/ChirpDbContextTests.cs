@@ -1,7 +1,7 @@
 using Bogus;
 using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Models;
-using Chirp.Infrastructure.Tests.Utilities;
+using Chirp.Tests.Core;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Chirp.Infrastructure.Tests.Contexts;
