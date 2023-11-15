@@ -33,7 +33,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Open Web Client Directory
-        working-directory: src/webclient
+        working-directory: .
         run: |
           ls -la
         
