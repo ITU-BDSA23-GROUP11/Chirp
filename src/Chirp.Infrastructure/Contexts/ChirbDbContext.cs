@@ -11,10 +11,8 @@ public class ChirpDbContext : DbContext
     public virtual DbSet<Cheep> Cheeps { get; set; } = null!;
     public virtual DbSet<Author> Authors { get; set; } = null!;
     
-    [ExcludeFromCodeCoverage]
     public ChirpDbContext() {}
 
-    [ExcludeFromCodeCoverage]
     public ChirpDbContext(DbContextOptions<ChirpDbContext> options)
         : base(options)
     { }

@@ -9,7 +9,7 @@ on:
     branches: [ main, develop, release ]
 
 jobs:
-  BuildAndTestAnalysis:
+  BuildAndTestWithCoverage:
     runs-on: ubuntu-latest
     env:
       thresholds: '60 80'
@@ -21,20 +21,31 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 7.0.x
-          
+          dotnet-quality: 'ga'
+
       - name: Restore dependencies
         run: dotnet restore
-        
-      - name: Build
+
+      - name: Restore tools
+        run: dotnet tool restore
+
+      - name: Generate Coverage Report
         run: dotnet build --no-restore
-        
       - name: Test With Coverage
-        run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage;ExcludeByFile=**/Migrations/*.cs" --results-directory coverage
+        run: dotnet dotcover test --dcXML=CoverageConfiguration.xml
+
+      - name: Report Generator
+        uses: danielpalme/ReportGenerator-GitHub-Action@5.1.26
+        with:
+          reports: analysis.xml
+          targetdir: coverage
+          reporttypes: Cobertura
+          verbosity: 'Info'
 
       - name: Build Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: 'coverage/*/coverage.cobertura.xml'
+          filename: 'coverage/Cobertura.xml'
           badge: true
           format: markdown
           hide_branch_rate: true
@@ -56,6 +67,6 @@ jobs:
       - name: Test Check Failure of Code Coverage Summary Report
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: 'coverage/*/coverage.cobertura.xml'
+          filename: 'coverage/Cobertura.xml'
           fail_below_min: true
           thresholds: ${{ env.thresholds }}
