@@ -1,6 +1,5 @@
 using Bogus;
-using Chirp.Core.Dto;
-using Chirp.Infrastructure.Tests.Repositories;
+using Chirp.Tests.Core;
 using Chirp.WebService.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
@@ -12,21 +11,21 @@ public class CheepControllerTest
 {
     private readonly MockCheepRepository _mockCheepRepository = MockRepositoryFactory.GetMockCheepRepository();
     private readonly CheepController _cheepController;
-    private Mock<CheepController> mockController;
+    private readonly Mock<CheepController> _mockController;
     
     public CheepControllerTest()
     {
-        mockController = new Mock<CheepController>(_mockCheepRepository.CheepRepository);
-        mockController.CallBase = true;
-        mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => true);
+        _mockController = new Mock<CheepController>(_mockCheepRepository.CheepRepository);
+        _mockController.CallBase = true;
+        _mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => true);
             
         string firstName = new Faker().Name.FirstName();
         string lastName = new Faker().Name.LastName();
-        mockController.As<IController>().Setup(bc => bc.GetUserFullName).Returns(() => $"{firstName} {lastName}");
-        mockController.As<IController>().Setup(bc => bc.GetUserEmail).Returns(() => new Faker().Internet.Email(firstName,lastName));
-        mockController.As<IController>().Setup(bc => bc.GetPathUrl).Returns(() => new Faker().Internet.UrlWithPath());
+        _mockController.As<IController>().Setup(bc => bc.GetUserFullName).Returns(() => $"{firstName} {lastName}");
+        _mockController.As<IController>().Setup(bc => bc.GetUserEmail).Returns(() => new Faker().Internet.Email(firstName,lastName));
+        _mockController.As<IController>().Setup(bc => bc.GetPathUrl).Returns(() => new Faker().Internet.UrlWithPath());
 
-        _cheepController = mockController.Object;
+        _cheepController = _mockController.Object;
     }
     
     [Fact]
@@ -54,7 +53,7 @@ public class CheepControllerTest
     {
         //Arrange
         //Simulate a non-authenticated user
-        mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => false);
+        _mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => false);
 
         String newCheep = new Faker().Random.Words();
 

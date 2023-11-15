@@ -1,8 +1,6 @@
 using System.Security.Claims;
-using Chirp.Core.Repositories;
-using Chirp.WebService.Controllers;
+using Chirp.Tests.Core;
 using Chirp.WebService.Extensions;
-using Chirp.WebService.Tests.Utilities;
 using Moq;
 
 namespace Chirp.WebService.Tests.Extensions;

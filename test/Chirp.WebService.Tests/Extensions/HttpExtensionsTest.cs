@@ -1,5 +1,5 @@
+using Chirp.Tests.Core;
 using Chirp.WebService.Extensions;
-using Chirp.WebService.Tests.Utilities;
 using Moq;
 
 namespace Chirp.WebService.Tests.Extensions;
