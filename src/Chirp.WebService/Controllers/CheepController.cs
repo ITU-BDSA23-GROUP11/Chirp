@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chirp.WebService.Controllers
 {
-    public class CheepController : Controller
+    public class CheepController : BaseController
     {
         private readonly ICheepRepository _service;
-
+        
         public CheepController(ICheepRepository service)
         {
             _service = service;
@@ -22,28 +22,28 @@ namespace Chirp.WebService.Controllers
         {
             try
             {
-                string? cheepText = collection["cheepText"];
+                return WithAuth(() =>
+                {
+                    string? cheepText = collection["cheepText"];
 
-                if (cheepText == null)
-                {
-                    return BadRequest("Invalid input");
-                }
-                
-                if (User.Identity != null && User.Identity.IsAuthenticated)
-                {
+                    if (String.IsNullOrEmpty(cheepText))
+                    {
+                        return BadRequest("Invalid input");
+                    }
+
+                    if (cheepText.Length > 160)
+                    {
+                        return BadRequest("Invalid input - too long");
+                    }
+
                     _service.AddCheep(new AddCheepDto
                     {
-                        AuthorEmail = User.GetUserEmail(),
-                        AuthorName = User.GetUserFullName(),
+                        AuthorEmail = GetUserEmail(),
+                        AuthorName = GetUserFullName(),
                         Text = cheepText
                     });
-                }
-                else
-                {
-                    return Unauthorized();
-                }
-
-                return Redirect(Request.GetPathUrl());
+                    return Redirect(GetPathUrl());
+                });
             }
             catch
             {
@@ -63,7 +63,7 @@ namespace Chirp.WebService.Controllers
                 {
                     String id = collection["cheepId"].ToString();
                     Console.WriteLine(id);
-                    bool isDeleted = _service.DeleteCheep(id, User.GetUserFullName());
+                    bool isDeleted = _service.DeleteCheep(id, GetUserFullName());
                     
                     if (!isDeleted)
                     {
