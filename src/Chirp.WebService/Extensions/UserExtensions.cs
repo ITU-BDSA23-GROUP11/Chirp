@@ -35,7 +35,7 @@ public static class UserExtensions
         using (var context = new ChirpDbContext())
         {
             cheepIds = context.Cheeps
-                .Where(x => x.Author == authorName)
+                .Where(x => x.Author.Name == authorName)
                 .Select(x => x.CheepId.ToString())
                 .ToList();
             
