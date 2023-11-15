@@ -32,11 +32,9 @@
                         </strong>
                         @cheep.Text
                         <small>&mdash; @cheep.Timestamp</small>
-                        @if (User.GetUserFullName().Equals(cheep.AuthorName))
-                        {
-                            <partial name="Shared/_DeleteCheepForm"/>
-                        }
+                        <partial name="Shared/_DeleteCheepForm" model=@cheep/>
                     </p>
+                       
                 </li>
             }
         </ul>
