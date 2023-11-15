@@ -32,7 +32,7 @@ jobs:
       - name: Generate Coverage Report
         run: dotnet build --no-restore
       - name: Test With Coverage
-        run: dotnet dotcover test --dcXML=CoverageConfiguration.xml
+        run: dotnet dotcover test --dcXML=./CoverageConfiguration.xml
 
       - name: Report Generator
         uses: danielpalme/ReportGenerator-GitHub-Action@5.1.26
