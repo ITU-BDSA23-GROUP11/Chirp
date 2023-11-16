@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 
 namespace Chirp.Infrastructure.Models;
 
