@@ -31,6 +31,19 @@ public class CheepRepositoryTests
         Assert.Equal(cheep.Text, addedCheep.Text);
         Assert.True(addedCheep.Timestamp.ToFileTimeUtc() > DateTime.UtcNow.Add(TimeSpan.FromSeconds(-1)).ToFileTimeUtc());
     }
+
+    [Fact]
+    public void DeleteCheepTest()
+    {
+        CheepDto cheepDto = _mockCheepRepository.CheepRepository.GetCheepsForPage(1).First();
+        
+        string cheepId = cheepDto.CheepId.ToString();
+        string cheepAuthor = cheepDto.AuthorName;
+        
+        bool actualVal = _mockCheepRepository.CheepRepository.DeleteCheep(cheepId, cheepAuthor);
+        Assert.True(actualVal);
+
+    }
     
     [Fact]
     public void TestGetCheepCount()
