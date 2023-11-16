@@ -1,10 +1,4 @@
 using System.Security.Claims;
-using Chirp.Infrastructure.Contexts;
-using System.Linq;
-using Chirp.Core.Dto;
-using Chirp.Core.Repositories;
-using Chirp.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.WebService.Extensions;
 
