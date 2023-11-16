@@ -35,12 +35,13 @@ public class CheepRepositoryTests
     [Fact]
     public void DeleteCheepTest()
     {
+        //Arrange
         CheepDto cheepDto = _mockCheepRepository.CheepRepository.GetCheepsForPage(1).First();
-        
+        //Act
         string cheepId = cheepDto.CheepId.ToString();
         string cheepAuthor = cheepDto.AuthorName;
-        
         bool actualVal = _mockCheepRepository.CheepRepository.DeleteCheep(cheepId, cheepAuthor);
+        //Assert
         Assert.True(actualVal);
 
     }
