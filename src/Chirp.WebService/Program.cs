@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Chirp.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Infrastructure;
@@ -30,7 +29,6 @@ public class Program
         webApplication.Run();
     }
 
-    [ExcludeFromCodeCoverage]
     private static void ConfigureServices(IConfiguration configuration, IServiceCollection services)
     {
         services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
@@ -66,7 +64,6 @@ public class Program
             options.UseSqlServer(sqlConnectionString.ConnectionString));
     }
     
-    [ExcludeFromCodeCoverage]
     private static void ConfigureMiddleware(WebApplication app)
     {
         if (app.Environment.IsDevelopment())
@@ -90,7 +87,6 @@ public class Program
         app.MapControllers();
     }
     
-    [ExcludeFromCodeCoverage]
     private static void BootstrapDb(IHost host)
     {
         using (var scope = host.Services.CreateScope())

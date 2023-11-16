@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "isRoot": true,
+  "tools": {
+    "jetbrains.dotcover.globaltool": {
+      "version": "2023.2.3",
+      "commands": [
+        "dotnet-dotcover"
+      ]
+    },
+    "dotnet-reportgenerator-globaltool": {
+      "version": "5.2.0",
+      "commands": [
+        "reportgenerator"
+      ]
+    }
+  }
+}
