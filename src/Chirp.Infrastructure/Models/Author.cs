@@ -17,4 +17,6 @@ public class Author
     [MaxLength(100, ErrorMessage = "Email must be less than 100 characters")]
     public required string Email { get; set; }
     public ICollection<Cheep> Cheeps { get; } = new List<Cheep>();
+    public string? GithubUrl { get; set; }
+    
 }
