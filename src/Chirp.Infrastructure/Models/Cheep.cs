@@ -20,4 +20,5 @@ public class Cheep
     [MaxLength(160, ErrorMessage = "Cheeps must contain less than 160 characters")] //Defined minimum length is not required
     public string Text { get; set; } = "";
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public string? GithubUrl { get; set; }
 }
