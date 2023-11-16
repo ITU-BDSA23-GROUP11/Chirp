@@ -22,11 +22,13 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+
     </ItemGroup>
     
     <ItemGroup>
       <ProjectReference Include="..\..\src\Chirp.WebService\Chirp.WebService.csproj" />
       <ProjectReference Include="..\Chirp.Tests.Core\Chirp.Tests.Core.csproj" />
+
     </ItemGroup>
 
 </Project>

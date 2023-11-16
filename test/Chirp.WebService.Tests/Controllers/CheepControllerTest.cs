@@ -38,11 +38,13 @@ public class CheepControllerTest
             new Dictionary<string, StringValues>
             {
                 {"cheepText", newCheepText}
+
             }
         );
 
         //Act
         ActionResult actionResult = _cheepController.Create(collection);
+
         
         //Assert
         Assert.True(actionResult is RedirectResult);
@@ -108,4 +110,5 @@ public class CheepControllerTest
         //Assert
         Assert.True(actionResult is BadRequestObjectResult);
     }
+
 }

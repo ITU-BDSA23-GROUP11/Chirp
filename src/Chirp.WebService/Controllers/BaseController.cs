@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chirp.WebService.Controllers;
 
-[NonController]
+
 public abstract class BaseController : Controller, IController
 {
     public virtual Func<bool> IsUserAuthenticated { get; }
