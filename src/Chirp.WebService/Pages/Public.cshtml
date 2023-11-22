@@ -27,7 +27,17 @@
                         @cheep.Text
                         <small>&mdash; @cheep.Timestamp</small>
                         <partial name="Shared/_DeleteCheepForm" model="@cheep"/>
-                        <partial name="Shared/_FollowAuthorForm" model="@cheep"/>
+                        @{
+                            if (Model.Follows.Contains(@cheep.AuthorEmail))
+                            {
+                                //Follows already -> unfollow
+                                <partial name="Shared/UnfollowAuthorForm" model="@cheep"/>
+                            }
+                            else
+                            {
+                                <partial name="Shared/_FollowAuthorForm" model="@cheep"/>
+                            }
+                        }
                     </p>
                     
                 </li>

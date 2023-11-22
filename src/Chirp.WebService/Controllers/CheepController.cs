@@ -91,9 +91,8 @@ namespace Chirp.WebService.Controllers
                 String authorToBeFollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
 
                 Console.WriteLine("Attempting to follow: " + authorToBeFollowed);
-                
-                _service.
-                //_service.UpdateFollowsForAuthor(User.GetUserEmail(), authorToBeFollowed);
+
+                _service.AddFollow(User.GetUserEmail(), authorToBeFollowed);
                 
                 return Redirect(Request.GetPathUrl());//Redirect to same page
             }
@@ -103,6 +102,25 @@ namespace Chirp.WebService.Controllers
             }
         }
         
-        
+        //Post Cheep/Unfollow
+        [HttpPost]
+        [Route("Cheep/Unfollow")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Unfollow(IFormCollection collection)
+        {
+            try
+            {
+                String authorToBeUnfollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
+
+                Console.WriteLine("Attempting to unfollow: " + authorToBeUnfollowed);
+
+                //_service.AddFollow(User.GetUserEmail(), authorToBeUnfollowed);
+                return Redirect(Request.GetPathUrl());//Redirect to same page
+            }
+            catch
+            {
+                return BadRequest("An unknown error occured while trying to unfollow");
+            }
+        }
     }
 }

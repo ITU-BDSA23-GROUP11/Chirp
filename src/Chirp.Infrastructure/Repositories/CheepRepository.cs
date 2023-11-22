@@ -129,4 +129,25 @@ public class CheepRepository : ICheepRepository
         
         return true; 
     }
+
+    public List<string> GetFollowsForAuthor(string authorEmail)
+    {
+        return new List<string>();
+    }
+
+    public bool AddFollow(string authorEmail, string followEmail)
+    {
+        try
+        {
+            _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail)
+                .Follows.Add(followEmail);
+            return true;
+        }
+        catch (Exception e)
+        {
+            return false;
+        }
+        
+        
+    }
 }
