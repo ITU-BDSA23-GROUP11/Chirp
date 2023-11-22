@@ -135,17 +135,24 @@ public class CheepRepository : ICheepRepository
         return new List<string>();
     }
 
-    public bool AddFollow(string authorEmail, string followEmail)
+    public void AddFollow(string authorEmail, string followEmail)
     {
         try
         {
-            _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail)
-                .Follows.Add(followEmail);
-            return true;
+            Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail);
+
+            if (userAuthor == null) throw new Exception("User could not be found...");
+
+            Author? followAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == followEmail);
+
+            if (followAuthor == null) throw new Exception("Could not find user to be followed");
+
+            userAuthor.Follows.Add(followAuthor);
+            followAuthor.FollowedBy.Add(userAuthor);
         }
         catch (Exception e)
         {
-            return false;
+            
         }
         
         

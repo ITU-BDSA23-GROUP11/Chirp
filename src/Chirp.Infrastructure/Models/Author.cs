@@ -18,5 +18,6 @@ public class Author
     public required string Email { get; set; }
     public ICollection<Cheep> Cheeps { get; } = new List<Cheep>();
 
-    public List<string> Follows { get; set; } = new List<string>();
+    public List<Author> Follows { get; set; } = new List<Author>();
+    public List<Author> FollowedBy { get; set; } = new List<Author>();
 }
