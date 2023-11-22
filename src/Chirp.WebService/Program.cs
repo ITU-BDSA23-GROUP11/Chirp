@@ -49,6 +49,7 @@ public class Program
             .AddMicrosoftIdentityUI();
         
         services.AddScoped<ICheepRepository, CheepRepository>();
+        services.AddScoped<IAuthorRepository, AuthorRepository>();
         services.AddSingleton(configuration);
         
         var sqlConnectionString = new SqlConnectionStringBuilder(configuration.GetConnectionString("ChirpSqlDb"));
