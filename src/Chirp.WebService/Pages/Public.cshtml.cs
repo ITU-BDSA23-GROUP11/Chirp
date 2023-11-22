@@ -1,5 +1,6 @@
 ﻿using Chirp.Core.Dto;
 using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Models;
 using Chirp.WebService.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,8 +13,7 @@ public class PublicModel : PageModel
 
     public int PageNumber { get; set; }
 
-    public List<string> Follows { get; set; }
-
+    public List<string> Follows { get; set; } = new List<string>();
     public List<CheepDto> Cheeps { get; set; } = new List<CheepDto>();
 
     public int AmountOfPages { get; set; }
@@ -42,7 +42,8 @@ public class PublicModel : PageModel
         }
         
         Cheeps = _service.GetCheepsForPage(PageNumber);
-
+        
+        //Set the follows
         Follows = _service.GetFollowsForAuthor(User.GetUserEmail());
         
         return Page();

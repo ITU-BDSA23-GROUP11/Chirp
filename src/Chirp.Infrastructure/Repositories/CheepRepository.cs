@@ -132,13 +132,23 @@ public class CheepRepository : ICheepRepository
 
     public List<string> GetFollowsForAuthor(string authorEmail)
     {
-        return new List<string>();
+        Author author = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.Email == authorEmail);
+        if (author == null) throw new Exception("The author could not be found");
+        
+        List<string> followsEmails = new List<string>();
+        
+        author.Follows.ForEach(
+            a => followsEmails.Add(a.Email)
+        );
+
+        return followsEmails;
     }
 
     public void AddFollow(string authorEmail, string followEmail)
     {
         try
         {
+            
             Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail);
 
             if (userAuthor == null) throw new Exception("User could not be found...");
@@ -147,8 +157,13 @@ public class CheepRepository : ICheepRepository
 
             if (followAuthor == null) throw new Exception("Could not find user to be followed");
 
+            _chirpDbContext.Authors.UpdateRange(userAuthor, followAuthor);
+            
             userAuthor.Follows.Add(followAuthor);
+
             followAuthor.FollowedBy.Add(userAuthor);
+
+            _chirpDbContext.SaveChanges();
         }
         catch (Exception e)
         {
