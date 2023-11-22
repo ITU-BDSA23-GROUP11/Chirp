@@ -80,6 +80,29 @@ namespace Chirp.WebService.Controllers
        
         }
         
+        //Post Cheep/Follow
+        [HttpPost]
+        [Route("Cheep/Follow")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Follow(IFormCollection collection)
+        {
+            try
+            {
+                String authorToBeFollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
+
+                Console.WriteLine("Attempting to follow: " + authorToBeFollowed);
+                
+                _service.
+                //_service.UpdateFollowsForAuthor(User.GetUserEmail(), authorToBeFollowed);
+                
+                return Redirect(Request.GetPathUrl());//Redirect to same page
+            }
+            catch
+            {
+                return BadRequest("An unknown error occured when trying to follow...");
+            }
+        }
+        
         
     }
 }
