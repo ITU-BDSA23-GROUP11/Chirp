@@ -140,6 +140,11 @@ public class CheepRepository : ICheepRepository
         author.Follows.ForEach(
             a => followsEmails.Add(a.Email)
         );
+        
+        foreach(string s in followsEmails)
+        {
+            Console.WriteLine("Following: " + s);
+        }
 
         return followsEmails;
     }
@@ -175,22 +180,28 @@ public class CheepRepository : ICheepRepository
     {
         try
         {
-            
-            Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail);
+            Author? userAuthor = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.Email == authorEmail);
 
             if (userAuthor == null) throw new Exception("User could not be found...");
 
-            Author? unfollowAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == unfollowEmail);
+            Author? unfollowAuthor = _chirpDbContext.Authors.Include(a => a.FollowedBy).FirstOrDefault(a => a.Email == unfollowEmail);
 
             if (unfollowAuthor == null) throw new Exception("Could not find user to be followed");
 
             _chirpDbContext.Authors.UpdateRange(userAuthor, unfollowAuthor);
             
-            userAuthor.Follows.Add(unfollowAuthor);
+            userAuthor.Follows.Remove(unfollowAuthor);
 
-            unfollowAuthor.FollowedBy.Add(userAuthor);
+            unfollowAuthor.FollowedBy.Remove(userAuthor);
 
             _chirpDbContext.SaveChanges();
+            
+            //Debug
+            Console.WriteLine("Debugging purposes");
+            foreach (Author a in userAuthor.Follows)
+            {
+                Console.WriteLine("Break for debug");
+            }
         }
         catch (Exception e)
         {

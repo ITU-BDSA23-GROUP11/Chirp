@@ -115,7 +115,7 @@ namespace Chirp.WebService.Controllers
                 Console.WriteLine("Attempting to unfollow: " + authorToBeUnfollowed);
 
                 _service.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
-                //_service.AddFollow(User.GetUserEmail(), authorToBeUnfollowed);
+                
                 return Redirect(Request.GetPathUrl());//Redirect to same page
             }
             catch
