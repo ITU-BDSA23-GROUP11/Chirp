@@ -10,5 +10,5 @@ public interface ICheepRepository
     public List<CheepDto> GetAuthorCheepsForPage(string authorName, int pageNumber);
     public bool DeleteCheep(String cheepId, String author);
     public List<string> GetFollowsForAuthor(string authorEmail);
-    public bool AddFollow(string authorEmail, string followEmail);
+    public void AddFollow(string authorEmail, string followEmail);
 }
