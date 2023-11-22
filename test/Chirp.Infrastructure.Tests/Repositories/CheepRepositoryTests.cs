@@ -2,6 +2,7 @@ using Bogus;
 using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 
 namespace Chirp.Infrastructure.Tests.Repositories;
@@ -36,13 +37,28 @@ public class CheepRepositoryTests
     public void DeleteCheepTest()
     {
         //Arrange
-        CheepDto cheepDto = _mockCheepRepository.CheepRepository.GetCheepsForPage(1).First();
+        Author author = _mockCheepRepository.TestAuthors.First();
+
+        AddCheepDto cheep = new AddCheepDto
+        {
+            
+            AuthorName = author.Name,
+            AuthorEmail = author.Email,
+            Text = new Faker().Random.Words()
+            
+        };
+        
+        CheepDto addedCheep = _mockCheepRepository.CheepRepository.AddCheep(cheep);
+        
         //Act
-        string cheepId = cheepDto.CheepId.ToString();
-        string cheepAuthor = cheepDto.AuthorName;
-        bool actualVal = _mockCheepRepository.CheepRepository.DeleteCheep(cheepId, cheepAuthor);
+        _mockCheepRepository.CheepRepository.DeleteCheep(addedCheep.CheepId.ToString(), addedCheep.AuthorName);
+        _mockCheepRepository.MockCheepsDbSet.Verify(m => m.Remove(It.IsAny<Cheep>()), Times.Once);
+        _mockCheepRepository.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+        
         //Assert
-        Assert.True(actualVal);
+        Assert.Null(addedCheep.CheepId.ToString());
+        Assert.Null(addedCheep.AuthorName);
+        Assert.Null(addedCheep.Text);
 
     }
     
