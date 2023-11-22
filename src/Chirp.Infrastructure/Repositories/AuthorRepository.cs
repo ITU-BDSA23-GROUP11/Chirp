@@ -1,0 +1,35 @@
+using Chirp.Core.Dto;
+using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Contexts;
+using Chirp.Infrastructure.Models;
+
+namespace Chirp.Infrastructure.Repositories;
+
+public class AuthorRepository : IAuthorRepository
+{
+    private readonly ChirpDbContext _chirpDbContext;
+
+    public AuthorRepository(ChirpDbContext chirpDbContext)
+    {
+        _chirpDbContext = chirpDbContext;
+    }
+
+    public void AddAuthor(AuthorDto authorDto)
+    {
+        if (!AuthorExists(authorDto))
+        {
+            _chirpDbContext.Authors.Add(new Author
+            {
+                AuthorId = authorDto.Id,
+                Name = authorDto.Name,
+                Email = authorDto.Email
+            });
+            _chirpDbContext.SaveChanges();
+        }
+    }
+
+    private bool AuthorExists(AuthorDto authorDto)
+    {
+        return _chirpDbContext.Authors.Any(a => a.AuthorId == authorDto.Id);
+    }
+}
