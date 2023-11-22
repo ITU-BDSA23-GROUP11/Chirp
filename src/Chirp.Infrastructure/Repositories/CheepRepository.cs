@@ -169,7 +169,32 @@ public class CheepRepository : ICheepRepository
         {
             
         }
-        
-        
+    }
+
+    public void RemoveFollow(string authorEmail, string unfollowEmail)
+    {
+        try
+        {
+            
+            Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail);
+
+            if (userAuthor == null) throw new Exception("User could not be found...");
+
+            Author? unfollowAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == unfollowEmail);
+
+            if (unfollowAuthor == null) throw new Exception("Could not find user to be followed");
+
+            _chirpDbContext.Authors.UpdateRange(userAuthor, unfollowAuthor);
+            
+            userAuthor.Follows.Add(unfollowAuthor);
+
+            unfollowAuthor.FollowedBy.Add(userAuthor);
+
+            _chirpDbContext.SaveChanges();
+        }
+        catch (Exception e)
+        {
+            
+        }
     }
 }

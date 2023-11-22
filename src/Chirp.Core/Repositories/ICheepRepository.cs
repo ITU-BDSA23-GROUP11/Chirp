@@ -11,4 +11,6 @@ public interface ICheepRepository
     public bool DeleteCheep(String cheepId, String author);
     public List<string> GetFollowsForAuthor(string authorEmail);
     public void AddFollow(string authorEmail, string followEmail);
+
+    public void RemoveFollow(string authorEmail, string unfollowEmail);
 }
