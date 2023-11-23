@@ -12,7 +12,8 @@ public class UserTimelineModel : PageModel
     
     public int PageNumber { get; set; }
     public List<CheepDto> Cheeps { get; set; } = new ();
-    
+    public List<CheepDto> CheepsByFollowed { get; set; } = new();
+
     public int AmountOfPages { get; set; }
 
     public UserTimelineModel(ICheepRepository service)
@@ -39,6 +40,8 @@ public class UserTimelineModel : PageModel
         }
         
         Cheeps = _service.GetAuthorCheepsForPage(author, PageNumber);
+        List<string> follows = _service.GetFollowsForAuthor(author);
+        
         
         return Page();   
     }

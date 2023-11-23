@@ -208,4 +208,11 @@ public class CheepRepository : ICheepRepository
             
         }
     }
+
+    public string GetAuthorNameByEmail(string authorEmail)
+    {
+        string name = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail).Name;
+        if (name == null) throw new Exception("Could not find name in database");
+        return name;
+    }
 }

@@ -19,7 +19,9 @@
     @* </form> *@
     
     <partial name="Shared/_AddCheepForm"/>
-    
+    @{
+        Console.WriteLine("ROUTING ADDRESS IS: " + routeName);
+    }
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
