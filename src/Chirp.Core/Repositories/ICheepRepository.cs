@@ -13,7 +13,7 @@ public interface ICheepRepository
     
     public bool DeleteCheep(String cheepId, String author);
     public List<string> GetFollowsForAuthor(string authorEmail);
-    public string GetAuthorNameByEmail(string authorEmail);
+    public string GetAuthorEmailByName(string authorName);
     
     public void AddFollow(string authorEmail, string followEmail);
 

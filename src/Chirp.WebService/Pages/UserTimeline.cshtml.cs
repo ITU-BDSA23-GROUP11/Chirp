@@ -44,7 +44,7 @@ public class UserTimelineModel : PageModel
         //If the author of the timeline is the same as the user -> return followed cheeps
         if (User.GetUserFullName().Equals(author))
         {
-            List<string> follows = _service.GetFollowsForAuthor(author);
+            List<string> follows = _service.GetFollowsForAuthor(_service.GetAuthorEmailByName(author));
             foreach(string f in follows)
             {
                 //Add all cheeps from followed to the range
