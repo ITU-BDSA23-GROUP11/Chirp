@@ -102,6 +102,33 @@ public class CheepRepository : ICheepRepository
         });
     }
 
+    public List<CheepDto> GetAuthorCheepsForPageAsOwner(string authorName, int pageNumber)
+    {
+        List<string> authorFollows = GetFollowsForAuthor(authorName);
+        
+        return FetchWithErrorHandling(() =>
+        {
+            return _chirpDbContext
+                .Cheeps
+                .Where(c => authorFollows.Contains(c.Author.Name) || c.Author.Name == authorName)
+                .Include(c => c.Author)
+                .OrderByDescending(c => authorFollows.Contains(c.Author.Name))
+                .ThenBy(c => c.Timestamp)
+                .Skip(int.Max(pageNumber - 1, 0) * 32)
+                .Take(32)
+                .Select<Cheep, CheepDto>(c =>
+                    new CheepDto {
+                        CheepId = c.CheepId,
+                        AuthorName = c.Author.Name,
+                        AuthorEmail = c.Author.Email,
+                        Text = c.Text,
+                        Timestamp = c.Timestamp
+                    }
+                )
+                .ToList();
+        });
+    }
+
     private List<CheepDto> FetchWithErrorHandling(Func<List<CheepDto>> fetchFunction)
     {
         try
