@@ -50,6 +50,24 @@ namespace Chirp.WebService.Controllers
                 return BadRequest("Unknown Error Occurred");
             }
         }
+        
+        [HttpPost]
+        [Route("User/Delete")]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteUser(IFormCollection collection)
+        {
+            try
+            {
+
+            }
+            catch
+            {
+                
+            }
+
+            return null;
+        }
+        
         // POST: Cheep/Delete
         [HttpPost]
         [Route("Cheep/Delete")]
@@ -62,7 +80,6 @@ namespace Chirp.WebService.Controllers
                 if (User.Identity != null)
                 {
                     String id = collection["cheepId"].ToString();
-                    Console.WriteLine(id);
                     bool isDeleted = _service.DeleteCheep(id, GetUserFullName());
                     
                     if (!isDeleted)
