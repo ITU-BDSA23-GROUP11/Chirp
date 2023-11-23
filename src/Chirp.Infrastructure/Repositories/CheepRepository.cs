@@ -1,8 +1,11 @@
+using System.Text.Json.Serialization;
 using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Contexts;
+using Newtonsoft.Json;
+using System.Net.Http;
 using Microsoft.Identity.Client;
 
 namespace Chirp.Infrastructure.Repositories;
@@ -128,5 +131,15 @@ public class CheepRepository : ICheepRepository
         _chirpDbContext.SaveChanges();
         
         return true; 
+    }
+
+    public async Task<Author> GetGitHubProfilePicture(string email)
+    {
+        var httpClient = new HttpClient();
+        var response = await httpClient.GetAsync($"$\"https://api.github.com/...{{email}}...\"");
+        var content = await response.Content.ReadAsStringAsync();
+
+        dynamic? data = JsonConvert.DeserializeObject(content);
+        return data?.profile_picture_url;
     }
 }
