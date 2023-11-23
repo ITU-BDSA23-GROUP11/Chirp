@@ -113,7 +113,28 @@ public class CheepRepository : ICheepRepository
             return new List<CheepDto>();
         }
     }
-    
+
+    public List<CheepDto> GetAllCheepsFromAuthor(string authorEmail)
+    {
+        return FetchWithErrorHandling(() =>
+        {
+            return _chirpDbContext
+                .Authors
+                .Include(a => a.Cheeps)
+                .FirstOrDefault(a => a.Email == authorEmail)
+                .Cheeps
+                .Select<Cheep, CheepDto>(c =>
+                    new CheepDto
+                    {
+                        CheepId = c.CheepId,
+                        AuthorName = c.Author.Name,
+                        AuthorEmail = c.Author.Email,
+                        Text = c.Text,
+                        Timestamp = c.Timestamp
+                }).ToList();
+        });
+    }
+
     public bool DeleteCheep(String cheepId, String author)
     {
         Cheep cheepToDelete = _chirpDbContext.Cheeps

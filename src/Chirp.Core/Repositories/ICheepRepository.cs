@@ -8,6 +8,9 @@ public interface ICheepRepository
     public int GetAuthorCheepCount(string authorName);
     public List<CheepDto> GetCheepsForPage(int pageNumber);
     public List<CheepDto> GetAuthorCheepsForPage(string authorName, int pageNumber);
+
+    public List<CheepDto> GetAllCheepsFromAuthor(string authorEmail);
+    
     public bool DeleteCheep(String cheepId, String author);
     public List<string> GetFollowsForAuthor(string authorEmail);
     public string GetAuthorNameByEmail(string authorEmail);
