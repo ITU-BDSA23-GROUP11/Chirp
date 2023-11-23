@@ -11,7 +11,17 @@
 
 <div>
     <h2> @routeName's Timeline </h2>
-    
+    @if (User.Identity.IsAuthenticated) 
+    {
+        <form asp-controller="Cheep" asp-action="DeleteUser" style="display:inline;">
+            <input type="hidden" name="cheepId" value="author"/>
+            <input name="__RequestVerificationToken" type="hidden"/>
+            @Html.AntiForgeryToken()
+            <button type="submit" style="background:none;border:none;color: red;padding:0;margin-left: 10px;cursor:pointer">
+                Forget me!
+            </button>
+        </form>
+    }
     <partial name="Shared/_AddCheepForm"/>
     
     @if (Model.Cheeps.Any())
