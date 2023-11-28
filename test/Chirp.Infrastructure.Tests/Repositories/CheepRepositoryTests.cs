@@ -55,7 +55,7 @@ public void DeleteCheepTest()
     _mockCheepRepository.MockCheepsDbSet.Verify(m => m.Remove(It.IsAny<Cheep>()), Times.Once);
     _mockCheepRepository.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
 
-    var cheepAfterDeletion = _mockCheepRepository.CheepRepository.GetCheepById(addedCheep.CheepId.ToString());
+    var cheepAfterDeletion = _mockCheepRepository.CheepRepository.GetCheepById(addedCheep.CheepId.ToString()); //TODO: Make method to get Cheep by id
     Assert.Null(cheepAfterDeletion);
 }
 
