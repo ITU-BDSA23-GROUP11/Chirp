@@ -33,31 +33,32 @@ public class CheepRepositoryTests
         Assert.True(addedCheep.Timestamp.ToFileTimeUtc() > DateTime.UtcNow.Add(TimeSpan.FromSeconds(-1)).ToFileTimeUtc());
     }
 
-[Fact]
-public void DeleteCheepTest()
-{
-    // Arrange
-    Author author = _mockCheepRepository.TestAuthors.First();
-
-    AddCheepDto cheep = new AddCheepDto
+    [Fact]
+    public void DeleteCheepTest()
     {
-        AuthorName = author.Name,
-        AuthorEmail = author.Email,
-        Text = new Faker().Random.Words()
-    };
+        // Arrange
+        Author author = _mockCheepRepository.TestAuthors.First();
 
-    CheepDto addedCheep = _mockCheepRepository.CheepRepository.AddCheep(cheep);
+        AddCheepDto cheep = new AddCheepDto
+        {
+            AuthorName = author.Name,
+            AuthorEmail = author.Email,
+            Text = new Faker().Random.Words()
+        };
 
-    // Act
-    _mockCheepRepository.CheepRepository.DeleteCheep(addedCheep.CheepId.ToString(), addedCheep.AuthorName);
+        CheepDto addedCheep = _mockCheepRepository.CheepRepository.AddCheep(cheep);
+
+        // Act
+        _mockCheepRepository.CheepRepository.DeleteCheep(addedCheep.CheepId.ToString(), addedCheep.AuthorName);
     
-    // Assert
-    _mockCheepRepository.MockCheepsDbSet.Verify(m => m.Remove(It.IsAny<Cheep>()), Times.Once);
-    _mockCheepRepository.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+        // Assert
+        _mockCheepRepository.MockCheepsDbSet.Verify(m => m.Remove(It.IsAny<Cheep>()), Times.Once);
+        _mockCheepRepository.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
 
-    var cheepAfterDeletion = _mockCheepRepository.CheepRepository.GetCheepById(addedCheep.CheepId.ToString()); //TODO: Make method to get Cheep by id
-    Assert.Null(cheepAfterDeletion);
-}
+        // Assert
+        var cheepAfterDeletion = _mockCheepRepository.CheepRepository.GetCheepById(addedCheep.CheepId.ToString());
+        Assert.Null(cheepAfterDeletion);
+    }
 
     
     [Fact]
