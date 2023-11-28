@@ -60,7 +60,6 @@ public class CheepRepositoryTests
         Assert.Null(cheepAfterDeletion);
     }
 
-    
     [Fact]
     public void TestGetCheepCount()
     {
