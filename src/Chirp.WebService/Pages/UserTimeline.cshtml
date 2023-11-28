@@ -19,9 +19,6 @@
     @* </form> *@
     
     <partial name="Shared/_AddCheepForm"/>
-    @{
-        Console.WriteLine("ROUTING ADDRESS IS: " + routeName);
-    }
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
@@ -35,6 +32,17 @@
                         @cheep.Text
                         <small>&mdash; @cheep.Timestamp</small>
                         <partial name="Shared/_DeleteCheepForm" model=@cheep/>
+                        @{
+                            if (Model.Follows.Any(s => s == @cheep.AuthorEmail))
+                            {
+                                //Follows already -> unfollow
+                                <partial name="Shared/_UnfollowAuthorForm" model="@cheep"/>
+                            }
+                            else
+                            {
+                                <partial name="Shared/_FollowAuthorForm" model="@cheep"/>
+                            }
+                        }
                     </p>
                        
                 </li>
