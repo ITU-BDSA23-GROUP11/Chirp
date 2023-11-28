@@ -104,13 +104,13 @@ public class CheepRepository : ICheepRepository
 
     public List<CheepDto> GetAuthorCheepsForPageAsOwner(string authorName, int pageNumber)
     {
-        List<string> authorFollows = GetFollowsForAuthor(authorName);
-        
+        List<string> authorFollows = GetFollowsForAuthor(GetAuthorEmailByName(authorName));
+        Console.WriteLine("Fethcing for: " + pageNumber);
         return FetchWithErrorHandling(() =>
         {
             return _chirpDbContext
                 .Cheeps
-                .Where(c => authorFollows.Contains(c.Author.Name) || c.Author.Name == authorName)
+                .Where(c => authorFollows.Contains(c.Author.Email) || c.Author.Name == authorName)
                 .Include(c => c.Author)
                 .OrderByDescending(c => authorFollows.Contains(c.Author.Name))
                 .ThenBy(c => c.Timestamp)
@@ -139,27 +139,6 @@ public class CheepRepository : ICheepRepository
         {
             return new List<CheepDto>();
         }
-    }
-
-    public List<CheepDto> GetAllCheepsFromAuthor(string authorEmail)
-    {
-        return FetchWithErrorHandling(() =>
-        {
-            return _chirpDbContext
-                .Authors
-                .Include(a => a.Cheeps)
-                .FirstOrDefault(a => a.Email == authorEmail)
-                .Cheeps
-                .Select<Cheep, CheepDto>(c =>
-                    new CheepDto
-                    {
-                        CheepId = c.CheepId,
-                        AuthorName = c.Author.Name,
-                        AuthorEmail = c.Author.Email,
-                        Text = c.Text,
-                        Timestamp = c.Timestamp
-                }).ToList();
-        });
     }
 
     public bool DeleteCheep(String cheepId, String author)
@@ -260,7 +239,14 @@ public class CheepRepository : ICheepRepository
     public string GetAuthorEmailByName(string authorName)
     {
         string email = _chirpDbContext.Authors.Single(a => a.Name == authorName).Email;
-        if (email == null) throw new Exception("Could not find name in database");
+        if (email == null) throw new Exception("Could not find email in database");
         return email;
+    }
+
+    public string GetAuthorNameByEmail(string authorEmail)
+    {
+        string name = _chirpDbContext.Authors.Single(a => a.Email == authorEmail).Name;
+        if (name == null) throw new Exception("Could not find name in database");
+        return name;
     }
 }
