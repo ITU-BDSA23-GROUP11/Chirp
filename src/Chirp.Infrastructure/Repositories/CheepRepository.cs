@@ -44,6 +44,19 @@ public class CheepRepository : ICheepRepository
             Timestamp = newCheep.Timestamp
         };
     }
+
+    public string GetCheepById(string id)
+    {
+        foreach (var cheep in _chirpDbContext.Cheeps)
+        {
+            if (cheep.CheepId.ToString().Equals(id))
+            {
+                return cheep.CheepId.ToString();
+            }
+        }
+
+        return null;
+    }
     
     public int GetCheepCount()
     {
