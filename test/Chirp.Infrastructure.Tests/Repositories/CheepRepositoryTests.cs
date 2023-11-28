@@ -33,34 +33,32 @@ public class CheepRepositoryTests
         Assert.True(addedCheep.Timestamp.ToFileTimeUtc() > DateTime.UtcNow.Add(TimeSpan.FromSeconds(-1)).ToFileTimeUtc());
     }
 
-    [Fact]
-    public void DeleteCheepTest()
+[Fact]
+public void DeleteCheepTest()
+{
+    // Arrange
+    Author author = _mockCheepRepository.TestAuthors.First();
+
+    AddCheepDto cheep = new AddCheepDto
     {
-        //Arrange
-        Author author = _mockCheepRepository.TestAuthors.First();
+        AuthorName = author.Name,
+        AuthorEmail = author.Email,
+        Text = new Faker().Random.Words()
+    };
 
-        AddCheepDto cheep = new AddCheepDto
-        {
-            
-            AuthorName = author.Name,
-            AuthorEmail = author.Email,
-            Text = new Faker().Random.Words()
-            
-        };
-        
-        CheepDto addedCheep = _mockCheepRepository.CheepRepository.AddCheep(cheep);
-        
-        //Act
-        _mockCheepRepository.CheepRepository.DeleteCheep(addedCheep.CheepId.ToString(), addedCheep.AuthorName);
-        _mockCheepRepository.MockCheepsDbSet.Verify(m => m.Remove(It.IsAny<Cheep>()), Times.Once);
-        _mockCheepRepository.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
-        
-        //Assert
-        Assert.Null(addedCheep.CheepId.ToString());
-        Assert.Null(addedCheep.AuthorName);
-        Assert.Null(addedCheep.Text);
+    CheepDto addedCheep = _mockCheepRepository.CheepRepository.AddCheep(cheep);
 
-    }
+    // Act
+    _mockCheepRepository.CheepRepository.DeleteCheep(addedCheep.CheepId.ToString(), addedCheep.AuthorName);
+    
+    // Assert
+    _mockCheepRepository.MockCheepsDbSet.Verify(m => m.Remove(It.IsAny<Cheep>()), Times.Once);
+    _mockCheepRepository.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+
+    var cheepAfterDeletion = _mockCheepRepository.CheepRepository.GetCheepById(addedCheep.CheepId.ToString());
+    Assert.Null(cheepAfterDeletion);
+}
+
     
     [Fact]
     public void TestGetCheepCount()
