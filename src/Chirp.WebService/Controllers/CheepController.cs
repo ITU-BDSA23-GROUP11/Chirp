@@ -62,7 +62,6 @@ namespace Chirp.WebService.Controllers
                 if (User.Identity != null)
                 {
                     String id = collection["cheepId"].ToString();
-                    Console.WriteLine(id);
                     bool isDeleted = _service.DeleteCheep(id, GetUserFullName());
                     
                     if (!isDeleted)
@@ -86,20 +85,14 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Follow(IFormCollection collection)
         {
-            try
+            return WithAuth(() =>
             {
                 String authorToBeFollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
-
-                Console.WriteLine("Attempting to follow: " + authorToBeFollowed);
-
+                
                 _service.AddFollow(User.GetUserEmail(), authorToBeFollowed);
                 
                 return Redirect(Request.GetPathUrl());//Redirect to same page
-            }
-            catch
-            {
-                return BadRequest("An unknown error occured when trying to follow...");
-            }
+            });
         }
         
         //Post Cheep/Unfollow
@@ -108,20 +101,12 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Unfollow(IFormCollection collection)
         {
-            try
+            return WithAuth(() =>
             {
                 String authorToBeUnfollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
-
-                Console.WriteLine("Attempting to unfollow: " + authorToBeUnfollowed);
-
                 _service.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
-                
                 return Redirect(Request.GetPathUrl());//Redirect to same page
-            }
-            catch
-            {
-                return BadRequest("An unknown error occured while trying to unfollow");
-            }
+            });
         }
     }
 }
