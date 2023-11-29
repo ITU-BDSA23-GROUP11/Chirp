@@ -105,7 +105,6 @@ public class CheepRepository : ICheepRepository
     public List<CheepDto> GetAuthorCheepsForPageAsOwner(string authorName, int pageNumber)
     {
         List<string> authorFollows = GetFollowsForAuthor(GetAuthorEmailByName(authorName));
-        Console.WriteLine("Fethcing for: " + pageNumber);
         return FetchWithErrorHandling(() =>
         {
             return _chirpDbContext
@@ -167,73 +166,46 @@ public class CheepRepository : ICheepRepository
         author.Follows.ForEach(
             a => followsEmails.Add(a.Email)
         );
-        
-        foreach(string s in followsEmails)
-        {
-            Console.WriteLine("Following: " + s);
-        }
 
         return followsEmails;
     }
 
     public void AddFollow(string authorEmail, string followEmail)
     {
-        try
-        {
-            
-            Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail);
+        Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail);
 
-            if (userAuthor == null) throw new Exception("User could not be found...");
+        if (userAuthor == null) return;
 
-            Author? followAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == followEmail);
+        Author? followAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == followEmail);
 
-            if (followAuthor == null) throw new Exception("Could not find user to be followed");
+        if (followAuthor == null) return;
 
-            _chirpDbContext.Authors.UpdateRange(userAuthor, followAuthor);
-            
-            userAuthor.Follows.Add(followAuthor);
+        _chirpDbContext.Authors.UpdateRange(userAuthor, followAuthor);
+        
+        userAuthor.Follows.Add(followAuthor);
 
-            followAuthor.FollowedBy.Add(userAuthor);
+        followAuthor.FollowedBy.Add(userAuthor);
 
-            _chirpDbContext.SaveChanges();
-        }
-        catch (Exception e)
-        {
-            
-        }
+        _chirpDbContext.SaveChanges();
     }
 
     public void RemoveFollow(string authorEmail, string unfollowEmail)
     {
-        try
-        {
-            Author? userAuthor = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.Email == authorEmail);
+        Author? userAuthor = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.Email == authorEmail);
 
-            if (userAuthor == null) throw new Exception("User could not be found...");
+        if (userAuthor == null) return;
 
-            Author? unfollowAuthor = _chirpDbContext.Authors.Include(a => a.FollowedBy).FirstOrDefault(a => a.Email == unfollowEmail);
+        Author? unfollowAuthor = _chirpDbContext.Authors.Include(a => a.FollowedBy).FirstOrDefault(a => a.Email == unfollowEmail);
 
-            if (unfollowAuthor == null) throw new Exception("Could not find user to be followed");
-
-            _chirpDbContext.Authors.UpdateRange(userAuthor, unfollowAuthor);
+        if (unfollowAuthor == null) return;
             
-            userAuthor.Follows.Remove(unfollowAuthor);
-
-            unfollowAuthor.FollowedBy.Remove(userAuthor);
-
-            _chirpDbContext.SaveChanges();
+        _chirpDbContext.Authors.UpdateRange(userAuthor, unfollowAuthor);
             
-            //Debug
-            Console.WriteLine("Debugging purposes");
-            foreach (Author a in userAuthor.Follows)
-            {
-                Console.WriteLine("Break for debug");
-            }
-        }
-        catch (Exception e)
-        {
-            
-        }
+        userAuthor.Follows.Remove(unfollowAuthor);
+
+        unfollowAuthor.FollowedBy.Remove(userAuthor);
+
+        _chirpDbContext.SaveChanges();
     }
 
     public string GetAuthorEmailByName(string authorName)
