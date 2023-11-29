@@ -70,7 +70,7 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Follow(IFormCollection collection)
         {
-            return WithAuth((_ =>
+            return WithAuth(_ =>
             {
                 String authorToBeFollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
                 
