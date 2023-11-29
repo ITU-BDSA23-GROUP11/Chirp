@@ -26,6 +26,11 @@
         <ClassMask>Chirp.Infrastructure.DbInitializer</ClassMask>
       </FilterEntry>
       <FilterEntry>
+        <ModuleMask>Chirp.WebService</ModuleMask>
+        <ClassMask>Chirp.WebService.Controllers.BaseController</ClassMask>
+        <FunctionMask>*</FunctionMask>
+      </FilterEntry>
+      <FilterEntry>
         <ModuleMask>testhost</ModuleMask>
       </FilterEntry>
     </ExcludeFilters>

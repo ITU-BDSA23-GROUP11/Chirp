@@ -9,13 +9,13 @@ namespace Chirp.WebService.Tests.Controllers;
 
 public class CheepControllerTest
 {
-    private readonly MockCheepRepository _mockCheepRepository = MockRepositoryFactory.GetMockCheepRepository();
+    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepository();
     private readonly CheepController _cheepController;
     private readonly Mock<CheepController> _mockController;
     
     public CheepControllerTest()
     {
-        _mockController = new Mock<CheepController>(_mockCheepRepository.CheepRepository);
+        _mockController = new Mock<CheepController>(_mockChirpRepositories.AuthorRepository, _mockChirpRepositories.CheepRepository);
         _mockController.CallBase = true;
         _mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => true);
             
@@ -23,7 +23,9 @@ public class CheepControllerTest
         string lastName = new Faker().Name.LastName();
         _mockController.As<IController>().Setup(bc => bc.GetUserFullName).Returns(() => $"{firstName} {lastName}");
         _mockController.As<IController>().Setup(bc => bc.GetUserEmail).Returns(() => new Faker().Internet.Email(firstName,lastName));
+        _mockController.As<IController>().Setup(bc => bc.GetUserEmail).Returns(() => new Faker().Internet.Email(firstName,lastName));
         _mockController.As<IController>().Setup(bc => bc.GetPathUrl).Returns(() => new Faker().Internet.UrlWithPath());
+        _mockController.As<IController>().Setup(bc => bc.GetUserId).Returns(() => new Faker().Random.Guid());
 
         _cheepController = _mockController.Object;
     }

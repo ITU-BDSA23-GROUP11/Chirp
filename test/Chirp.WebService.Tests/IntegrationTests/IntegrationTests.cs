@@ -1,8 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using HtmlAgilityPack;
 using Testcontainers.SqlEdge;
-using Xunit.Abstractions;
-using Xunit.Sdk;
 
 // Used parts of https://github.com/testcontainers/testcontainers-dotnet/tree/develop/examples/WeatherForecast
 
