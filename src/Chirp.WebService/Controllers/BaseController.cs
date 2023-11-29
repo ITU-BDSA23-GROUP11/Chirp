@@ -7,7 +7,7 @@ namespace Chirp.WebService.Controllers;
 
 public struct ClientUser
 {
-    public required bool IsAuthenticated { get; set; }
+    public required bool IsAuthenticated;
     public Guid Id { get; init; }
     public string FullName { get; init; }
     public string Email { get; init; }
@@ -49,30 +49,27 @@ public abstract class BaseController : Controller, IController
     {
         try
         {
-            if (IsUserAuthenticated())
+            if (!IsUserAuthenticated()) return Unauthorized();
+            
+            var userId = GetUserId();
+            if (userId == null) return Unauthorized();
+            
+            var user = new ClientUser
             {
-                var userId = GetUserId();
-                if (userId == null) return Unauthorized();
+                IsAuthenticated = IsUserAuthenticated(),
+                FullName = GetUserFullName(),
+                Email = GetUserEmail(),
+                Id = userId.Value
+            };
+            
+            AuthorRepository.AddAuthor(new AuthorDto
+            {
+                Id = user.Id,
+                Name = user.FullName,
+                Email = user.Email
+            });
 
-                var user = new ClientUser
-                {
-                    IsAuthenticated = IsUserAuthenticated(),
-                    FullName = GetUserFullName(),
-                    Email = GetUserEmail(),
-                    Id = userId ?? new Guid()
-                };
-
-                AuthorRepository.AddAuthor(new AuthorDto
-                {
-                    Id = user.Id,
-                    Name = user.FullName,
-                    Email = user.Email
-                });
-
-                return protectedFunction(user);
-            }
-
-            return Unauthorized();
+            return protectedFunction(user);
         }
         catch
         {
