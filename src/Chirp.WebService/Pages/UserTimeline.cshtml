@@ -1,5 +1,6 @@
 ﻿@page "/{author}"
 @using Microsoft.AspNetCore.Authorization
+@using Chirp.Infrastructure.Models
 @model Chirp.WebService.Pages.UserTimelineModel
 @attribute [AllowAnonymous]
 
@@ -10,20 +11,11 @@
 }
 
 <div>
+     <partial name="_ForgetMe"/>
     <h2> @routeName's Timeline </h2>
-    @if (User.Identity.IsAuthenticated) 
-    {
-        <form asp-controller="Cheep" asp-action="DeleteUser" style="display:inline;">
-            <input type="hidden" name="cheepId" value="author"/>
-            <input name="__RequestVerificationToken" type="hidden"/>
-            @Html.AntiForgeryToken()
-            <button type="submit" style="background:none;border:none;color: red;padding:0;margin-left: 10px;cursor:pointer">
-                Forget me!
-            </button>
-        </form>
     }
     <partial name="Shared/_AddCheepForm"/>
-    
+
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
@@ -38,7 +30,7 @@
                         <small>&mdash; @cheep.Timestamp</small>
                         <partial name="Shared/_DeleteCheepForm" model=@cheep/>
                     </p>
-                       
+
                 </li>
             }
         </ul>
@@ -48,10 +40,10 @@
         <em>There are no cheeps so far.</em>
     }
     <!--Pagination-->
-        <div>
-            @for (int i = 1; i <= Model.AmountOfPages; i++)
-            {
-                <a href="@routeName?page=@i">@i</a>
-            }
-        </div>
+    <div>
+        @for (int i = 1; i <= Model.AmountOfPages; i++)
+        {
+            <a href="@routeName?page=@i">@i</a>
+        }
+    </div>
 </div>
