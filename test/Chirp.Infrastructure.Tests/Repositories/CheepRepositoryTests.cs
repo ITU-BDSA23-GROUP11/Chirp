@@ -8,12 +8,12 @@ namespace Chirp.Infrastructure.Tests.Repositories;
 
 public class CheepRepositoryTests
 {
-    private readonly MockCheepRepository _mockCheepRepository = MockRepositoryFactory.GetMockCheepRepository();
+    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepository();
 
     [Fact]
     public void TestAddCheep()
     {
-        Author author = _mockCheepRepository.TestAuthors.First();
+        Author author = _mockChirpRepositories.TestAuthors.First();
 
         AddCheepDto cheep = new AddCheepDto
         {
@@ -22,10 +22,10 @@ public class CheepRepositoryTests
             Text = new Faker().Random.Words()
         };
         
-        CheepDto addedCheep = _mockCheepRepository.CheepRepository.AddCheep(cheep);
+        CheepDto addedCheep = _mockChirpRepositories.CheepRepository.AddCheep(cheep);
         
-        _mockCheepRepository.MockCheepsDbSet.Verify(m => m.Add(It.IsAny<Cheep>()), Times.Once);
-        _mockCheepRepository.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+        _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Add(It.IsAny<Cheep>()), Times.Once);
+        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
         Assert.Equal(Guid.Empty, addedCheep.CheepId);
         Assert.Equal(author.Name, addedCheep.AuthorName);
         Assert.Equal(cheep.Text, addedCheep.Text);
@@ -35,22 +35,22 @@ public class CheepRepositoryTests
     [Fact]
     public void TestGetCheepCount()
     {
-        int cheepsCount = _mockCheepRepository.CheepRepository.GetCheepCount();
-        Assert.Equal(_mockCheepRepository.TestCheeps.Count, cheepsCount);
+        int cheepsCount = _mockChirpRepositories.CheepRepository.GetCheepCount();
+        Assert.Equal(_mockChirpRepositories.TestCheeps.Count, cheepsCount);
     }
     
     [Fact]
     public void TestGetCheepsForPage()
     {
-        int pages = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(_mockCheepRepository.TestCheeps.Count) / 32));
+        int pages = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(_mockChirpRepositories.TestCheeps.Count) / 32));
 
         for (int i = 1; i <= pages; i++)
         {
-            List<CheepDto> pageCheeps = _mockCheepRepository.CheepRepository.GetCheepsForPage(i);
+            List<CheepDto> pageCheeps = _mockChirpRepositories.CheepRepository.GetCheepsForPage(i);
 
             if (i == pages)
             {
-                Assert.Equal(_mockCheepRepository.TestCheeps.Count%32, pageCheeps.Count);
+                Assert.Equal(_mockChirpRepositories.TestCheeps.Count%32, pageCheeps.Count);
             }
             else
             {
@@ -62,17 +62,17 @@ public class CheepRepositoryTests
     [Fact]
     public void TestGetAuthorCheepCount()
     {
-        foreach (Author author in _mockCheepRepository.TestAuthors)
+        foreach (Author author in _mockChirpRepositories.TestAuthors)
         {
-            int authorCheepCount = _mockCheepRepository.CheepRepository.GetAuthorCheepCount(author.Name);
-            Assert.Equal(_mockCheepRepository.TestAuthors.Single(a => a.AuthorId == author.AuthorId).Cheeps.Count, authorCheepCount);
+            int authorCheepCount = _mockChirpRepositories.CheepRepository.GetAuthorCheepCount(author.Name);
+            Assert.Equal(_mockChirpRepositories.TestAuthors.Single(a => a.AuthorId == author.AuthorId).Cheeps.Count, authorCheepCount);
         }
     }
     
     [Fact]
     public void TestGetAuthorCheepsForPage()
     {
-        foreach (Author author in _mockCheepRepository.TestAuthors)
+        foreach (Author author in _mockChirpRepositories.TestAuthors)
         {
             
             int pages = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(author.Cheeps.Count) / 32));
@@ -80,7 +80,7 @@ public class CheepRepositoryTests
             
             for (int i = 1; i <= pages; i++)
             {
-                List<CheepDto> pageAuthorCheeps = _mockCheepRepository.CheepRepository.GetAuthorCheepsForPage(author.Name, i);
+                List<CheepDto> pageAuthorCheeps = _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPage(author.Name, i);
 
                 if (i == pages)
                 {
@@ -99,14 +99,14 @@ public class CheepRepositoryTests
     {
         //Arrange
         int pages = Convert.ToInt32(
-            Math.Ceiling(Convert.ToDecimal(_mockCheepRepository.CheepRepository.GetCheepCount() / 32)));
+            Math.Ceiling(Convert.ToDecimal(_mockChirpRepositories.CheepRepository.GetCheepCount() / 32)));
 
         List<CheepDto> allCheeps = new List<CheepDto>();
 
         //Act
         for (int i = 1; i <= pages; i++)
         {
-            allCheeps.AddRange(_mockCheepRepository.CheepRepository.GetCheepsForPage(i));
+            allCheeps.AddRange(_mockChirpRepositories.CheepRepository.GetCheepsForPage(i));
         }
         
         //allCheeps should now hold all cheeps in a sorted order -> newest cheep first
