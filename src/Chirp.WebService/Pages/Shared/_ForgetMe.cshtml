@@ -1,0 +1,7 @@
+
+@if (User.Identity.IsAuthenticated) 
+{
+    <div>|
+        <a asp-controller="User" asp-action="DeleteUser">Forget me!</a>
+    </div>
+}
