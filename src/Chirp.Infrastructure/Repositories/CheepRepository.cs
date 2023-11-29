@@ -160,7 +160,7 @@ public class CheepRepository : ICheepRepository
     public List<string> GetFollowsForAuthor(string authorEmail)
     {
         Author author = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.Email == authorEmail);
-        if (author == null) throw new Exception("The author could not be found");
+        if (author == null) return new List<string>();
         
         List<string> followsEmails = new List<string>();
         
@@ -238,8 +238,7 @@ public class CheepRepository : ICheepRepository
 
     public string GetAuthorEmailByName(string authorName)
     {
-        string email = _chirpDbContext.Authors.Single(a => a.Name == authorName).Email;
-        if (email == null) throw new Exception("Could not find email in database");
+        string? email = _chirpDbContext.Authors.Single(a => a.Name == authorName).Email;
         return email;
     }
 

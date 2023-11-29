@@ -3,6 +3,7 @@ using Chirp.Core.Repositories;
 using Chirp.WebService.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Chirp.WebService.Pages;
 
@@ -24,7 +25,11 @@ public class UserTimelineModel : PageModel
     public ActionResult OnGet(string author)
     {
         //Set the follows
-        Follows = _service.GetFollowsForAuthor(User.GetUserEmail());
+        if (!User.GetUserEmail().Equals(("No Email")))
+        {
+            Console.WriteLine("PRINTING USERNAME: " + User.GetUserEmail());
+            Follows = _service.GetFollowsForAuthor(User.GetUserEmail());
+        }
         
         //Calculate the total amount of pages needed for pagination
         if (User.GetUserFullName().Equals(author))
