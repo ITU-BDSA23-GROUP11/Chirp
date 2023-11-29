@@ -3,7 +3,6 @@ using Chirp.Core.Repositories;
 using Chirp.WebService.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.IdentityModel.Tokens;
 
 namespace Chirp.WebService.Pages;
 
