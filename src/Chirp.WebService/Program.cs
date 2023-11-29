@@ -48,6 +48,7 @@ public class Program
             .AddMvcOptions(_ => { })
             .AddMicrosoftIdentityUI();
         
+        services.AddScoped<IAuthorRepository, AuthorRepository>();
         services.AddScoped<ICheepRepository, CheepRepository>();
         services.AddSingleton(configuration);
         

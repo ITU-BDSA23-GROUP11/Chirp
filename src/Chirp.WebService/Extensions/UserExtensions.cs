@@ -1,10 +1,4 @@
 using System.Security.Claims;
-using Chirp.Infrastructure.Contexts;
-using System.Linq;
-using Chirp.Core.Dto;
-using Chirp.Core.Repositories;
-using Chirp.Infrastructure.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.WebService.Extensions;
 
@@ -23,5 +17,11 @@ public static class UserExtensions
     {
         var emailClaim = claims.Claims.FirstOrDefault(y => y.Type == "emails");
         return (emailClaim != null) ? emailClaim.Value : "No Email";
+    }
+
+    public static Guid? GetUserId(this ClaimsPrincipal claims)
+    {
+        var idClaim = claims.Claims.FirstOrDefault(y => y.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier");
+        return idClaim == null ? null : Guid.Parse(idClaim.Value);
     }
 }

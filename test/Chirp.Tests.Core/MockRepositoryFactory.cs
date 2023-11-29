@@ -9,9 +9,10 @@ namespace Chirp.Tests.Core;
 
 // Source: https://learn.microsoft.com/en-us/ef/ef6/fundamentals/testing/mocking
 
-public struct MockCheepRepository
+public struct MockChirpRepositories
 {
     public ICheepRepository CheepRepository;
+    public IAuthorRepository AuthorRepository;
     public List<Author> TestAuthors;
     public List<Cheep> TestCheeps;
     public Mock<ChirpDbContext> MockChirpDbContext;
@@ -21,7 +22,7 @@ public struct MockCheepRepository
 
 public static class MockRepositoryFactory
 {
-    public static MockCheepRepository GetMockCheepRepository(bool withErrorProvocation = false)
+    public static MockChirpRepositories GetMockCheepRepository(bool withErrorProvocation = false)
     {
         var mockAuthorsDbSet = new Mock<DbSet<Author>>();
         var mockCheepsDbSet = new Mock<DbSet<Cheep>>();
@@ -45,11 +46,13 @@ public static class MockRepositoryFactory
         mockChirpDbContext.Setup(m => m.Authors).Returns(mockAuthorsDbSet.Object);
         mockChirpDbContext.Setup(m => m.Cheeps).Returns(mockCheepsDbSet.Object);
         
-        ICheepRepository cheepRepository = new CheepRepository(mockChirpDbContext.Object);
+        IAuthorRepository authorRepository = new AuthorRepository(mockChirpDbContext.Object);
+        ICheepRepository cheepRepository = new CheepRepository(mockChirpDbContext.Object, authorRepository);
 
-        return new MockCheepRepository
+        return new MockChirpRepositories
         {
             CheepRepository = cheepRepository,
+            AuthorRepository = authorRepository,
             TestAuthors = data.Authors,
             TestCheeps = data.Cheeps,
             MockChirpDbContext = mockChirpDbContext,

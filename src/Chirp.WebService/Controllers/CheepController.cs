@@ -7,11 +7,8 @@ namespace Chirp.WebService.Controllers
 {
     public class CheepController : BaseController
     {
-        private readonly ICheepRepository _service;
-        
-        public CheepController(ICheepRepository service)
+        public CheepController(IAuthorRepository authorRepository, ICheepRepository cheepRepository) : base(authorRepository, cheepRepository)
         {
-            _service = service;
         }
 
         // POST: Cheep/Create
@@ -20,36 +17,30 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
         {
-            try
+            return WithAuth(_ =>
             {
-                return WithAuth(() =>
+                string? cheepText = collection["cheepText"];
+
+                if (String.IsNullOrEmpty(cheepText))
                 {
-                    string? cheepText = collection["cheepText"];
+                    return BadRequest("Invalid input");
+                }
 
-                    if (String.IsNullOrEmpty(cheepText))
-                    {
-                        return BadRequest("Invalid input");
-                    }
+                if (cheepText.Length > 160)
+                {
+                    return BadRequest("Invalid input - too long");
+                }
 
-                    if (cheepText.Length > 160)
-                    {
-                        return BadRequest("Invalid input - too long");
-                    }
-
-                    _service.AddCheep(new AddCheepDto
-                    {
-                        AuthorEmail = GetUserEmail(),
-                        AuthorName = GetUserFullName(),
-                        Text = cheepText
-                    });
-                    return Redirect(GetPathUrl());
+                CheepRepository.AddCheep(new AddCheepDto
+                {
+                    AuthorEmail = GetUserEmail(),
+                    AuthorName = GetUserFullName(),
+                    Text = cheepText
                 });
-            }
-            catch
-            {
-                return BadRequest("Unknown Error Occurred");
-            }
+                return Redirect(GetPathUrl());
+            });
         }
+        
         // POST: Cheep/Delete
         [HttpPost]
         [Route("Cheep/Delete")]
@@ -57,26 +48,20 @@ namespace Chirp.WebService.Controllers
         //public IActionResult Delete(Guid id)
         public IActionResult Delete(IFormCollection collection)
         {
-            try
+            return WithAuth(user =>
             {
-                if (User.Identity != null)
+                string? cheepId = collection["cheepId"];
+                
+                if (String.IsNullOrEmpty(cheepId))
                 {
-                    String id = collection["cheepId"].ToString();
-                    bool isDeleted = _service.DeleteCheep(id, GetUserFullName());
-                    
-                    if (!isDeleted)
-                    {
-                        return NotFound("ERROR: Cheep was not found");
-                    }
-                    return Redirect(Request.GetPathUrl());
-                } 
-                return Unauthorized();
-            }
-            catch
-            {
-                return BadRequest("An unknown error occured");
-            }
-       
+                    return BadRequest("Invalid Cheep Id");
+                }
+                
+                Guid id = Guid.Parse(cheepId);
+                if (!CheepRepository.DeleteCheep(id, user.Id)) return NotFound("ERROR: Cheep was not found");
+                
+                return Redirect(Request.GetPathUrl());
+            });
         }
         
         //Post Cheep/Follow
@@ -85,11 +70,11 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Follow(IFormCollection collection)
         {
-            return WithAuth(() =>
+            return WithAuth(_ =>
             {
                 String authorToBeFollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
                 
-                _service.AddFollow(User.GetUserEmail(), authorToBeFollowed);
+                AuthorRepository.AddFollow(User.GetUserEmail(), authorToBeFollowed);
                 
                 return Redirect(Request.GetPathUrl());//Redirect to same page
             });
@@ -101,10 +86,10 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Unfollow(IFormCollection collection)
         {
-            return WithAuth(() =>
+            return WithAuth(_ =>
             {
                 String authorToBeUnfollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
-                _service.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
+                AuthorRepository.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
                 return Redirect(Request.GetPathUrl());//Redirect to same page
             });
         }
