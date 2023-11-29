@@ -27,7 +27,6 @@ public class UserTimelineModel : PageModel
         //Set the follows
         if (!User.GetUserEmail().Equals(("No Email")))
         {
-            Console.WriteLine("PRINTING USERNAME: " + User.GetUserEmail());
             Follows = _service.GetFollowsForAuthor(User.GetUserEmail());
         }
         
