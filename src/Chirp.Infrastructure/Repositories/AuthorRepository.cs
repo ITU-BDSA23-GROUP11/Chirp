@@ -16,7 +16,9 @@ public class AuthorRepository : IAuthorRepository
 
     public void AddAuthor(AuthorDto authorDto)
     {
-        if (!AuthorExists(authorDto))
+        var authorWithIdExists = _chirpDbContext.Authors.Any(a => a.AuthorId == authorDto.Id);
+        
+        if (!authorWithIdExists)
         {
             _chirpDbContext.Authors.Add(new Author
             {
@@ -26,10 +28,7 @@ public class AuthorRepository : IAuthorRepository
             });
             _chirpDbContext.SaveChanges();
         }
-    }
-
-    private bool AuthorExists(AuthorDto authorDto)
-    {
-        return _chirpDbContext.Authors.Any(a => a.AuthorId == authorDto.Id);
+        
+        
     }
 }

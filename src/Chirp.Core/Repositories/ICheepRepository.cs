@@ -11,7 +11,7 @@ public interface ICheepRepository
 
     public List<CheepDto> GetAuthorCheepsForPageAsOwner(string authorName, int pageNumber);
     
-    public bool DeleteCheep(String cheepId, String author);
+    public bool DeleteCheep(Guid cheepId, Guid authorId);
     public List<string> GetFollowsForAuthor(string authorEmail);
     public string GetAuthorEmailByName(string authorName);
     public string GetAuthorNameByEmail(string authorEmail);

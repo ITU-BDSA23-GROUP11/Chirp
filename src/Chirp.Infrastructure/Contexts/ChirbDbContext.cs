@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 

@@ -17,35 +17,28 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
         {
-            try
+            return WithAuth(_ =>
             {
-                return WithAuth(_ =>
+                string? cheepText = collection["cheepText"];
+
+                if (String.IsNullOrEmpty(cheepText))
                 {
-                    string? cheepText = collection["cheepText"];
+                    return BadRequest("Invalid input");
+                }
 
-                    if (String.IsNullOrEmpty(cheepText))
-                    {
-                        return BadRequest("Invalid input");
-                    }
+                if (cheepText.Length > 160)
+                {
+                    return BadRequest("Invalid input - too long");
+                }
 
-                    if (cheepText.Length > 160)
-                    {
-                        return BadRequest("Invalid input - too long");
-                    }
-
-                    CheepRepository.AddCheep(new AddCheepDto
-                    {
-                        AuthorEmail = GetUserEmail(),
-                        AuthorName = GetUserFullName(),
-                        Text = cheepText
-                    });
-                    return Redirect(GetPathUrl());
+                CheepRepository.AddCheep(new AddCheepDto
+                {
+                    AuthorEmail = GetUserEmail(),
+                    AuthorName = GetUserFullName(),
+                    Text = cheepText
                 });
-            }
-            catch
-            {
-                return BadRequest("Unknown Error Occurred");
-            }
+                return Redirect(GetPathUrl());
+            });
         }
         
         // POST: Cheep/Delete
@@ -55,26 +48,20 @@ namespace Chirp.WebService.Controllers
         //public IActionResult Delete(Guid id)
         public IActionResult Delete(IFormCollection collection)
         {
-            try
+            return WithAuth(user =>
             {
-                if (User.Identity != null)
+                string? cheepId = collection["cheepId"];
+                
+                if (String.IsNullOrEmpty(cheepId))
                 {
-                    String id = collection["cheepId"].ToString();
-                    bool isDeleted = CheepRepository.DeleteCheep(id, GetUserFullName());
-                    
-                    if (!isDeleted)
-                    {
-                        return NotFound("ERROR: Cheep was not found");
-                    }
-                    return Redirect(Request.GetPathUrl());
-                } 
-                return Unauthorized();
-            }
-            catch
-            {
-                return BadRequest("An unknown error occured");
-            }
-       
+                    return BadRequest("Invalid Cheep Id");
+                }
+                
+                Guid id = Guid.Parse(cheepId);
+                if (!CheepRepository.DeleteCheep(id, user.Id)) return NotFound("ERROR: Cheep was not found");
+                
+                return Redirect(Request.GetPathUrl());
+            });
         }
         
         //Post Cheep/Follow
