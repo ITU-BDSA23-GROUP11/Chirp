@@ -8,24 +8,26 @@ namespace Chirp.WebService.Pages;
 
 public class PublicModel : PageModel
 {
-    private readonly ICheepRepository _service;
+    private readonly ICheepRepository _cheepRepository;
+    private readonly IAuthorRepository _authorRepository;
 
     public int PageNumber { get; set; }
 
-    public List<string> Follows { get; set; } = new List<string>();
-    public List<CheepDto> Cheeps { get; set; } = new List<CheepDto>();
+    public List<string> Follows { get; set; } = new ();
+    public List<CheepDto> Cheeps { get; set; } = new ();
 
     public int AmountOfPages { get; set; }
 
-    public PublicModel(ICheepRepository service)
+    public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository)
     {
-        _service = service;
+        _cheepRepository = cheepRepository;
+        _authorRepository = authorRepository;
     }
 
     public ActionResult OnGet()
     {
         //Calculate the amount of pages needed
-        AmountOfPages = (int)Math.Ceiling((double)_service.GetCheepCount() / 32);
+        AmountOfPages = (int)Math.Ceiling((double)_cheepRepository.GetCheepCount() / 32);
         
         //Determine pageNumber
         if (Request.Query.ContainsKey("page") && int.TryParse(Request.Query["page"], out int pageParameter))
@@ -40,10 +42,10 @@ public class PublicModel : PageModel
             PageNumber = 0;
         }
         
-        Cheeps = _service.GetCheepsForPage(PageNumber);
+        Cheeps = _cheepRepository.GetCheepsForPage(PageNumber);
         
         //Set the follows
-        Follows = _service.GetFollowsForAuthor(User.GetUserEmail());
+        Follows = _authorRepository.GetFollowsForAuthor(User.GetUserEmail());
         
         return Page();
     }

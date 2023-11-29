@@ -74,7 +74,7 @@ namespace Chirp.WebService.Controllers
             {
                 String authorToBeFollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
                 
-                CheepRepository.AddFollow(User.GetUserEmail(), authorToBeFollowed);
+                AuthorRepository.AddFollow(User.GetUserEmail(), authorToBeFollowed);
                 
                 return Redirect(Request.GetPathUrl());//Redirect to same page
             });
@@ -89,7 +89,7 @@ namespace Chirp.WebService.Controllers
             return WithAuth(_ =>
             {
                 String authorToBeUnfollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
-                CheepRepository.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
+                AuthorRepository.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
                 return Redirect(Request.GetPathUrl());//Redirect to same page
             });
         }

@@ -46,8 +46,8 @@ public static class MockRepositoryFactory
         mockChirpDbContext.Setup(m => m.Authors).Returns(mockAuthorsDbSet.Object);
         mockChirpDbContext.Setup(m => m.Cheeps).Returns(mockCheepsDbSet.Object);
         
-        ICheepRepository cheepRepository = new CheepRepository(mockChirpDbContext.Object);
         IAuthorRepository authorRepository = new AuthorRepository(mockChirpDbContext.Object);
+        ICheepRepository cheepRepository = new CheepRepository(mockChirpDbContext.Object, authorRepository);
 
         return new MockChirpRepositories
         {

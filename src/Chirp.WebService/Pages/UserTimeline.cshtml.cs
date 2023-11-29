@@ -8,17 +8,19 @@ namespace Chirp.WebService.Pages;
 
 public class UserTimelineModel : PageModel
 {
-    private readonly ICheepRepository _service;
+    private readonly ICheepRepository _cheepRepository;
+    private readonly IAuthorRepository _authorRepository;
     
     public int PageNumber { get; set; }
     public List<CheepDto> Cheeps { get; set; } = new ();
-    public List<string> Follows { get; set; } = new List<string>();
+    public List<string> Follows { get; set; } = new ();
 
     public int AmountOfPages { get; set; }
 
-    public UserTimelineModel(ICheepRepository service)
+    public UserTimelineModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository)
     {
-        _service = service;
+        _cheepRepository = cheepRepository;
+        _authorRepository = authorRepository;
     }
 
     public ActionResult OnGet(string author)
@@ -26,7 +28,7 @@ public class UserTimelineModel : PageModel
         //Set the follows
         if (!User.GetUserEmail().Equals(("No Email")))
         {
-            Follows = _service.GetFollowsForAuthor(User.GetUserEmail());
+            Follows = _authorRepository.GetFollowsForAuthor(User.GetUserEmail());
         }
         
         //Calculate the total amount of pages needed for pagination
@@ -34,14 +36,14 @@ public class UserTimelineModel : PageModel
         {
             //The user is the owner -> include follows
             int allCheepsCount = 0;
-            allCheepsCount += _service.GetAuthorCheepCount(author);
-            foreach (string f in Follows) allCheepsCount += _service.GetAuthorCheepCount(_service.GetAuthorNameByEmail(f));
+            allCheepsCount += _cheepRepository.GetAuthorCheepCount(author);
+            foreach (string f in Follows) allCheepsCount += _cheepRepository.GetAuthorCheepCount(_authorRepository.GetAuthorNameByEmail(f));
             AmountOfPages = (int)Math.Ceiling((double)allCheepsCount / 32);
         }
         else
         {
             //The user is a visitor
-            AmountOfPages = (int)Math.Ceiling((double)_service.GetAuthorCheepCount(author) / 32);
+            AmountOfPages = (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(author) / 32);
         }
 
         //Determine pageNumber
@@ -59,11 +61,11 @@ public class UserTimelineModel : PageModel
 
         if (User.GetUserFullName().Equals(author))
         {
-            Cheeps = _service.GetAuthorCheepsForPageAsOwner(author, PageNumber);
+            Cheeps = _cheepRepository.GetAuthorCheepsForPageAsOwner(author, PageNumber);
         }
         else
         {
-            Cheeps = _service.GetAuthorCheepsForPage(author, PageNumber);
+            Cheeps = _cheepRepository.GetAuthorCheepsForPage(author, PageNumber);
         }
         
         return Page();   
