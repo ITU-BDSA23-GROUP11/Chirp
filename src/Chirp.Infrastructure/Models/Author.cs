@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Chirp.Core.Dto;
 
 namespace Chirp.Infrastructure.Models;
 
@@ -17,4 +18,7 @@ public class Author
     [MaxLength(100, ErrorMessage = "Email must be less than 100 characters")]
     public required string Email { get; set; }
     public ICollection<Cheep> Cheeps { get; } = new List<Cheep>();
+
+    public List<Author> Follows { get; set; } = new List<Author>();
+    public List<Author> FollowedBy { get; set; } = new List<Author>();
 }

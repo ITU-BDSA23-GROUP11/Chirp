@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,5 +25,9 @@ public class ChirpDbContext : DbContext
             .WithMany(a => a.Cheeps)
             .HasForeignKey("AuthorId")
             .IsRequired();
+
+        modelBuilder.Entity<Author>()
+            .HasMany<Author>(a => a.Follows)
+            .WithMany(c => c.FollowedBy);
     }
 }
