@@ -1,0 +1,14 @@
+@using Chirp.WebService.Extensions
+@model Chirp.Core.Dto.CheepDto
+
+@if (!User.GetUserEmail().Equals(Model.AuthorEmail))
+{
+    <form asp-controller="Cheep" asp-action="Follow" style="display:inline;">
+        <input type="hidden" name="CheepAuthorEmail" value="@Model.AuthorEmail"/>
+        <input name="__RequestVerificationToken" type="hidden"/>
+        @Html.AntiForgeryToken()
+        <button type="submit" style="background:none;border:none;color: green;padding:0;margin-left: 10px;cursor:pointer">
+            Follow @Model.AuthorName
+        </button>
+    </form>
+}

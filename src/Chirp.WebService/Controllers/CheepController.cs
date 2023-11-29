@@ -62,7 +62,6 @@ namespace Chirp.WebService.Controllers
                 if (User.Identity != null)
                 {
                     String id = collection["cheepId"].ToString();
-                    Console.WriteLine(id);
                     bool isDeleted = _service.DeleteCheep(id, GetUserFullName());
                     
                     if (!isDeleted)
@@ -80,6 +79,34 @@ namespace Chirp.WebService.Controllers
        
         }
         
+        //Post Cheep/Follow
+        [HttpPost]
+        [Route("Cheep/Follow")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Follow(IFormCollection collection)
+        {
+            return WithAuth(() =>
+            {
+                String authorToBeFollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
+                
+                _service.AddFollow(User.GetUserEmail(), authorToBeFollowed);
+                
+                return Redirect(Request.GetPathUrl());//Redirect to same page
+            });
+        }
         
+        //Post Cheep/Unfollow
+        [HttpPost]
+        [Route("Cheep/Unfollow")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Unfollow(IFormCollection collection)
+        {
+            return WithAuth(() =>
+            {
+                String authorToBeUnfollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
+                _service.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
+                return Redirect(Request.GetPathUrl());//Redirect to same page
+            });
+        }
     }
 }

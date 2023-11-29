@@ -102,6 +102,32 @@ public class CheepRepository : ICheepRepository
         });
     }
 
+    public List<CheepDto> GetAuthorCheepsForPageAsOwner(string authorName, int pageNumber)
+    {
+        List<string> authorFollows = GetFollowsForAuthor(GetAuthorEmailByName(authorName));
+        return FetchWithErrorHandling(() =>
+        {
+            return _chirpDbContext
+                .Cheeps
+                .Where(c => authorFollows.Contains(c.Author.Email) || c.Author.Name == authorName)
+                .Include(c => c.Author)
+                .OrderByDescending(c => authorFollows.Contains(c.Author.Name))
+                .ThenBy(c => c.Timestamp)
+                .Skip(int.Max(pageNumber - 1, 0) * 32)
+                .Take(32)
+                .Select<Cheep, CheepDto>(c =>
+                    new CheepDto {
+                        CheepId = c.CheepId,
+                        AuthorName = c.Author.Name,
+                        AuthorEmail = c.Author.Email,
+                        Text = c.Text,
+                        Timestamp = c.Timestamp
+                    }
+                )
+                .ToList();
+        });
+    }
+
     private List<CheepDto> FetchWithErrorHandling(Func<List<CheepDto>> fetchFunction)
     {
         try
@@ -113,7 +139,7 @@ public class CheepRepository : ICheepRepository
             return new List<CheepDto>();
         }
     }
-    
+
     public bool DeleteCheep(String cheepId, String author)
     {
         Cheep cheepToDelete = _chirpDbContext.Cheeps
@@ -128,5 +154,70 @@ public class CheepRepository : ICheepRepository
         _chirpDbContext.SaveChanges();
         
         return true; 
+    }
+
+    public List<string> GetFollowsForAuthor(string authorEmail)
+    {
+        Author author = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.Email == authorEmail);
+        if (author == null) return new List<string>();
+        
+        List<string> followsEmails = new List<string>();
+        
+        author.Follows.ForEach(
+            a => followsEmails.Add(a.Email)
+        );
+
+        return followsEmails;
+    }
+
+    public void AddFollow(string authorEmail, string followEmail)
+    {
+        Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail);
+
+        if (userAuthor == null) return;
+
+        Author? followAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == followEmail);
+
+        if (followAuthor == null) return;
+
+        _chirpDbContext.Authors.UpdateRange(userAuthor, followAuthor);
+        
+        userAuthor.Follows.Add(followAuthor);
+
+        followAuthor.FollowedBy.Add(userAuthor);
+
+        _chirpDbContext.SaveChanges();
+    }
+
+    public void RemoveFollow(string authorEmail, string unfollowEmail)
+    {
+        Author? userAuthor = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.Email == authorEmail);
+
+        if (userAuthor == null) return;
+
+        Author? unfollowAuthor = _chirpDbContext.Authors.Include(a => a.FollowedBy).FirstOrDefault(a => a.Email == unfollowEmail);
+
+        if (unfollowAuthor == null) return;
+            
+        _chirpDbContext.Authors.UpdateRange(userAuthor, unfollowAuthor);
+            
+        userAuthor.Follows.Remove(unfollowAuthor);
+
+        unfollowAuthor.FollowedBy.Remove(userAuthor);
+
+        _chirpDbContext.SaveChanges();
+    }
+
+    public string GetAuthorEmailByName(string authorName)
+    {
+        string? email = _chirpDbContext.Authors.Single(a => a.Name == authorName).Email;
+        return email;
+    }
+
+    public string GetAuthorNameByEmail(string authorEmail)
+    {
+        string name = _chirpDbContext.Authors.Single(a => a.Email == authorEmail).Name;
+        if (name == null) throw new Exception("Could not find name in database");
+        return name;
     }
 }
