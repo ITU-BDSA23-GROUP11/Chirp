@@ -51,23 +51,6 @@ namespace Chirp.WebService.Controllers
             }
         }
         
-        [HttpPost]
-        [Route("User/Delete")]
-        [ValidateAntiForgeryToken]
-        public IActionResult DeleteUser(IFormCollection collection)
-        {
-            try
-            {
-
-            }
-            catch
-            {
-                
-            }
-
-            return null;
-        }
-        
         // POST: Cheep/Delete
         [HttpPost]
         [Route("Cheep/Delete")]
