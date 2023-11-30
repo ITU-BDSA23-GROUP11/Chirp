@@ -40,7 +40,7 @@ public class CheepRepositoryTests
         Cheep firstCheep = _mockChirpRepositories.TestCheeps.First();
 
         // Act
-        _mockChirpRepositories.CheepRepository.DeleteCheep(firstCheep.CheepId, firstCheep.Author.Name);
+        _mockChirpRepositories.CheepRepository.DeleteCheep(firstCheep.CheepId, firstCheep.Author.AuthorId);
     
         // Assert
         _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Remove(firstCheep), Times.Once);
@@ -54,7 +54,7 @@ public class CheepRepositoryTests
         Cheep firstCheep = _mockChirpRepositories.TestCheeps.First();
         Cheep dontDeleteCheep = _mockChirpRepositories.TestCheeps[1];
         // Act
-        _mockChirpRepositories.CheepRepository.DeleteCheep(firstCheep.CheepId, firstCheep.Author.Name);
+        _mockChirpRepositories.CheepRepository.DeleteCheep(firstCheep.CheepId, firstCheep.Author.AuthorId);
         // Assert
         _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Remove(dontDeleteCheep), Times.Never);
     }
