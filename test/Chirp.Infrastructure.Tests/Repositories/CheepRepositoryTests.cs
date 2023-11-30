@@ -37,26 +37,26 @@ public class CheepRepositoryTests
     public void DeleteCheepTest()
     {
         // Arrange
-        Cheep firstCheep = _mockCheepRepository.TestCheeps.First();
+        Cheep firstCheep = _mockChirpRepositories.TestCheeps.First();
 
         // Act
-        _mockCheepRepository.CheepRepository.DeleteCheep(firstCheep.CheepId.ToString(), firstCheep.Author.Name);
+        _mockChirpRepositories.CheepRepository.DeleteCheep(firstCheep.CheepId, firstCheep.Author.Name);
     
         // Assert
-        _mockCheepRepository.MockCheepsDbSet.Verify(m => m.Remove(firstCheep), Times.Once);
-        _mockCheepRepository.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+        _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Remove(firstCheep), Times.Once);
+        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
     }
 
     [Fact]
     public void DontDeleteCheepTest()
     {
         // Arrange
-        Cheep firstCheep = _mockCheepRepository.TestCheeps.First();
-        Cheep dontDeleteCheep = _mockCheepRepository.TestCheeps[1];
+        Cheep firstCheep = _mockChirpRepositories.TestCheeps.First();
+        Cheep dontDeleteCheep = _mockChirpRepositories.TestCheeps[1];
         // Act
-        _mockCheepRepository.CheepRepository.DeleteCheep(firstCheep.CheepId.ToString(), firstCheep.Author.Name);
+        _mockChirpRepositories.CheepRepository.DeleteCheep(firstCheep.CheepId, firstCheep.Author.Name);
         // Assert
-        _mockCheepRepository.MockCheepsDbSet.Verify(m => m.Remove(dontDeleteCheep), Times.Never);
+        _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Remove(dontDeleteCheep), Times.Never);
     }
 
     [Fact]
