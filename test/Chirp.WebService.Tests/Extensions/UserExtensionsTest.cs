@@ -30,6 +30,8 @@ public class UserExtensionsTest
             {
                 claims.Add(new Claim("emails", claim.Email));
             }
+            
+            claims.Add(new Claim("http://schemas.microsoft.com/identity/claims/objectidentifier", claim.Id.ToString()));
 
             mockClaims.SetupGet(cp => cp.Claims).Returns(claims);
 
@@ -38,6 +40,8 @@ public class UserExtensionsTest
             Assert.Equal(claim.GivenName == null || claim.Surname == null ? "No Name Found" : $"{claim.GivenName} {claim.Surname}", claimsPrincipal.GetUserFullName());
             
             Assert.Equal(claim.Email ?? "No Email", claimsPrincipal.GetUserEmail());
+            
+            Assert.Equal(claim.Id, claimsPrincipal.GetUserId());
         }
     }
 }

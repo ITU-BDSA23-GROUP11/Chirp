@@ -3,17 +3,18 @@ using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
 using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Contexts;
-using Microsoft.Identity.Client;
 
 namespace Chirp.Infrastructure.Repositories;
 
 public class CheepRepository : ICheepRepository
 {
     private readonly ChirpDbContext _chirpDbContext;
+    private readonly IAuthorRepository _authorRepository;
 
-    public CheepRepository(ChirpDbContext chirpDbContext)
+    public CheepRepository(ChirpDbContext chirpDbContext, IAuthorRepository authorRepository)
     {
         _chirpDbContext = chirpDbContext;
+        _authorRepository = authorRepository;
     }
     
     public CheepDto AddCheep(AddCheepDto cheep)
@@ -115,6 +116,33 @@ public class CheepRepository : ICheepRepository
         });
     }
 
+    public List<CheepDto> GetAuthorCheepsForPageAsOwner(string authorName, int pageNumber)
+    {
+        return FetchWithErrorHandling(() =>
+        {
+            var email = _chirpDbContext.Authors.Single(a => a.Name == authorName).Email;
+            List<string> authorFollows = _authorRepository.GetFollowsForAuthor(email);
+            return _chirpDbContext
+                .Cheeps
+                .Where(c => authorFollows.Contains(c.Author.Email) || c.Author.Name == authorName)
+                .Include(c => c.Author)
+                .OrderByDescending(c => authorFollows.Contains(c.Author.Name))
+                .ThenBy(c => c.Timestamp)
+                .Skip(int.Max(pageNumber - 1, 0) * 32)
+                .Take(32)
+                .Select<Cheep, CheepDto>(c =>
+                    new CheepDto {
+                        CheepId = c.CheepId,
+                        AuthorName = c.Author.Name,
+                        AuthorEmail = c.Author.Email,
+                        Text = c.Text,
+                        Timestamp = c.Timestamp
+                    }
+                )
+                .ToList();
+        });
+    }
+
     private List<CheepDto> FetchWithErrorHandling(Func<List<CheepDto>> fetchFunction)
     {
         try
@@ -127,15 +155,14 @@ public class CheepRepository : ICheepRepository
         }
     }
     
-    public bool DeleteCheep(String cheepId, String author)
+    public bool DeleteCheep(Guid cheepId, Guid authorId)
     {
-        Cheep cheepToDelete = _chirpDbContext.Cheeps
+        Cheep? cheepToDelete = _chirpDbContext.Cheeps
             .Include(c => c.Author)
-            .First(c => c.CheepId.ToString() == cheepId);
-        if (!cheepToDelete.Author.Name.Equals(author))
-        {
-            return false;
-        }
+            .SingleOrDefault(c => c.CheepId == cheepId);
+
+        if (cheepToDelete == null) return false;
+        if (cheepToDelete.Author.AuthorId.Equals(authorId)) return false;
         
         _chirpDbContext.Cheeps.Remove(cheepToDelete);
         _chirpDbContext.SaveChanges();

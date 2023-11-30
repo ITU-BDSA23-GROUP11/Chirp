@@ -88,6 +88,7 @@ public class DataGenerator
         public string? GivenName;
         public string? Surname;
         public string? Email;
+        public Guid Id;
     }
     
     public static List<FakeClaims> GenerateUserClaims(
@@ -98,7 +99,9 @@ public class DataGenerator
         var claimsFaker = new Faker<FakeClaims>()
             .RuleFor(c => c.GivenName, f => f.Random.Bool() ? f.Name.FirstName() : null)
             .RuleFor(c => c.Surname, f => f.Random.Bool() ? f.Name.LastName() : null)
-            .RuleFor(c => c.Email, (f, c) => f.Random.Bool() ? f.Internet.Email(firstName: c.GivenName, lastName: c.Surname) : null);
+            .RuleFor(c => c.Email,
+                (f, c) => f.Random.Bool() ? f.Internet.Email(firstName: c.GivenName, lastName: c.Surname) : null)
+            .RuleFor(c => c.Id, f => f.Random.Guid());
 
         return claimsFaker.GenerateBetween(minAmount, maxAmount);
     }
