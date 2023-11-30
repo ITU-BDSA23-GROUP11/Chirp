@@ -56,7 +56,7 @@ public class CheepRepository : ICheepRepository
             }
         }
 
-        return null;
+        return "";
     }
     
     public int GetCheepCount()
