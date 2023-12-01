@@ -7,8 +7,28 @@ namespace Chirp.WebService.Controllers
 {
     public class CheepController : BaseController
     {
-        public CheepController(IAuthorRepository authorRepository, ICheepRepository cheepRepository) : base(authorRepository, cheepRepository)
+        public CheepController(IAuthorRepository authorRepository, ICheepRepository cheepRepository, ILikeRepository likeRepository) : base(authorRepository, cheepRepository, likeRepository)
         {
+        }
+        
+        // POST: Cheep/Like
+        [HttpPost]
+        [Route("Cheep/Like")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Like(IFormCollection collection)
+        {
+            return WithAuth(user =>
+            {
+                String cheepId = collection["cheepId"];
+                if (String.IsNullOrEmpty(cheepId))
+                {
+                    return BadRequest("Invalid input");
+                }
+
+                Guid cId = Guid.Parse(cheepId);
+                LikeRepository.LikeCheep(cId, user.Id);
+                return Redirect(GetPathUrl());
+            });
         }
 
         // POST: Cheep/Create
