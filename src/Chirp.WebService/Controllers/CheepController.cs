@@ -31,6 +31,26 @@ namespace Chirp.WebService.Controllers
             });
         }
 
+        [HttpPost]
+        [Route("Cheep/Unlike")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Unlike(IFormCollection collection)
+        {
+            return WithAuth(user =>
+            {
+                String? cheepId = collection["cheepId"];
+                if (String.IsNullOrEmpty(cheepId))
+                {
+                    return BadRequest("Invalid input");
+                }
+
+                Guid cId = Guid.Parse(cheepId);
+                LikeRepository.UnlikeCheep(cId, user.Id);
+                return Redirect(GetPathUrl());
+            });
+        }
+        
+
         // POST: Cheep/Create
         [HttpPost]
         [Route("Cheep/Create")]
