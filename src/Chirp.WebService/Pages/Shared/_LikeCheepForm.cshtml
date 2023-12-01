@@ -1,0 +1,16 @@
+@using Chirp.WebService.Extensions
+@model Chirp.Core.Dto.CheepDto
+
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <form asp-controller="Cheep" asp-action="Like" style="display:inline;">
+    <input type="hidden" name="cheepId" value="@Model.CheepId"/>
+    <input name="__RequestVerificationToken" type="hidden"/>
+    @Html.AntiForgeryToken()
+    <button type="submit" style="background:none;border:none;color: #0040ff;padding:0;margin-left: 10px;cursor:pointer">
+        Like
+    </button>
+    </form>
+
+}
+  
