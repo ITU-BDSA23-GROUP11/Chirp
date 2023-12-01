@@ -8,7 +8,7 @@ namespace Chirp.Infrastructure.Repositories;
 
 public class LikeRepository : ILikeRepository
 {
-    private ChirpDbContext _chirpDbContext;
+    private readonly ChirpDbContext _chirpDbContext;
 
     public LikeRepository(ChirpDbContext chirpDbContext)
     {
