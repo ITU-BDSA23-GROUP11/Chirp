@@ -19,7 +19,7 @@ namespace Chirp.WebService.Controllers
         {
             return WithAuth(user =>
             {
-                String cheepId = collection["cheepId"];
+                String? cheepId = collection["cheepId"];
                 if (String.IsNullOrEmpty(cheepId))
                 {
                     return BadRequest("Invalid input");
