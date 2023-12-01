@@ -60,10 +60,12 @@ public class Program
         {
             // Add local password
             sqlConnectionString.Password = password;
-        }
+        } 
         
         services.AddDbContext<ChirpDbContext>(options =>
             options.UseSqlServer(sqlConnectionString.ConnectionString));
+      
+        
     }
     
     private static void ConfigureMiddleware(WebApplication app)
