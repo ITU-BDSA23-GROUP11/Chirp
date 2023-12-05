@@ -82,6 +82,19 @@ namespace Chirp.Infrastructure.Migrations
                     b.ToTable("Cheeps");
                 });
 
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Like", b =>
+                {
+                    b.Property<Guid>("LikedByAuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CheepId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("LikedByAuthorId", "CheepId");
+
+                    b.ToTable("Likes");
+                });
+
             modelBuilder.Entity("AuthorAuthor", b =>
                 {
                     b.HasOne("Chirp.Infrastructure.Models.Author", null)
