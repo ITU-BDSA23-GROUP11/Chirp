@@ -1,6 +1,8 @@
+using Chirp.Core.Dto;
 using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure.Repositories;
 
@@ -8,12 +10,17 @@ namespace Chirp.Infrastructure.Repositories;
 
 public class LikeRepository : ILikeRepository
 {
+    private readonly IAuthorRepository _authorRepository;
+    private readonly ICheepRepository _cheepRepository;
     private readonly ChirpDbContext _chirpDbContext;
 
-    public LikeRepository(ChirpDbContext chirpDbContext)
+    public LikeRepository(ChirpDbContext chirpDbContext, IAuthorRepository authorRepository, ICheepRepository cheepRepository)
     {
+        _cheepRepository = cheepRepository;
+        _authorRepository = authorRepository;
         _chirpDbContext = chirpDbContext;
         _chirpDbContext.Database.EnsureCreated();
+        
     }
 
     public void LikeCheep(Guid authorId, Guid cheepId)
@@ -44,6 +51,33 @@ public class LikeRepository : ILikeRepository
     public int LikeCount(Guid cheepId)
     {
         return _chirpDbContext.Likes.Count(x => x.CheepId == cheepId);
+    }
+
+    public List<LikeDto> GetLikesByAuthorId(Guid authorId)
+    {
+        return _chirpDbContext.Likes
+            .Where(l => l.LikedByAuthorId == authorId)
+            .Select<Like, LikeDto>(l =>
+                new LikeDto
+                {
+                    CheepId = l.CheepId,
+                    LikedByAuthorId = l.LikedByAuthorId
+                }
+            ).ToList();
+    }
+   
+
+    public List<LikeDto> GetLikesByCheepId(Guid cheepId)
+    {
+        return _chirpDbContext.Likes
+            .Where(l => l.CheepId == cheepId)
+            .Select<Like, LikeDto>(l =>
+                new LikeDto
+                {
+                    CheepId = l.CheepId,
+                    LikedByAuthorId = l.LikedByAuthorId
+                }
+            ).ToList();
     }
 
     public bool IsLiked(Guid authorId, Guid cheepId)
