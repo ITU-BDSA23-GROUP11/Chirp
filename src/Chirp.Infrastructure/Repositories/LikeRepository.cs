@@ -77,6 +77,19 @@ public class LikeRepository : ILikeRepository
             ).ToList();
     }
 
+    public LikeDto GetLike(Guid authorId, Guid cheepId)
+    {
+        return _chirpDbContext.Likes
+            .Where(l => l.LikedByAuthorId == authorId)
+            .Where(l => l.CheepId == cheepId)
+            .Select<Like, LikeDto>(l => new LikeDto
+            {
+                CheepId = l.CheepId,
+                LikedByAuthorId = l.LikedByAuthorId
+            }
+            ).ToList().First();
+    }
+
     public bool IsLiked(Guid authorId, Guid cheepId) //Checks if a cheep is already liked
     {
         if (!_chirpDbContext.Likes.Any(x => x.LikedByAuthorId == authorId && x.CheepId == cheepId))
