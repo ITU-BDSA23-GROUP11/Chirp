@@ -81,12 +81,20 @@ public sealed class End2EndTests : IAsyncLifetime
             [Fact]
             public async Task playwrightTest()
             {
+                //Arrange playwright functionality
                 using var playwright = await Playwright.CreateAsync();
                 var browser = await playwright.Chromium.LaunchAsync();
                 var page = await browser.NewPageAsync();
+                
+                var httpResponse = await _httpClient.GetAsync("/");
+                httpResponse.EnsureSuccessStatusCode();
+                var response = await httpResponse.Content.ReadAsStringAsync();
 
-                await page.GotoAsync("https://itu.dk/");
+                await page.SetContentAsync(response);
+                
                 var content = await page.ContentAsync();
+
+                Assert.Contains("Chirp!", content);
             }
             
             [Fact]
