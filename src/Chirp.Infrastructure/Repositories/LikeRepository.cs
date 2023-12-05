@@ -10,16 +10,13 @@ namespace Chirp.Infrastructure.Repositories;
 
 public class LikeRepository : ILikeRepository
 {
-    private readonly IAuthorRepository _authorRepository;
-    private readonly ICheepRepository _cheepRepository;
+    
     private readonly ChirpDbContext _chirpDbContext;
 
-    public LikeRepository(ChirpDbContext chirpDbContext, IAuthorRepository authorRepository, ICheepRepository cheepRepository)
+
+    public LikeRepository(ChirpDbContext chirpDbContext)
     {
-        _cheepRepository = cheepRepository;
-        _authorRepository = authorRepository;
         _chirpDbContext = chirpDbContext;
-        _chirpDbContext.Database.EnsureCreated();
         
     }
 

@@ -9,7 +9,7 @@ public class ChirpDbContext : DbContext
 {
     public virtual DbSet<Cheep> Cheeps { get; set; } = null!;
     public virtual DbSet<Author> Authors { get; set; } = null!;
-    public DbSet<Like> Likes { get; set; } = null!;
+    public virtual DbSet<Like> Likes { get; set; } = null!;
     public ChirpDbContext() {}
 
     public ChirpDbContext(DbContextOptions<ChirpDbContext> options)

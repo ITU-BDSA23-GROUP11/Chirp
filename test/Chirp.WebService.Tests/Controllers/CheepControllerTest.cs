@@ -15,7 +15,7 @@ public class CheepControllerTest
     
     public CheepControllerTest()
     {
-        _mockController = new Mock<CheepController>(_mockChirpRepositories.AuthorRepository, _mockChirpRepositories.CheepRepository);
+        _mockController = new Mock<CheepController>(_mockChirpRepositories.AuthorRepository, _mockChirpRepositories.CheepRepository, _mockChirpRepositories.LikeRepository);
         _mockController.CallBase = true;
         _mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => true);
             
