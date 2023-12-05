@@ -2,6 +2,6 @@ namespace Chirp.Core.Dto;
 
 public class LikeDto
 {
-    public Guid CheepId { get; set; }
-    public Guid LikedByAuthorId { get; set; }
+    public required Guid CheepId { get; init; }
+    public required Guid LikedByAuthorId { get; init; }
 }

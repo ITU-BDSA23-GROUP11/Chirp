@@ -25,12 +25,13 @@ namespace Chirp.WebService.Controllers
                     return BadRequest("Invalid input");
                 }
                 Guid cId = Guid.Parse(cheepId);
-                LikeRepository.LikeCheep(cId, user.Id);
+                LikeRepository.LikeCheep(user.Id, cId);
                 
                 return Redirect(GetPathUrl());
             });
         }
-
+        
+        //POST: Unlike cheep
         [HttpPost]
         [Route("Cheep/Unlike")]
         [ValidateAntiForgeryToken]
@@ -44,7 +45,7 @@ namespace Chirp.WebService.Controllers
                     return BadRequest("Invalid input");
                 }
                 Guid cId = Guid.Parse(cheepId);
-                LikeRepository.UnlikeCheep(cId, user.Id);
+                LikeRepository.UnlikeCheep(user.Id, cId);
                 
                 return Redirect(GetPathUrl());
             });
