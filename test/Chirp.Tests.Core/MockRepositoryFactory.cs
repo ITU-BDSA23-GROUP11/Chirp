@@ -18,6 +18,7 @@ public struct MockChirpRepositories
     public Mock<ChirpDbContext> MockChirpDbContext;
     public Mock<DbSet<Author>> MockAuthorsDbSet;
     public Mock<DbSet<Cheep>> MockCheepsDbSet;
+   
 }
 
 public static class MockRepositoryFactory
@@ -26,7 +27,7 @@ public static class MockRepositoryFactory
     {
         var mockAuthorsDbSet = new Mock<DbSet<Author>>();
         var mockCheepsDbSet = new Mock<DbSet<Cheep>>();
-
+        
         DataGenerator.AuthorCheepsData data = DataGenerator.GenerateAuthorsAndCheeps();
         
         // If mock db sets are not set up, it will throw an exception which will be caught by FetchWithErrorHandling
@@ -40,14 +41,17 @@ public static class MockRepositoryFactory
             mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.Expression).Returns(data.Cheeps.AsQueryable().Expression);
             mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.ElementType).Returns(data.Cheeps.AsQueryable().ElementType);
             mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.GetEnumerator()).Returns(data.Cheeps.AsQueryable().GetEnumerator());
+            
         }
         
         var mockChirpDbContext = new Mock<ChirpDbContext>();
         mockChirpDbContext.Setup(m => m.Authors).Returns(mockAuthorsDbSet.Object);
         mockChirpDbContext.Setup(m => m.Cheeps).Returns(mockCheepsDbSet.Object);
+ 
         
         IAuthorRepository authorRepository = new AuthorRepository(mockChirpDbContext.Object);
         ICheepRepository cheepRepository = new CheepRepository(mockChirpDbContext.Object, authorRepository);
+   
 
         return new MockChirpRepositories
         {
@@ -57,7 +61,7 @@ public static class MockRepositoryFactory
             TestCheeps = data.Cheeps,
             MockChirpDbContext = mockChirpDbContext,
             MockAuthorsDbSet = mockAuthorsDbSet,
-            MockCheepsDbSet = mockCheepsDbSet
+            MockCheepsDbSet = mockCheepsDbSet,
         };
     }
 }
