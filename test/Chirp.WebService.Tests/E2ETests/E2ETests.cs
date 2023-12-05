@@ -2,6 +2,9 @@
 using HtmlAgilityPack;
 using Microsoft.Playwright;
 using Testcontainers.SqlEdge;
+using Xunit.Abstractions;
+using Xunit.Sdk;
+using System.Net.Http;
 
 // Used parts of https://github.com/testcontainers/testcontainers-dotnet/tree/develop/examples/WeatherForecast
 
@@ -10,7 +13,7 @@ namespace Chirp.WebService.Tests.E2ETests;
 public sealed class End2EndTests : IAsyncLifetime
 {
     private readonly SqlEdgeContainer _sqlEdgeContainer = new SqlEdgeBuilder().Build();
-    
+
     public Task InitializeAsync()
     {
         return _sqlEdgeContainer.StartAsync();
@@ -81,6 +84,7 @@ public sealed class End2EndTests : IAsyncLifetime
             [Fact]
             public async Task playwrightTest()
             {
+                ITestOutputHelper helper = new TestOutputHelper();
                 //Arrange playwright functionality
                 using var playwright = await Playwright.CreateAsync();
                 var browser = await playwright.Chromium.LaunchAsync();
@@ -90,11 +94,41 @@ public sealed class End2EndTests : IAsyncLifetime
                 httpResponse.EnsureSuccessStatusCode();
                 var response = await httpResponse.Content.ReadAsStringAsync();
 
+                //Retrieve base url from simulation
+                var baseUrl = httpResponse.RequestMessage.RequestUri.ToString();
+                var finalUrl = baseUrl;//Initially the same as URI
+                
+                //Determine if a port should be included (no port on production)
+                if (!httpResponse.RequestMessage.RequestUri.IsDefaultPort)
+                {
+                    finalUrl = $"{baseUrl}:{httpResponse.RequestMessage.RequestUri.Port}";
+                }
+                
                 await page.SetContentAsync(response);
                 
-                var content = await page.ContentAsync();
+                var ButtonXPath = "//*[@id=\"messagelist\"]/li[1]/p[1]/strong/a";
 
-                Assert.Contains("Chirp!", content);
+                var button = await page.QuerySelectorAsync(ButtonXPath);
+                
+                if (button != null)
+                {
+                    var buttonAttribute = await button.GetAttributeAsync("href");
+                    
+                    var location = finalUrl + buttonAttribute.Substring(1);//Remove double slash
+                    
+                    //Simulate the button click with page.GotoAsync due to issues with the url prefix
+                    var newHttpResponse = await _httpClient.GetAsync(location);
+                    await page.SetContentAsync(await newHttpResponse.Content.ReadAsStringAsync());
+
+                    var updatedPage = await page.ContentAsync();
+                    
+                    Assert.Contains(await button.InnerTextAsync(), updatedPage);
+                }
+                else
+                {
+                    Assert.Fail();
+                    return;
+                }
             }
             
             [Fact]
