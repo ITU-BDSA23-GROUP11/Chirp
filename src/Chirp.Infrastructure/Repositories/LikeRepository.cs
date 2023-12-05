@@ -23,7 +23,7 @@ public class LikeRepository : ILikeRepository
         
     }
 
-    public void LikeCheep(Guid authorId, Guid cheepId)
+    public void LikeCheep(Guid authorId, Guid cheepId) //Creates a like in DbContext
     {
         if (IsLiked(authorId, cheepId))
         {
@@ -38,7 +38,7 @@ public class LikeRepository : ILikeRepository
         _chirpDbContext.SaveChanges();
     }
 
-    public void UnlikeCheep(Guid authorId, Guid cheepId)
+    public void UnlikeCheep(Guid authorId, Guid cheepId) //Removes a like from DbContext
     {
         if (IsLiked(authorId, cheepId))
         {
@@ -48,12 +48,12 @@ public class LikeRepository : ILikeRepository
         }
     }
 
-    public int LikeCount(Guid cheepId)
+    public int LikeCount(Guid cheepId) //Counts amount of likes of a cheep
     {
         return _chirpDbContext.Likes.Count(x => x.CheepId == cheepId);
     }
 
-    public List<LikeDto> GetLikesByAuthorId(Guid authorId)
+    public List<LikeDto> GetLikesByAuthorId(Guid authorId) //A list of an authors likes
     {
         return _chirpDbContext.Likes
             .Where(l => l.LikedByAuthorId == authorId)
@@ -67,7 +67,7 @@ public class LikeRepository : ILikeRepository
     }
    
 
-    public List<LikeDto> GetLikesByCheepId(Guid cheepId)
+    public List<LikeDto> GetLikesByCheepId(Guid cheepId) //A list of a cheeps likes
     {
         return _chirpDbContext.Likes
             .Where(l => l.CheepId == cheepId)
@@ -80,7 +80,7 @@ public class LikeRepository : ILikeRepository
             ).ToList();
     }
 
-    public bool IsLiked(Guid authorId, Guid cheepId)
+    public bool IsLiked(Guid authorId, Guid cheepId) //Checks if a cheep is already liked
     {
         if (!_chirpDbContext.Likes.Any(x => x.LikedByAuthorId == authorId && x.CheepId == cheepId))
         {
