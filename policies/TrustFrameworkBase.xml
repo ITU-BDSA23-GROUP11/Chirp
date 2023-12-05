@@ -203,6 +203,16 @@
         </DefaultPartnerClaimTypes>
       </ClaimType>
 
+      <ClaimType Id="avatar_url">
+        <DisplayName>Avatar Url</DisplayName>
+        <DataType>string</DataType>
+        <DefaultPartnerClaimTypes>
+          <Protocol Name="OAuth2" PartnerClaimType="avatar_url" />
+          <Protocol Name="OpenIdConnect" PartnerClaimType="avatar_url" />
+          <Protocol Name="SAML2" PartnerClaimType="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/avatar_url" />
+        </DefaultPartnerClaimTypes>
+      </ClaimType>
+
 <!--      <ClaimType Id="surname">-->
 <!--        <DisplayName>Surname</DisplayName>-->
 <!--        <DataType>string</DataType>-->
@@ -402,6 +412,7 @@
             <OutputClaim ClaimTypeReferenceId="email" PartnerClaimType="email" />
             <OutputClaim ClaimTypeReferenceId="numericUserId" PartnerClaimType="id" />
             <OutputClaim ClaimTypeReferenceId="login" PartnerClaimType="login" />
+            <OutputClaim ClaimTypeReferenceId="avatar_url" PartnerClaimType="avatar_url" />
             <OutputClaim ClaimTypeReferenceId="issuerUserId" />
             <OutputClaim ClaimTypeReferenceId="identityProvider" DefaultValue="github.com" AlwaysUseDefaultValue="true" />
             <OutputClaim ClaimTypeReferenceId="authenticationSource" DefaultValue="socialIdpAuthentication" AlwaysUseDefaultValue="true" />

@@ -28,6 +28,7 @@
         <OutputClaim ClaimTypeReferenceId="objectId" PartnerClaimType="sub"/>
         <OutputClaim ClaimTypeReferenceId="identityProvider" />
         <OutputClaim ClaimTypeReferenceId="login" PartnerClaimType="login" />
+        <OutputClaim ClaimTypeReferenceId="avatar_url" PartnerClaimType="avatar_url" />
         <OutputClaim ClaimTypeReferenceId="tenantId" AlwaysUseDefaultValue="true" DefaultValue="{Policy:TenantObjectId}" />
         
       </OutputClaims>
