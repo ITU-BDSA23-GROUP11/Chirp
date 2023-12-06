@@ -39,10 +39,10 @@ public class AuthorRepositoryTest
         Author authorToBeFollowed = _mockChirpRepositories.TestAuthors.Last();
         Author followingAuthor = _mockChirpRepositories.TestAuthors.First();
         //Act
-        _mockChirpRepositories.AuthorRepository.AddFollow(authorToBeFollowed.AuthorId, followingAuthor.AuthorId);
+        _mockChirpRepositories.AuthorRepository.AddFollow(followingAuthor.AuthorId, authorToBeFollowed.AuthorId);
         //Assert
-        Guid actual = followingAuthor.FollowedBy.First().AuthorId;
-        Assert.Equal(authorToBeFollowed.AuthorId.ToString(), actual.ToString());
+        Assert.Contains(authorToBeFollowed.FollowedBy,
+            a => a.AuthorId.ToString().Equals(followingAuthor.AuthorId.ToString()));
     }
 
     [Fact]
