@@ -41,7 +41,14 @@
                             {
                                 <partial name="Shared/_FollowAuthorForm" model="@cheep"/>
                             }
-                            <partial name="Shared/_LikeCheepForm" model="@cheep"/>
+                            if (Model.CheepIsLiked(cheep.CheepId))
+                            {
+                                <partial name="Shared/_UnlikeCheepForm" model="@cheep"/>
+                            }
+                            else
+                            {
+                                <partial name="Shared/_LikeCheepForm" model="@cheep"/>
+                            }
                         }
                     </p>
                        
