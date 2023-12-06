@@ -18,8 +18,8 @@ public class Program
     {
         var webApplicationBuilder = WebApplication.CreateBuilder(args);
         webApplicationBuilder.Configuration.AddEnvironmentVariables();
-        ConfigureServices(webApplicationBuilder.Configuration, webApplicationBuilder.Services);
-
+        ConfigureServices(webApplicationBuilder.Configuration, webApplicationBuilder.Services, webApplicationBuilder.Environment);
+        
         var webApplication = webApplicationBuilder.Build();
         
         ConfigureMiddleware(webApplication);
@@ -29,10 +29,16 @@ public class Program
         webApplication.Run();
     }
 
-    private static void ConfigureServices(IConfiguration configuration, IServiceCollection services)
+    private static void ConfigureServices(IConfiguration configuration, IServiceCollection services, IWebHostEnvironment env)
     {
-        services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-            .AddMicrosoftIdentityWebApp(configuration.GetSection("AzureADB2C"));
+        Console.WriteLine(env.EnvironmentName);
+        //Add authentication only if NOT in E2ETesting environment
+        if (!env.IsEnvironment("E2ETesting"))
+        {
+            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+                .AddMicrosoftIdentityWebApp(configuration.GetSection("AzureADB2C"));    
+        }
+        
         services.AddAuthorization(options =>
         {
             // By default, all incoming requests will be authorized according to 
@@ -66,6 +72,11 @@ public class Program
             options.UseSqlServer(sqlConnectionString.ConnectionString));
       
         
+    }
+
+    public static void ConfigureE2ETesting()
+    {
+        Console.WriteLine("wait here");
     }
     
     private static void ConfigureMiddleware(WebApplication app)
