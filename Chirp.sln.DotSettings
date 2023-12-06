@@ -6,5 +6,9 @@
 	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=Chirp_002EWebService_003B_002A_003BChirp_002EWebService_002EControllers_002EBaseController_003B_002A/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=Chirp_002EWebService_003B_002A_003BChirp_002EWebService_002EControllers_002EBaseController_003B_002Ector/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=Chirp_002EWebService_003B_002A_003BChirp_002EWebService_002EExtensions_002EUserExtensions_003BGetUserEmail/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=Chirp_002EWebService_003B_002A_003BChirp_002EWebService_002EPages_002EPages_005FPublic_003B_002A/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=Chirp_002EWebService_003B_002A_003BChirp_002EWebService_002EPages_002EPages_005FUserTimeline_003B_002A/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=Chirp_002EWebService_003B_002A_003BChirp_002EWebService_002EPages_002EPages_005F_005FViewImports_003B_002A/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=Chirp_002EWebService_003B_002A_003BChirp_002EWebService_002EPages_002EShared_002EPages_005FShared_005F_005FLayout_003B_002A/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=Chirp_002EWebService_003B_002A_003BChirp_002EWebService_002EProgram_003BBootstrapDb/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/Filtering/ExcludeCoverageFilters/=Chirp_002EWebService_003B_002A_003BChirp_002EWebService_002EProgram_003B_002A/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

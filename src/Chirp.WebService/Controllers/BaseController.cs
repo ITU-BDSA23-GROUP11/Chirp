@@ -6,20 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chirp.WebService.Controllers;
 
-public struct ClientUser
-{
-    public required bool IsAuthenticated;
-    public Guid Id { get; init; }
-    public string FullName { get; init; }
-    public string Email { get; init; }
-}
-
 public abstract class BaseController : Controller, IController
 {
-    public virtual Func<bool> IsUserAuthenticated { get; }
-    public virtual Func<Guid?> GetUserId { get; }
-    public virtual Func<string> GetUserFullName { get; }
-    public virtual Func<string> GetUserEmail { get; }
+    public virtual Func<ClaimsUser?> GetUser { get; }
     public virtual Func<string> GetPathUrl { get; }
     
     protected readonly IAuthorRepository AuthorRepository;
@@ -30,49 +19,31 @@ public abstract class BaseController : Controller, IController
     {
         AuthorRepository = authorRepository;
         CheepRepository = cheepRepository;
+        
+        GetUser = () => User.GetUser();
         LikeRepository = likeRepository;
-        IsUserAuthenticated = () =>
-        {
-            try
-            {
-                return User.Identity?.IsAuthenticated ?? false;
-            }
-            catch
-            {
-                return false;
-            }
-        };
-        GetUserId = () => User.GetUserId();
-        GetUserEmail = () => User.GetUserEmail();
-        GetUserFullName = () => User.GetUserFullName();
+        GetUser = () => User.GetUser();
         GetPathUrl = () => Request.GetPathUrl();
     }
 
-    protected ActionResult WithAuth(Func<ClientUser, ActionResult> protectedFunction)
+    protected ActionResult WithAuth(Func<ClaimsUser, ActionResult> protectedFunction)
     {
         try
         {
-            if (!IsUserAuthenticated()) return Unauthorized();
-            
-            var userId = GetUserId();
-            if (userId == null) return Unauthorized();
-            
-            var user = new ClientUser
-            {
-                IsAuthenticated = IsUserAuthenticated(),
-                FullName = GetUserFullName(),
-                Email = GetUserEmail(),
-                Id = userId.Value
-            };
-            
+            var user = GetUser().ThrowIfNull();
             AuthorRepository.AddAuthor(new AuthorDto
             {
                 Id = user.Id,
-                Name = user.FullName,
-                Email = user.Email
+                Name = user.Name,
+                Username = user.Username,
+                AvatarUrl = user.AvatarUrl
             });
 
             return protectedFunction(user);
+        }
+        catch (ArgumentException)
+        {
+            return Unauthorized();
         }
         catch
         {
