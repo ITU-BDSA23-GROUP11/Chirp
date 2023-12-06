@@ -10,7 +10,7 @@ namespace Chirp.Infrastructure.Tests.Repositories;
 public class CheepRepositoryTests
 {
     private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepository();
-
+    
     [Fact]
     public void TestAddCheep()
     {

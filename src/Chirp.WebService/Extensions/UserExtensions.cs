@@ -23,5 +23,6 @@ public static class UserExtensions
     {
         var idClaim = claims.Claims.FirstOrDefault(y => y.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier");
         return idClaim == null ? null : Guid.Parse(idClaim.Value);
+        
     }
 }
