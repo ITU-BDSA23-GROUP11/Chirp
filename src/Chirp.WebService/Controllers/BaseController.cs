@@ -17,11 +17,7 @@ public struct ClientUser
 
 public abstract class BaseController : Controller, IController
 {
-    public virtual Func<bool> IsUserAuthenticated { get; }
-    public virtual Func<Guid?> GetUserId { get; }
-    public virtual Func<string> GetUserName { get; }
-    public virtual Func<string> GetUserLogin { get; }
-    public virtual Func<string> GetUserAvatarUrl { get; }
+    public virtual Func<ClaimsUser?> GetUser { get; }
     public virtual Func<string> GetPathUrl { get; }
     
     protected readonly IAuthorRepository AuthorRepository;
@@ -32,43 +28,18 @@ public abstract class BaseController : Controller, IController
     {
         AuthorRepository = authorRepository;
         CheepRepository = cheepRepository;
+        
+        GetUser = () => User.GetUser();
         LikeRepository = likeRepository;
-        IsUserAuthenticated = () =>
-        {
-            try
-            {
-                return User.Identity?.IsAuthenticated ?? false;
-            }
-            catch
-            {
-                return false;
-            }
-        };
-        GetUserId = () => User.GetUserId();
-        GetUserLogin = () => User.GetUserLogin();
-        GetUserName = () => User.GetUserName() ?? GetUserLogin();
-        GetUserAvatarUrl = () => User.GetUserAvatar();
+        GetUser = () => User.GetUser();
         GetPathUrl = () => Request.GetPathUrl();
     }
 
-    protected ActionResult WithAuth(Func<ClientUser, ActionResult> protectedFunction)
+    protected ActionResult WithAuth(Func<ClaimsUser, ActionResult> protectedFunction)
     {
         try
         {
-            if (!IsUserAuthenticated()) return Unauthorized();
-            
-            var userId = GetUserId();
-            if (userId == null) return Unauthorized();
-            
-            var user = new ClientUser
-            {
-                IsAuthenticated = IsUserAuthenticated(),
-                Name = GetUserName(),
-                Login = GetUserLogin(),
-                AvatarUrl = GetUserAvatarUrl(),
-                Id = userId.Value
-            };
-            
+            var user = GetUser().ThrowIfNull();
             AuthorRepository.AddAuthor(new AuthorDto
             {
                 Id = user.Id,
@@ -78,6 +49,10 @@ public abstract class BaseController : Controller, IController
             });
 
             return protectedFunction(user);
+        }
+        catch (ArgumentException)
+        {
+            return Unauthorized();
         }
         catch
         {

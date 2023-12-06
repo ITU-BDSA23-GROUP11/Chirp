@@ -10,20 +10,15 @@
 }
 
 <div>
-    <h2> @routeName's Timeline </h2>
-    @* <form method="post" class="addCheepForm"> *@
-    @*     <label>New Cheep</label> *@
-    @*     <input type="text" name="CheepText" placeholder="Write New Cheep" /> *@
-    @*     <input type="submit" value="SUBMIT"/> *@
-    @* </form> *@
-    
+    <h2> @(Model?.Author?.Name ?? routeName)'s Timeline </h2>
     <partial name="Shared/_AddCheepForm"/>
     @if (Model.Cheeps.Any())
     {
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
             {
-                <li>
+                <li style="display: flex">
+                    <img src="@cheep.AuthorAvatarUrl" alt="@cheep.AuthorName" style="height: 64px; aspect-ratio: 1/1" />
                     <p>
                         <strong>
                             <a href="/@cheep.AuthorLogin">@cheep.AuthorName</a>
@@ -51,7 +46,7 @@
                             }
                         }
                     </p>
-                       
+
                 </li>
             }
         </ul>

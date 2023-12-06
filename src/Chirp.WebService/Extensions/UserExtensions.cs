@@ -2,38 +2,32 @@ using System.Security.Claims;
 
 namespace Chirp.WebService.Extensions;
 
+public struct ClaimsUser
+{
+    public string Name { get; init; }
+    public string Login { get; init; }
+    public string AvatarUrl { get; init; }
+    public Guid Id { get; init; }
+}
+
 public static class UserExtensions
 {
-    
-    public static string? GetUserName(this ClaimsPrincipal claims)
+    public static ClaimsUser? GetUser(this ClaimsPrincipal claims)
     {
         var name = claims.Claims.FirstOrDefault(x => x.Type == "name");
-
-        return name?.Value ?? null;
-    }
-    
-    public static string GetUserAvatar(this ClaimsPrincipal claims)
-    {
-        // IEF with github guarantees avatar url
-        return claims.Claims.FirstOrDefault(x => x.Type == "avatar_url")!.Value;
-    }
-
-    public static string GetUserLogin(this ClaimsPrincipal claims)
-    {
-        // IEF with github guarantees user login
-        return claims.Claims.FirstOrDefault(x => x.Type == "login")!.Value;
-    }
-
-    public static string GetUserEmail(this ClaimsPrincipal claims)
-    {
-        var emailClaim = claims.Claims.FirstOrDefault(y => y.Type == "emails");
-        return (emailClaim != null) ? emailClaim.Value : "No Email";
-    }
-
-    public static Guid? GetUserId(this ClaimsPrincipal claims)
-    {
-        var idClaim = claims.Claims.FirstOrDefault(y => y.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier");
-        return idClaim == null ? null : Guid.Parse(idClaim.Value);
+        var avatarUrl = claims.Claims.FirstOrDefault(x => x.Type == "avatar_url");
+        var login = claims.Claims.FirstOrDefault(x => x.Type == "login");
+        var id = claims.Claims.FirstOrDefault(y =>
+            y.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
         
+        if (avatarUrl == null || login == null || id == null) return null;
+
+        return new ClaimsUser
+        {
+            Name = name?.Value ?? login.Value,
+            Login = login.Value,
+            AvatarUrl = avatarUrl.Value,
+            Id = Guid.Parse(id.Value)
+        };
     }
 }

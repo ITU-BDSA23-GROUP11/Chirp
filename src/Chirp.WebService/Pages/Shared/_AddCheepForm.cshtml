@@ -1,9 +1,12 @@
 @using Chirp.WebService.Extensions
 
-@if (User.Identity?.IsAuthenticated ?? false)
+@{
+    var user = User.GetUser();
+}
+@if (user is not null)
 {
     <div class="cheepbox">
-        <h3>What's on your mind @(User.GetUserName())?</h3>
+        <h3>What's on your mind @(user?.Name)?</h3>
         <form asp-controller="Cheep" asp-action="Create">
             <input style="float: left" type="text" name="cheepText">
             <input type="submit" value="Share">

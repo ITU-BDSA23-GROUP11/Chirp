@@ -25,10 +25,22 @@ public class AuthorRepository : IAuthorRepository
             {
                 AuthorId = authorDto.Id,
                 Name = authorDto.Name,
-                Login = authorDto.Login
+                Login = authorDto.Login,
+                AvatarUrl = authorDto.AvatarUrl
             });
             _chirpDbContext.SaveChanges();
         }
+    }
+    
+    public List<string> GetFollowsForAuthor(Guid authorId)
+    {
+        Author? author = _chirpDbContext.Authors
+            .Include(a => a.Follows)
+            .FirstOrDefault(a => a.AuthorId == authorId);
+        
+        if (author == null) return new List<string>();
+
+        return GetFollows(author);
     }
     
     public List<string> GetFollowsForAuthor(string authorLogin)
@@ -38,7 +50,12 @@ public class AuthorRepository : IAuthorRepository
             .FirstOrDefault(a => a.Login == authorLogin);
         
         if (author == null) return new List<string>();
-        
+
+        return GetFollows(author);
+    }
+
+    private List<string> GetFollows(Author author)
+    {
         List<string> followsLogins = new List<string>();
         
         author.Follows.ForEach(
@@ -48,13 +65,13 @@ public class AuthorRepository : IAuthorRepository
         return followsLogins;
     }
 
-    public void AddFollow(string authorLogin, string followLogin)
+    public void AddFollow(Guid authorId, Guid followId)
     {
-        Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Login == authorLogin);
+        Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.AuthorId == authorId);
 
         if (userAuthor == null) return;
 
-        Author? followAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Login == followLogin);
+        Author? followAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.AuthorId == followId);
 
         if (followAuthor == null) return;
 
@@ -67,13 +84,13 @@ public class AuthorRepository : IAuthorRepository
         _chirpDbContext.SaveChanges();
     }
 
-    public void RemoveFollow(string authorLogin, string unfollowLogin)
+    public void RemoveFollow(Guid authorId, Guid unfollowId)
     {
-        Author? userAuthor = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.Login == authorLogin);
+        Author? userAuthor = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.AuthorId == authorId);
 
         if (userAuthor == null) return;
 
-        Author? unfollowAuthor = _chirpDbContext.Authors.Include(a => a.FollowedBy).FirstOrDefault(a => a.Login == unfollowLogin);
+        Author? unfollowAuthor = _chirpDbContext.Authors.Include(a => a.FollowedBy).FirstOrDefault(a => a.AuthorId == unfollowId);
 
         if (unfollowAuthor == null) return;
             
@@ -84,5 +101,20 @@ public class AuthorRepository : IAuthorRepository
         unfollowAuthor.FollowedBy.Remove(userAuthor);
 
         _chirpDbContext.SaveChanges();
+    }
+
+    public AuthorDto? GetAuthorFromLogin(string authorLogin)
+    {
+        Author? author = _chirpDbContext.Authors.FirstOrDefault(a => a.Login == authorLogin);
+        
+        if (author == null) return null;
+        
+        return new AuthorDto
+        {
+            Id = author.AuthorId,
+            Login = author.Login,
+            Name = author.Name,
+            AvatarUrl = author.AvatarUrl
+        };
     }
 }

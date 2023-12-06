@@ -4,6 +4,7 @@ using Chirp.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Infrastructure.Migrations
 {
     [DbContext(typeof(ChirpDbContext))]
-    partial class ChirpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231206103458_AddAuthorAvatar")]
+    partial class AddAuthorAvatar
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -82,19 +85,6 @@ namespace Chirp.Infrastructure.Migrations
                     b.HasIndex("AuthorId");
 
                     b.ToTable("Cheeps");
-                });
-
-            modelBuilder.Entity("Chirp.Infrastructure.Models.Like", b =>
-                {
-                    b.Property<Guid>("LikedByAuthorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CheepId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("LikedByAuthorId", "CheepId");
-
-                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("AuthorAuthor", b =>

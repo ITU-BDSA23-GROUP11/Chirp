@@ -13,6 +13,7 @@ public class UserTimelineModel : PageModel
     private readonly ILikeRepository _likeRepository;
     
     public int PageNumber { get; set; }
+    public AuthorDto? Author { get; set; }
     public List<CheepDto> Cheeps { get; set; } = new ();
     public List<string> Follows { get; set; } = new ();
 
@@ -27,29 +28,18 @@ public class UserTimelineModel : PageModel
 
     public ActionResult OnGet(string author)
     {
-        //Set the follows
-        // if (!User.GetUserEmail().Equals("No Email"))
-        // {
-        //     Follows = _authorRepository.GetFollowsForAuthor(User.GetUserEmail());
-        // }
+        Author = _authorRepository.GetAuthorFromLogin(author);
         
-        Follows = _authorRepository.GetFollowsForAuthor(User.GetUserLogin());
-        
-        //Calculate the total amount of pages needed for pagination
-        if (User.GetUserLogin().Equals(author))
+        User.GetUser().RunIfNotNull(user =>
         {
-            //The user is the owner -> include follows
-            int allCheepsCount = 0;
-            allCheepsCount += _cheepRepository.GetAuthorCheepCount(author);
-            foreach (string f in Follows) allCheepsCount += _cheepRepository.GetAuthorCheepCount(f);
-            AmountOfPages = (int)Math.Ceiling((double)allCheepsCount / 32);
-        }
-        else
-        {
-            //The user is a visitor
-            AmountOfPages = (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(author) / 32);
-        }
+            Follows = _authorRepository.GetFollowsForAuthor(user.Id);
+        });
 
+        User.GetUser().RunIfNotNull(user =>
+        {
+            AmountOfPages = _cheepRepository.GetAuthorCheepCount(user.Login, user.Login.Equals(author));
+        });
+        
         //Determine pageNumber
         if (Request.Query.ContainsKey("page") && int.TryParse(Request.Query["page"], out int pageParameter))
         { 
@@ -63,14 +53,17 @@ public class UserTimelineModel : PageModel
             PageNumber = 0;
         }
 
-        if (User.GetUserLogin().Equals(author))
+        User.GetUser().RunIfNotNull(user =>
         {
-            Cheeps = _cheepRepository.GetAuthorCheepsForPageAsOwner(author, PageNumber);
-        }
-        else
-        {
-            Cheeps = _cheepRepository.GetAuthorCheepsForPage(author, PageNumber);
-        }
+            if (user.Login.Equals(author))
+            {
+                Cheeps = _cheepRepository.GetAuthorCheepsForPageAsOwner(user.Id, PageNumber);
+            }
+            else
+            {
+                Cheeps = _cheepRepository.GetAuthorCheepsForPage(user.Login, PageNumber);
+            }
+        });
         
         return Page();   
     }

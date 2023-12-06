@@ -1,14 +1,18 @@
 @using Chirp.WebService.Extensions
 @model Chirp.Core.Dto.CheepDto
 
-@if (!User.GetUserLogin().Equals(Model.AuthorLogin))
+@{
+    var user = User.GetUser();
+}
+
+@if (user != null && !(user?.Login.Equals(Model.AuthorLogin) ?? false))
 {
     <form asp-controller="Cheep" asp-action="Follow" style="display:inline;">
-        <input type="hidden" name="CheepAuthorLogin" value="@Model.AuthorLogin"/>
+        <input type="hidden" name="CheepAuthorLogin" value="@Model.AuthorId"/>
         <input name="__RequestVerificationToken" type="hidden"/>
         @Html.AntiForgeryToken()
         <button type="submit" style="background:none;border:none;color: green;padding:0;margin-left: 10px;cursor:pointer">
-            Follow @(Model.AuthorName ?? @Model.AuthorLogin)
+            Follow @(Model.AuthorName)
         </button>
     </form>
 }
