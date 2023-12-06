@@ -19,8 +19,8 @@ public class LikeRepository : ILikeRepository
         _chirpDbContext = chirpDbContext;
         
     }
-
-    public void LikeCheep(Guid authorId, Guid cheepId) //Creates a like in DbContext
+    //Creates a like in DbContext
+    public void LikeCheep(Guid authorId, Guid cheepId) 
     {
         if (IsLiked(authorId, cheepId))
         {
@@ -34,8 +34,8 @@ public class LikeRepository : ILikeRepository
         });
         _chirpDbContext.SaveChanges();
     }
-
-    public void UnlikeCheep(Guid authorId, Guid cheepId) //Removes a like from DbContext
+    //Removes a like from DbContext
+    public void UnlikeCheep(Guid authorId, Guid cheepId) 
     {
         if (IsLiked(authorId, cheepId))
         {
@@ -44,13 +44,13 @@ public class LikeRepository : ILikeRepository
             _chirpDbContext.SaveChanges();
         }
     }
-
-    public int LikeCount(Guid cheepId) //Counts amount of likes of a cheep
+    //Counts amount of likes of a cheep
+    public int LikeCount(Guid cheepId) 
     {
         return _chirpDbContext.Likes.Count(x => x.CheepId == cheepId);
     }
-
-    public List<LikeDto> GetLikesByAuthorId(Guid authorId) //A list of an authors likes
+    //A list of an authors likes
+    public List<LikeDto> GetLikesByAuthorId(Guid authorId) 
     {
         return _chirpDbContext.Likes
             .Where(l => l.LikedByAuthorId == authorId)
@@ -63,8 +63,8 @@ public class LikeRepository : ILikeRepository
             ).ToList();
     }
    
-
-    public List<LikeDto> GetLikesByCheepId(Guid cheepId) //A list of a cheeps likes
+    //A list of a cheeps likes
+    public List<LikeDto> GetLikesByCheepId(Guid cheepId) 
     {
         return _chirpDbContext.Likes
             .Where(l => l.CheepId == cheepId)
@@ -76,8 +76,8 @@ public class LikeRepository : ILikeRepository
                 }
             ).ToList();
     }
-
-    public LikeDto GetLike(Guid authorId, Guid cheepId)
+    //Finds a specific like based on authorId and cheepId
+    public LikeDto GetLike(Guid authorId, Guid cheepId) 
     {
         return _chirpDbContext.Likes
             .Where(l => l.LikedByAuthorId == authorId)
@@ -89,8 +89,8 @@ public class LikeRepository : ILikeRepository
             }
             ).ToList().First();
     }
-
-    public bool IsLiked(Guid authorId, Guid cheepId) //Checks if a cheep is already liked
+    //Checks if a like exists
+    public bool IsLiked(Guid authorId, Guid cheepId) 
     {
         if (!_chirpDbContext.Likes.Any(x => x.LikedByAuthorId == authorId && x.CheepId == cheepId))
         {
