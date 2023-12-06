@@ -68,11 +68,6 @@ public class Program
       
         
     }
-
-    public static void ConfigureE2ETesting()
-    {
-        Console.WriteLine("wait here");
-    }
     
     private static void ConfigureMiddleware(WebApplication app)
     {
