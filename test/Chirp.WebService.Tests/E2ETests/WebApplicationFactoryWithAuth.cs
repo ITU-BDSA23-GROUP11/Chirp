@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Text.Encodings.Web;
+using Chirp.Infrastructure;
 using Chirp.Infrastructure.Contexts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -29,6 +30,14 @@ public class WebApplicationFactoryWithAuth<TProgram> : WebApplicationFactory<TPr
                 options.UseInMemoryDatabase("MemoryDB");
             });
             
+            using (var scope = s.BuildServiceProvider().CreateScope())
+            {
+                var dbContext = scope.ServiceProvider.GetRequiredService<ChirpDbContext>();
+                dbContext.Database.EnsureCreated();
+
+                DbInitializer.SeedDatabase(dbContext);
+            }
+            
             s.AddAuthentication(defaultScheme: "E2EScheme")
                 .AddScheme<AuthenticationSchemeOptions, MockAuth>(
                     "E2EScheme",options => {});
@@ -48,17 +57,24 @@ public class MockAuth : AuthenticationHandler<AuthenticationSchemeOptions>
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
+        string userId = Guid.NewGuid().ToString();
+        
         var claims = new[] { 
+            //ID Claim for user
             new Claim(ClaimTypes.Name, "PlaywrightTester"), 
             new Claim(ClaimTypes.Email, "bdsagrup11@gmail.com"), 
             new Claim(ClaimTypes.GivenName, "E2E"), 
-            new Claim(ClaimTypes.Surname, "User") 
+            new Claim(ClaimTypes.Surname, "User"),
+            new Claim("http://schemas.microsoft.com/identity/claims/objectidentifier", "a93a2972-bc51-4a82-ad98-bfb8bd07434f")
         };
+        
         var identity = new ClaimsIdentity(claims, "E2ETest");
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, "E2EScheme");
 
         var result = AuthenticateResult.Success(ticket);
+
+        Console.WriteLine("break for investigation");
 
         return Task.FromResult(result);
     }
