@@ -54,18 +54,15 @@ public class MockAuth : AuthenticationHandler<AuthenticationSchemeOptions>
         : base(options, logger, encoder, clock)
     {
     }
-
+    
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
-        string userId = Guid.NewGuid().ToString();
-        
         var claims = new[] { 
-            //ID Claim for user
             new Claim(ClaimTypes.Name, "PlaywrightTester"), 
             new Claim(ClaimTypes.Email, "bdsagrup11@gmail.com"), 
             new Claim(ClaimTypes.GivenName, "E2E"), 
             new Claim(ClaimTypes.Surname, "User"),
-            new Claim("http://schemas.microsoft.com/identity/claims/objectidentifier", "a93a2972-bc51-4a82-ad98-bfb8bd07434f")
+            new Claim("http://schemas.microsoft.com/identity/claims/objectidentifier", "6c61076a-6dba-4f8f-b7dd-ac9e3f0fb029")
         };
         
         var identity = new ClaimsIdentity(claims, "E2ETest");
