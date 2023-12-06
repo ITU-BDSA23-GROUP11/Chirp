@@ -7,9 +7,50 @@ namespace Chirp.WebService.Controllers
 {
     public class CheepController : BaseController
     {
-        public CheepController(IAuthorRepository authorRepository, ICheepRepository cheepRepository) : base(authorRepository, cheepRepository)
+        public CheepController(IAuthorRepository authorRepository, ICheepRepository cheepRepository, ILikeRepository likeRepository) : base(authorRepository, cheepRepository, likeRepository)
         {
         }
+        
+        // POST: Cheep/Like
+        [HttpPost]
+        [Route("Cheep/Like")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Like(IFormCollection collection)
+        {
+            return WithAuth(user =>
+            {
+                String? cheepId = collection["cheepId"];
+                if (String.IsNullOrEmpty(cheepId))
+                {
+                    return BadRequest("Invalid input");
+                }
+                Guid cId = Guid.Parse(cheepId);
+                LikeRepository.LikeCheep(user.Id, cId);
+                
+                return Redirect(GetPathUrl());
+            });
+        }
+        
+        //POST: Unlike cheep
+        [HttpPost]
+        [Route("Cheep/Unlike")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Unlike(IFormCollection collection)
+        {
+            return WithAuth(user =>
+            {
+                String? cheepId = collection["cheepId"];
+                if (String.IsNullOrEmpty(cheepId))
+                {
+                    return BadRequest("Invalid input");
+                }
+                Guid cId = Guid.Parse(cheepId);
+                LikeRepository.UnlikeCheep(user.Id, cId);
+                
+                return Redirect(GetPathUrl());
+            });
+        }
+        
 
         // POST: Cheep/Create
         [HttpPost]
@@ -60,7 +101,7 @@ namespace Chirp.WebService.Controllers
                 Guid id = Guid.Parse(cheepId);
                 if (!CheepRepository.DeleteCheep(id, user.Id)) return NotFound("ERROR: Cheep was not found");
                 
-                return Redirect(Request.GetPathUrl());
+                return Redirect(GetPathUrl());
             });
         }
         
@@ -76,7 +117,7 @@ namespace Chirp.WebService.Controllers
                 
                 AuthorRepository.AddFollow(User.GetUserEmail(), authorToBeFollowed);
                 
-                return Redirect(Request.GetPathUrl());//Redirect to same page
+                return Redirect(GetPathUrl());//Redirect to same page
             });
         }
         
@@ -90,7 +131,7 @@ namespace Chirp.WebService.Controllers
             {
                 String authorToBeUnfollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
                 AuthorRepository.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
-                return Redirect(Request.GetPathUrl());//Redirect to same page
+                return Redirect(GetPathUrl());//Redirect to same page
             });
         }
     }

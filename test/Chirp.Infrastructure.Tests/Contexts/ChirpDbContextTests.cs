@@ -90,7 +90,7 @@ public class ChirpDbContextTests : IClassFixture<ChirpDbContextFixture>
     }
     
     [Fact]
-    public void TestAddCheepAndAuthor()
+    public void TestAddCheepAuthorAndLike()
     {
         ChirpDbContext context = _fixture.GetContext();
         
@@ -103,12 +103,21 @@ public class ChirpDbContextTests : IClassFixture<ChirpDbContextFixture>
             Timestamp = new Faker().Date.Past()
         };
 
+        Like like = new Like
+        {
+            LikedByAuthorId = author.AuthorId,
+            CheepId = cheep.CheepId
+        };
+
         EntityEntry<Author> addedAuthor = context.Authors.Add(author);
         EntityEntry<Cheep> addedCheep = context.Cheeps.Add(cheep);
+        EntityEntry<Like> addedLike = context.Likes.Add(like);
         
         Assert.Equal(author.Name, addedAuthor.Entity.Name);
         Assert.Equal(author.Name, addedCheep.Entity.Author.Name);
         Assert.Equal(cheep.Author, author);
         Assert.Equal(cheep.Text, addedCheep.Entity.Text);
+        Assert.Equal(like.LikedByAuthorId, addedLike.Entity.LikedByAuthorId);
+        
     }
 }

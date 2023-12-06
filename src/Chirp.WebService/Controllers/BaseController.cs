@@ -1,5 +1,6 @@
 using Chirp.Core.Dto;
 using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Repositories;
 using Chirp.WebService.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,11 +24,13 @@ public abstract class BaseController : Controller, IController
     
     protected readonly IAuthorRepository AuthorRepository;
     protected readonly ICheepRepository CheepRepository;
+    protected readonly ILikeRepository LikeRepository;
     
-    protected BaseController(IAuthorRepository authorRepository, ICheepRepository cheepRepository)
+    protected BaseController(IAuthorRepository authorRepository, ICheepRepository cheepRepository, ILikeRepository likeRepository)
     {
         AuthorRepository = authorRepository;
         CheepRepository = cheepRepository;
+        LikeRepository = likeRepository;
         IsUserAuthenticated = () =>
         {
             try
