@@ -58,7 +58,7 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
         {
-            return WithAuth(_ =>
+            return WithAuth(user =>
             {
                 string? cheepText = collection["cheepText"];
 
@@ -74,8 +74,7 @@ namespace Chirp.WebService.Controllers
 
                 CheepRepository.AddCheep(new AddCheepDto
                 {
-                    AuthorEmail = GetUserEmail(),
-                    AuthorName = GetUserFullName(),
+                    AuthorId = user.Id,
                     Text = cheepText
                 });
                 return Redirect(GetPathUrl());
@@ -98,8 +97,7 @@ namespace Chirp.WebService.Controllers
                     return BadRequest("Invalid Cheep Id");
                 }
                 
-                Guid id = Guid.Parse(cheepId);
-                if (!CheepRepository.DeleteCheep(id, user.Id)) return NotFound("ERROR: Cheep was not found");
+                if (!CheepRepository.DeleteCheep(Guid.Parse(cheepId), user.Id)) return NotFound("ERROR: Cheep was not found");
                 
                 return Redirect(GetPathUrl());
             });
@@ -111,11 +109,12 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Follow(IFormCollection collection)
         {
-            return WithAuth(_ =>
+            return WithAuth(user =>
             {
-                String authorToBeFollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
+                //The new account to follow
+                Guid authorToBeFollowed = Guid.Parse(collection["CheepAuthorId"].ToString());
                 
-                AuthorRepository.AddFollow(User.GetUserEmail(), authorToBeFollowed);
+                AuthorRepository.AddFollow(user.Id, authorToBeFollowed);
                 
                 return Redirect(GetPathUrl());//Redirect to same page
             });
@@ -127,10 +126,10 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Unfollow(IFormCollection collection)
         {
-            return WithAuth(_ =>
+            return WithAuth(user =>
             {
-                String authorToBeUnfollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
-                AuthorRepository.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
+                Guid authorToBeUnfollowed = Guid.Parse(collection["CheepAuthorId"].ToString());//The new account to follow
+                AuthorRepository.RemoveFollow(user.Id, authorToBeUnfollowed);
                 return Redirect(GetPathUrl());//Redirect to same page
             });
         }

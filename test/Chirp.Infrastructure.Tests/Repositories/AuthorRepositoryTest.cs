@@ -3,7 +3,6 @@ using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
 using Moq;
-using Org.BouncyCastle.Asn1.Cms;
 
 namespace Chirp.Infrastructure.Tests.Repositories;
 
@@ -16,14 +15,15 @@ public class AuthorRepositoryTest
     {
         //Arrange
         Guid authorDtoId = Guid.NewGuid();
-        string name = new Faker().Random.Words();
-        string authorEmail = "testing@mail.com";
+        string name = new Faker().Name.FullName();
+        string username = new Faker().Internet.UserName(name);
         //Act
         _mockChirpRepositories.AuthorRepository.AddAuthor(new AuthorDto
         {
-            Email = authorEmail,
+            Id = authorDtoId,
             Name = name,
-            Id = authorDtoId
+            Username = username,
+            AvatarUrl = new Faker().Internet.Avatar()
         });
         //Assert
         _mockChirpRepositories.MockAuthorsDbSet.Verify(m => m.Add(It.IsAny<Author>()), Times.Once);
@@ -38,10 +38,10 @@ public class AuthorRepositoryTest
         Author authorToBeFollowed = _mockChirpRepositories.TestAuthors.Last();
         Author followingAuthor = _mockChirpRepositories.TestAuthors.First();
         //Act
-        _mockChirpRepositories.AuthorRepository.AddFollow(authorToBeFollowed.Email, followingAuthor.Email);
+        _mockChirpRepositories.AuthorRepository.AddFollow(followingAuthor.AuthorId, authorToBeFollowed.AuthorId);
         //Assert
-        string actual = followingAuthor.FollowedBy.First().Email;
-        Assert.Equal(authorToBeFollowed.Email, actual);
+        Assert.Contains(authorToBeFollowed.FollowedBy,
+            a => a.AuthorId.ToString().Equals(followingAuthor.AuthorId.ToString()));
     }
 
     [Fact]
@@ -49,13 +49,10 @@ public class AuthorRepositoryTest
     {
         //Arrange
         Author author = _mockChirpRepositories.TestAuthors.First();
-        string authorEmail = author.Email;
         //Act
-        string name = _mockChirpRepositories.AuthorRepository.GetAuthorNameByEmail(authorEmail);
+        AuthorDto? resAuthor = _mockChirpRepositories.AuthorRepository.GetAuthorFromUsername(author.Username);
         //Assert
-        Assert.Equal(name, author.Name);
+        Assert.Equal(author.AuthorId, resAuthor?.Id);
     }
-    
-    
 }
 
