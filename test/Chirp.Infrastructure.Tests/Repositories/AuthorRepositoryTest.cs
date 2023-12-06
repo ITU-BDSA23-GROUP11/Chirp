@@ -16,14 +16,15 @@ public class AuthorRepositoryTest
     {
         //Arrange
         Guid authorDtoId = Guid.NewGuid();
-        string name = new Faker().Random.Words();
-        string authorEmail = "testing@mail.com";
+        string name = new Faker().Name.FullName();
+        string login = new Faker().Internet.UserName(name);
         //Act
         _mockChirpRepositories.AuthorRepository.AddAuthor(new AuthorDto
         {
-            Email = authorEmail,
+            Id = authorDtoId,
             Name = name,
-            Id = authorDtoId
+            Login = login,
+            AvatarUrl = new Faker().Internet.Avatar()
         });
         //Assert
         _mockChirpRepositories.MockAuthorsDbSet.Verify(m => m.Add(It.IsAny<Author>()), Times.Once);
@@ -38,10 +39,10 @@ public class AuthorRepositoryTest
         Author authorToBeFollowed = _mockChirpRepositories.TestAuthors.Last();
         Author followingAuthor = _mockChirpRepositories.TestAuthors.First();
         //Act
-        _mockChirpRepositories.AuthorRepository.AddFollow(authorToBeFollowed.Email, followingAuthor.Email);
+        _mockChirpRepositories.AuthorRepository.AddFollow(authorToBeFollowed.AuthorId, followingAuthor.AuthorId);
         //Assert
-        string actual = followingAuthor.FollowedBy.First().Email;
-        Assert.Equal(authorToBeFollowed.Email, actual);
+        Guid actual = followingAuthor.FollowedBy.First().AuthorId;
+        Assert.Equal(authorToBeFollowed.AuthorId.ToString(), actual.ToString());
     }
 
     [Fact]
@@ -49,13 +50,10 @@ public class AuthorRepositoryTest
     {
         //Arrange
         Author author = _mockChirpRepositories.TestAuthors.First();
-        string authorEmail = author.Email;
         //Act
-        string name = _mockChirpRepositories.AuthorRepository.GetAuthorNameByEmail(authorEmail);
+        AuthorDto? resAuthor = _mockChirpRepositories.AuthorRepository.GetAuthorFromLogin(author.Login);
         //Assert
-        Assert.Equal(name, author.Name);
+        Assert.Equal(author.AuthorId, resAuthor?.Id);
     }
-    
-    
 }
 

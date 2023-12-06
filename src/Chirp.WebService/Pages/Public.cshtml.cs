@@ -56,7 +56,7 @@ public class PublicModel : PageModel
 
     public bool CheepIsLiked(Guid cheepId)
     {
-        var authorId = User.GetUserId() ?? Guid.Empty;
+        var authorId = User.GetUser()?.Id ?? Guid.Empty;
         if (authorId.ToString().Equals(Guid.Empty.ToString())) return false;
         return _likeRepository.IsLiked(authorId, cheepId);   
     

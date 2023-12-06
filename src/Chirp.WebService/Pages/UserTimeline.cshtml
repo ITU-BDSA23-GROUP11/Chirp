@@ -12,7 +12,7 @@
 <div>
     <h2> @(Model?.Author?.Name ?? routeName)'s Timeline </h2>
     <partial name="Shared/_AddCheepForm"/>
-    @if (Model.Cheeps.Any())
+    @if (Model?.Cheeps.Any() ?? false)
     {
         <ul id="messagelist" class="cheeps">
             @foreach (var cheep in Model.Cheeps)
@@ -57,7 +57,7 @@
     }
     <!--Pagination-->
         <div>
-            @for (int i = 1; i <= Model.AmountOfPages; i++)
+            @for (int i = 1; i <= Model?.AmountOfPages; i++)
             {
                 <a href="@routeName?page=@i">@i</a>
             }
