@@ -77,9 +77,4 @@ public class UserTimelineModel : PageModel
         return _likeRepository.IsLiked(authorId, cheepId);   
     
     }
-
-    public int GetLikeCount(Guid cheepId)
-    {
-        return _likeRepository.LikeCount(cheepId);
-    }
 }
