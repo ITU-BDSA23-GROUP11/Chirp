@@ -3,7 +3,6 @@ using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
 using Moq;
-using Org.BouncyCastle.Asn1.Cms;
 
 namespace Chirp.Infrastructure.Tests.Repositories;
 
