@@ -13,6 +13,7 @@ public class UserTimelineModel : PageModel
     private readonly ILikeRepository _likeRepository;
     
     public int PageNumber { get; set; }
+    public AuthorDto? Author { get; set; }
     public List<CheepDto> Cheeps { get; set; } = new ();
     public List<string> Follows { get; set; } = new ();
 
@@ -27,27 +28,20 @@ public class UserTimelineModel : PageModel
 
     public ActionResult OnGet(string author)
     {
-        //Set the follows
-        if (!User.GetUserEmail().Equals(("No Email")))
-        {
-            Follows = _authorRepository.GetFollowsForAuthor(User.GetUserEmail());
-        }
+        Author = _authorRepository.GetAuthorFromUsername(author);
         
-        //Calculate the total amount of pages needed for pagination
-        if (User.GetUserFullName().Equals(author))
+        User.GetUser().RunIfNotNull(user =>
         {
-            //The user is the owner -> include follows
-            int allCheepsCount = 0;
-            allCheepsCount += _cheepRepository.GetAuthorCheepCount(author);
-            foreach (string f in Follows) allCheepsCount += _cheepRepository.GetAuthorCheepCount(_authorRepository.GetAuthorNameByEmail(f));
-            AmountOfPages = (int)Math.Ceiling((double)allCheepsCount / 32);
-        }
-        else
-        {
-            //The user is a visitor
-            AmountOfPages = (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(author) / 32);
-        }
+            Follows = _authorRepository.GetFollowsForAuthor(user.Id);
+        });
 
+        User.GetUser().RunIfNotNull(user =>
+        {
+            AmountOfPages =
+                (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(user.Username, user.Username.Equals(author)) /
+                                  32);
+        });
+        
         //Determine pageNumber
         if (Request.Query.ContainsKey("page") && int.TryParse(Request.Query["page"], out int pageParameter))
         { 
@@ -61,21 +55,24 @@ public class UserTimelineModel : PageModel
             PageNumber = 0;
         }
 
-        if (User.GetUserFullName().Equals(author))
+        User.GetUser().RunIfNotNull(user =>
         {
-            Cheeps = _cheepRepository.GetAuthorCheepsForPageAsOwner(author, PageNumber);
-        }
-        else
-        {
-            Cheeps = _cheepRepository.GetAuthorCheepsForPage(author, PageNumber);
-        }
+            if (user.Username.Equals(author))
+            {
+                Cheeps = _cheepRepository.GetAuthorCheepsForPageAsOwner(user.Id, PageNumber);
+            }
+            else
+            {
+                Cheeps = _cheepRepository.GetAuthorCheepsForPage(user.Username, PageNumber);
+            }
+        });
         
         return Page();   
     }
     
     public bool CheepIsLiked(Guid cheepId)
     {
-        var authorId = User.GetUserId() ?? Guid.Empty;
+        var authorId = User.GetUser()?.Id ?? Guid.Empty;
         if (authorId.ToString().Equals(Guid.Empty.ToString())) return false;
         return _likeRepository.IsLiked(authorId, cheepId);   
     

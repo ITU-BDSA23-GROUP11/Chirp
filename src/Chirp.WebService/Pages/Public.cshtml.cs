@@ -46,14 +46,17 @@ public class PublicModel : PageModel
         
         Cheeps = _cheepRepository.GetCheepsForPage(PageNumber);
         //Set the follows
-        Follows = _authorRepository.GetFollowsForAuthor(User.GetUserEmail());
+        User.GetUser().RunIfNotNull(user =>
+        {
+            Follows = _authorRepository.GetFollowsForAuthor(user.Id);
+        });
         
         return Page();
     }
 
     public bool CheepIsLiked(Guid cheepId)
     {
-        var authorId = User.GetUserId() ?? Guid.Empty;
+        var authorId = User.GetUser()?.Id ?? Guid.Empty;
         if (authorId.ToString().Equals(Guid.Empty.ToString())) return false;
         return _likeRepository.IsLiked(authorId, cheepId);   
     

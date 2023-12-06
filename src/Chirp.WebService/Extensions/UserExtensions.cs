@@ -2,27 +2,32 @@ using System.Security.Claims;
 
 namespace Chirp.WebService.Extensions;
 
+public struct ClaimsUser
+{
+    public string Name { get; init; }
+    public string Username { get; init; }
+    public string AvatarUrl { get; init; }
+    public Guid Id { get; init; }
+}
+
 public static class UserExtensions
 {
-    
-    public static string GetUserFullName(this ClaimsPrincipal claims)
+    public static ClaimsUser? GetUser(this ClaimsPrincipal claims)
     {
-        var givenNameClaim = claims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName);
-        var surnameClaim = claims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Surname);
+        var name = claims.Claims.FirstOrDefault(x => x.Type == "name");
+        var avatarUrl = claims.Claims.FirstOrDefault(x => x.Type == "avatar_url");
+        var username = claims.Claims.FirstOrDefault(x => x.Type == "login");
+        var id = claims.Claims.FirstOrDefault(y =>
+            y.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
         
-        return (givenNameClaim != null && surnameClaim != null) ? $"{givenNameClaim.Value} {surnameClaim.Value}" : "No Name Found";
-    }
+        if (avatarUrl == null || username == null || id == null) return null;
 
-    public static string GetUserEmail(this ClaimsPrincipal claims)
-    {
-        var emailClaim = claims.Claims.FirstOrDefault(y => y.Type == "emails");
-        return (emailClaim != null) ? emailClaim.Value : "No Email";
-    }
-
-    public static Guid? GetUserId(this ClaimsPrincipal claims)
-    {
-        var idClaim = claims.Claims.FirstOrDefault(y => y.Type == "http://schemas.microsoft.com/identity/claims/objectidentifier");
-        return idClaim == null ? null : Guid.Parse(idClaim.Value);
-        
+        return new ClaimsUser
+        {
+            Name = name?.Value ?? username.Value,
+            Username = username.Value,
+            AvatarUrl = avatarUrl.Value,
+            Id = Guid.Parse(id.Value)
+        };
     }
 }
