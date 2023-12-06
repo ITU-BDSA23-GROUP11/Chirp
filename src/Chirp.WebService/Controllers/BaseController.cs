@@ -6,15 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Chirp.WebService.Controllers;
 
-public struct ClientUser
-{
-    public required bool IsAuthenticated;
-    public Guid Id { get; init; }
-    public string Name { get; init; }
-    public string Login { get; init; }
-    public string AvatarUrl { get; init; }
-}
-
 public abstract class BaseController : Controller, IController
 {
     public virtual Func<ClaimsUser?> GetUser { get; }
@@ -44,7 +35,7 @@ public abstract class BaseController : Controller, IController
             {
                 Id = user.Id,
                 Name = user.Name,
-                Login = user.Login,
+                Username = user.Username,
                 AvatarUrl = user.AvatarUrl
             });
 

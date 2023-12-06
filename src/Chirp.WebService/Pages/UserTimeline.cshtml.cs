@@ -28,7 +28,7 @@ public class UserTimelineModel : PageModel
 
     public ActionResult OnGet(string author)
     {
-        Author = _authorRepository.GetAuthorFromLogin(author);
+        Author = _authorRepository.GetAuthorFromUsername(author);
         
         User.GetUser().RunIfNotNull(user =>
         {
@@ -38,7 +38,7 @@ public class UserTimelineModel : PageModel
         User.GetUser().RunIfNotNull(user =>
         {
             AmountOfPages =
-                (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(user.Login, user.Login.Equals(author)) /
+                (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(user.Username, user.Username.Equals(author)) /
                                   32);
         });
         
@@ -57,13 +57,13 @@ public class UserTimelineModel : PageModel
 
         User.GetUser().RunIfNotNull(user =>
         {
-            if (user.Login.Equals(author))
+            if (user.Username.Equals(author))
             {
                 Cheeps = _cheepRepository.GetAuthorCheepsForPageAsOwner(user.Id, PageNumber);
             }
             else
             {
-                Cheeps = _cheepRepository.GetAuthorCheepsForPage(user.Login, PageNumber);
+                Cheeps = _cheepRepository.GetAuthorCheepsForPage(user.Username, PageNumber);
             }
         });
         

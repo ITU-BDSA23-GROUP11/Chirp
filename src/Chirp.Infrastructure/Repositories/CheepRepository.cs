@@ -37,7 +37,7 @@ public class CheepRepository : ICheepRepository
             CheepId = newCheep.CheepId,
             AuthorId = newCheep.Author.AuthorId,
             AuthorName = newCheep.Author.Name,
-            AuthorLogin = newCheep.Author.Login,
+            AuthorUsername = newCheep.Author.Username,
             AuthorAvatarUrl = newCheep.Author.AvatarUrl,
             Text = newCheep.Text,
             Timestamp = newCheep.Timestamp
@@ -49,17 +49,17 @@ public class CheepRepository : ICheepRepository
         return _chirpDbContext.Cheeps.Count();
     }
     
-    public int GetAuthorCheepCount(string authorLogin, bool withFollows = false)
+    public int GetAuthorCheepCount(string authorUsername, bool withFollows = false)
     {
-        int cheepCount = _chirpDbContext.Cheeps.Count(c => c.Author.Login == authorLogin);
+        int cheepCount = _chirpDbContext.Cheeps.Count(c => c.Author.Username == authorUsername);
         
         if (withFollows)
         {
-            List<string> follows = _authorRepository.GetFollowsForAuthor(authorLogin);
+            List<string> follows = _authorRepository.GetFollowsForAuthor(authorUsername);
             cheepCount += _chirpDbContext
                 .Cheeps
                 .Include(c => c.Author)
-                .Count(c => follows.Contains(c.Author.Login));
+                .Count(c => follows.Contains(c.Author.Username));
         }
         
         return cheepCount;
@@ -80,7 +80,7 @@ public class CheepRepository : ICheepRepository
                         CheepId = c.CheepId,
                         AuthorId = c.Author.AuthorId,
                         AuthorName = c.Author.Name,
-                        AuthorLogin = c.Author.Login,
+                        AuthorUsername = c.Author.Username,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
                         Timestamp = c.Timestamp
@@ -90,13 +90,13 @@ public class CheepRepository : ICheepRepository
         });
     }
 
-    public List<CheepDto> GetAuthorCheepsForPage(string authorLogin, int pageNumber)
+    public List<CheepDto> GetAuthorCheepsForPage(string authorUsername, int pageNumber)
     {
         return FetchWithErrorHandling(() =>
         { 
             return _chirpDbContext
                 .Cheeps
-                .Where(c => c.Author.Login == authorLogin)
+                .Where(c => c.Author.Username == authorUsername)
                 .Include(c => c.Author)
                 .OrderByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
@@ -106,7 +106,7 @@ public class CheepRepository : ICheepRepository
                         CheepId = c.CheepId,
                         AuthorId = c.Author.AuthorId,
                         AuthorName = c.Author.Name,
-                        AuthorLogin = c.Author.Login,
+                        AuthorUsername = c.Author.Username,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
                         Timestamp = c.Timestamp
@@ -123,9 +123,9 @@ public class CheepRepository : ICheepRepository
             List<string> authorFollows = _authorRepository.GetFollowsForAuthor(authorId);
             return _chirpDbContext
                 .Cheeps
-                .Where(c => authorFollows.Contains(c.Author.Login) || c.Author.AuthorId.ToString().Equals(authorId.ToString()))
+                .Where(c => authorFollows.Contains(c.Author.Username) || c.Author.AuthorId.ToString().Equals(authorId.ToString()))
                 .Include(c => c.Author)
-                .OrderByDescending(c => authorFollows.Contains(c.Author.Login))
+                .OrderByDescending(c => authorFollows.Contains(c.Author.Username))
                 .ThenBy(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
@@ -134,7 +134,7 @@ public class CheepRepository : ICheepRepository
                         CheepId = c.CheepId,
                         AuthorId = c.Author.AuthorId,
                         AuthorName = c.Author.Name,
-                        AuthorLogin = c.Author.Login,
+                        AuthorUsername = c.Author.Username,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
                         Timestamp = c.Timestamp

@@ -63,7 +63,7 @@ public class CheepRepositoryTests
     {
         foreach (Author author in _mockChirpRepositories.TestAuthors)
         {
-            int authorCheepCount = _mockChirpRepositories.CheepRepository.GetAuthorCheepCount(author.Login);
+            int authorCheepCount = _mockChirpRepositories.CheepRepository.GetAuthorCheepCount(author.Username);
             Assert.Equal(_mockChirpRepositories.TestAuthors.Single(a => a.AuthorId == author.AuthorId).Cheeps.Count, authorCheepCount);
         }
     }
@@ -79,7 +79,7 @@ public class CheepRepositoryTests
             
             for (int i = 1; i <= pages; i++)
             {
-                List<CheepDto> pageAuthorCheeps = _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPage(author.Login, i);
+                List<CheepDto> pageAuthorCheeps = _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPage(author.Username, i);
 
                 if (i == pages)
                 {

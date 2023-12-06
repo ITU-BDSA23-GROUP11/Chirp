@@ -21,13 +21,13 @@
                     <img src="@cheep.AuthorAvatarUrl" alt="@cheep.AuthorName" style="height: 64px; aspect-ratio: 1/1" />
                     <p>
                         <strong>
-                            <a href="/@cheep.AuthorLogin">@cheep.AuthorName</a>
+                            <a href="/@cheep.AuthorUsername">@cheep.AuthorName</a>
                         </strong>
                         @cheep.Text
                         <small>&mdash; @cheep.Timestamp</small>
                         <partial name="Shared/_DeleteCheepForm" model=@cheep/>
                         @{
-                            if (Model.Follows.Any(s => s == cheep.AuthorLogin))
+                            if (Model.Follows.Any(s => s == cheep.AuthorUsername))
                             {
                                 //Follows already -> unfollow
                                 <partial name="Shared/_UnfollowAuthorForm" model="@cheep"/>

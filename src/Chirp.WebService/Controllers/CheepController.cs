@@ -112,7 +112,7 @@ namespace Chirp.WebService.Controllers
             return WithAuth(user =>
             {
                 //The new account to follow
-                Guid authorToBeFollowed = Guid.Parse(collection["CheepAuthorLogin"].ToString());
+                Guid authorToBeFollowed = Guid.Parse(collection["CheepAuthorId"].ToString());
                 
                 AuthorRepository.AddFollow(user.Id, authorToBeFollowed);
                 
@@ -128,7 +128,7 @@ namespace Chirp.WebService.Controllers
         {
             return WithAuth(user =>
             {
-                Guid authorToBeUnfollowed = Guid.Parse(collection["CheepAuthorLogin"].ToString());//The new account to follow
+                Guid authorToBeUnfollowed = Guid.Parse(collection["CheepAuthorId"].ToString());//The new account to follow
                 AuthorRepository.RemoveFollow(user.Id, authorToBeUnfollowed);
                 return Redirect(GetPathUrl());//Redirect to same page
             });

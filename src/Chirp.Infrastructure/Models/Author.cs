@@ -15,7 +15,7 @@ public class Author
     public string? Name { get; set; }
     
     [Required]
-    public required string Login { get; set; }
+    public required string Username { get; set; }
 
     [Required] public required string AvatarUrl { get; set; }
     

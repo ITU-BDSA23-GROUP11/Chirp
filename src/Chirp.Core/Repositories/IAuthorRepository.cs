@@ -6,12 +6,12 @@ public interface IAuthorRepository
 {
     public void AddAuthor(AuthorDto authorDto);
     
-    /// <returns>The logins of the users following the author with id authorId</returns>
+    /// <returns>The usernames of the users following the author with id authorId</returns>
     public List<string> GetFollowsForAuthor(Guid authorId);
-    /// <returns>The logins of the users following the author with id authorId</returns>
-    public List<string> GetFollowsForAuthor(string authorLogin);
+    /// <returns>The usernames of the users following the author with id authorId</returns>
+    public List<string> GetFollowsForAuthor(string authorUsername);
 
-    public AuthorDto? GetAuthorFromLogin(string authorLogin);
+    public AuthorDto? GetAuthorFromUsername(string authorUsername);
     
     public void AddFollow(Guid authorId, Guid followId);
 

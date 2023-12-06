@@ -17,7 +17,7 @@ public class DataGenerator
     {
         var authorsFaker = new Faker<Author>()
             .RuleFor(a => a.Name, f => f.Name.FullName())
-            .RuleFor(a => a.Login, (f, a) => f.Internet.UserName(a.Name))
+            .RuleFor(a => a.Username, (f, a) => f.Internet.UserName(a.Name))
             .RuleFor(a => a.AvatarUrl, f => f.Internet.Avatar());
 
         if (generateIds)

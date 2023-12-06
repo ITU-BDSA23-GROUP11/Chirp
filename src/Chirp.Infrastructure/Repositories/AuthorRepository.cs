@@ -25,7 +25,7 @@ public class AuthorRepository : IAuthorRepository
             {
                 AuthorId = authorDto.Id,
                 Name = authorDto.Name,
-                Login = authorDto.Login,
+                Username = authorDto.Username,
                 AvatarUrl = authorDto.AvatarUrl
             });
             _chirpDbContext.SaveChanges();
@@ -43,11 +43,11 @@ public class AuthorRepository : IAuthorRepository
         return GetFollows(author);
     }
     
-    public List<string> GetFollowsForAuthor(string authorLogin)
+    public List<string> GetFollowsForAuthor(string authorUsername)
     {
         Author? author = _chirpDbContext.Authors
             .Include(a => a.Follows)
-            .FirstOrDefault(a => a.Login == authorLogin);
+            .FirstOrDefault(a => a.Username == authorUsername);
         
         if (author == null) return new List<string>();
 
@@ -56,13 +56,13 @@ public class AuthorRepository : IAuthorRepository
 
     private List<string> GetFollows(Author author)
     {
-        List<string> followsLogins = new List<string>();
+        List<string> followsUsernames = new List<string>();
         
         author.Follows.ForEach(
-            a => followsLogins.Add(a.Login)
+            a => followsUsernames.Add(a.Username)
         );
 
-        return followsLogins;
+        return followsUsernames;
     }
 
     public void AddFollow(Guid authorId, Guid followId)
@@ -103,16 +103,16 @@ public class AuthorRepository : IAuthorRepository
         _chirpDbContext.SaveChanges();
     }
 
-    public AuthorDto? GetAuthorFromLogin(string authorLogin)
+    public AuthorDto? GetAuthorFromUsername(string authorUsername)
     {
-        Author? author = _chirpDbContext.Authors.FirstOrDefault(a => a.Login == authorLogin);
+        Author? author = _chirpDbContext.Authors.FirstOrDefault(a => a.Username == authorUsername);
         
         if (author == null) return null;
         
         return new AuthorDto
         {
             Id = author.AuthorId,
-            Login = author.Login,
+            Username = author.Username,
             Name = author.Name,
             AvatarUrl = author.AvatarUrl
         };

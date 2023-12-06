@@ -25,7 +25,7 @@ public class CheepControllerTest
         {
             Id = new Faker().Random.Guid(),
             Name = name,
-            Login = new Faker().Internet.UserName(name),
+            Username = new Faker().Internet.UserName(name),
             AvatarUrl = new Faker().Internet.Avatar()
         };
         _mockController.As<IController>().Setup(bc => bc.GetUser).Returns(() => user);

@@ -16,13 +16,13 @@ public class AuthorRepositoryTest
         //Arrange
         Guid authorDtoId = Guid.NewGuid();
         string name = new Faker().Name.FullName();
-        string login = new Faker().Internet.UserName(name);
+        string username = new Faker().Internet.UserName(name);
         //Act
         _mockChirpRepositories.AuthorRepository.AddAuthor(new AuthorDto
         {
             Id = authorDtoId,
             Name = name,
-            Login = login,
+            Username = username,
             AvatarUrl = new Faker().Internet.Avatar()
         });
         //Assert
@@ -50,7 +50,7 @@ public class AuthorRepositoryTest
         //Arrange
         Author author = _mockChirpRepositories.TestAuthors.First();
         //Act
-        AuthorDto? resAuthor = _mockChirpRepositories.AuthorRepository.GetAuthorFromLogin(author.Login);
+        AuthorDto? resAuthor = _mockChirpRepositories.AuthorRepository.GetAuthorFromUsername(author.Username);
         //Assert
         Assert.Equal(author.AuthorId, resAuthor?.Id);
     }

@@ -4,7 +4,7 @@
 @{
     var user = User.GetUser();
 }
-@if (user?.Login.Equals(Model.AuthorLogin) ?? false)
+@if (user?.Username.Equals(Model.AuthorUsername) ?? false)
 {
      <form asp-controller="Cheep" asp-action="Delete" style="display:inline;">
          <input type="hidden" name="cheepId" value="@Model.CheepId"/>

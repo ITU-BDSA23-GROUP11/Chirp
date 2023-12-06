@@ -11,18 +11,18 @@ public class ModelsUnitTests
     public void TestAuthorFields()
     {
         string name = new Faker().Name.FullName();
-        string login = new Faker().Internet.UserName(name);
+        string username = new Faker().Internet.UserName(name);
         string avatarUrl = new Faker().Internet.Avatar();
 
         Author author = new Author
         {
             Name = name,
-            Login = login,
+            Username = username,
             AvatarUrl = avatarUrl
         };
 
         Assert.Equal(name, author.Name);
-        Assert.Equal(login, author.Login);
+        Assert.Equal(username, author.Username);
         Assert.Equal(avatarUrl, author.AvatarUrl);
         Assert.Equal(Guid.Empty, author.AuthorId);
         Assert.Empty(author.Cheeps);
@@ -82,7 +82,7 @@ public class ModelsUnitTests
         var author = new Author
         {
             Name = "1234",
-            Login = new Faker().Internet.UserName(),
+            Username = new Faker().Internet.UserName(),
             AvatarUrl = new Faker().Internet.Avatar()
         };
 
@@ -97,7 +97,7 @@ public class ModelsUnitTests
         var author = new Author
         {
             Name = new string('a', 51),
-            Login = new Faker().Internet.UserName(),
+            Username = new Faker().Internet.UserName(),
             AvatarUrl = new Faker().Internet.Avatar()
 
         };

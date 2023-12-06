@@ -5,10 +5,10 @@
     var user = User.GetUser();
 }
 
-@if (user != null && !(user?.Login.Equals(Model.AuthorLogin) ?? false))
+@if (user != null && !(user?.Username.Equals(Model.AuthorUsername) ?? false))
 {
     <form asp-controller="Cheep" asp-action="Unfollow" style="display:inline;">
-        <input type="hidden" name="CheepAuthorLogin" value="@Model.AuthorId"/>
+        <input type="hidden" name="CheepAuthorId" value="@Model.AuthorId"/>
         <input name="__RequestVerificationToken" type="hidden"/>
         @Html.AntiForgeryToken()
         <button type="submit" style="background:none;border:none;color: purple;padding:0;margin-left: 10px;cursor:pointer">
