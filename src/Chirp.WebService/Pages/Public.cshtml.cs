@@ -61,8 +61,4 @@ public class PublicModel : PageModel
         return _likeRepository.IsLiked(authorId, cheepId);   
     
     }
-    public int GetLikeCount(Guid cheepId)
-    {
-        return _likeRepository.LikeCount(cheepId);
-    }
 }
