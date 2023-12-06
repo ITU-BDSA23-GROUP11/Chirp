@@ -16,7 +16,7 @@ public class PublicModel : PageModel
     public int PageNumber { get; set; }
     public List<string> Follows { get; set; } = new ();
     public List<CheepDto> Cheeps { get; set; } = new ();
-    public List<Like> Likes { get; set; } = new();
+    public List<Like> Likes { get; set; } = new ();
     public int AmountOfPages { get; set; }
 
     public PublicModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ILikeRepository likeRepository)

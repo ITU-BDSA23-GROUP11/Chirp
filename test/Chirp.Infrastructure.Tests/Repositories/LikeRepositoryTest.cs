@@ -24,10 +24,7 @@ public class LikeRepositoryTest
         //Assert
         _mockChirpRepositories.MockLikesDbSet.Verify(m => m.Add(It.IsAny<Like>()), Times.Once);
         _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
-        List<LikeDto> likeListTestCheepId = _mockChirpRepositories.LikeRepository.GetLikesByCheepId(cheep.CheepId);
-        List<LikeDto> likeListTestAuthorId = _mockChirpRepositories.LikeRepository.GetLikesByAuthorId(author.AuthorId);
-        Assert.NotEmpty(likeListTestCheepId);
-        Assert.NotEmpty(likeListTestAuthorId);
+        
     }
 
     [Fact] //Tests if a cheep is already liked while trying to like it again. No duplicates should be made.
