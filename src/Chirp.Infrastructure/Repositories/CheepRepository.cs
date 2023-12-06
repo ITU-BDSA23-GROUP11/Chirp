@@ -62,7 +62,7 @@ public class CheepRepository : ICheepRepository
                 .Count(c => follows.Contains(c.Author.Login));
         }
         
-        return (int)Math.Ceiling((double)cheepCount / 32);
+        return cheepCount;
     }
     
     public List<CheepDto> GetCheepsForPage(int pageNumber)

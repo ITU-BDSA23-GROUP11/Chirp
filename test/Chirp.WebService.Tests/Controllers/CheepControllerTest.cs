@@ -2,6 +2,7 @@ using Bogus;
 using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
 using Chirp.WebService.Controllers;
+using Chirp.WebService.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Moq;
@@ -18,15 +19,17 @@ public class CheepControllerTest
     {
         _mockController = new Mock<CheepController>(_mockChirpRepositories.AuthorRepository, _mockChirpRepositories.CheepRepository, _mockChirpRepositories.LikeRepository);
         _mockController.CallBase = true;
-        _mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => true);
             
-        string firstName = new Faker().Name.FirstName();
-        string lastName = new Faker().Name.LastName();
-        _mockController.As<IController>().Setup(bc => bc.GetUserFullName).Returns(() => $"{firstName} {lastName}");
-        _mockController.As<IController>().Setup(bc => bc.GetUserEmail).Returns(() => new Faker().Internet.Email(firstName,lastName));
-        _mockController.As<IController>().Setup(bc => bc.GetUserEmail).Returns(() => new Faker().Internet.Email(firstName,lastName));
+        string name = new Faker().Name.FullName();
+        var user = new ClaimsUser
+        {
+            Id = new Faker().Random.Guid(),
+            Name = name,
+            Login = new Faker().Internet.UserName(name),
+            AvatarUrl = new Faker().Internet.Avatar()
+        };
+        _mockController.As<IController>().Setup(bc => bc.GetUser).Returns(() => user);
         _mockController.As<IController>().Setup(bc => bc.GetPathUrl).Returns(() => new Faker().Internet.UrlWithPath());
-        _mockController.As<IController>().Setup(bc => bc.GetUserId).Returns(() => new Faker().Random.Guid());
 
         _cheepController = _mockController.Object;
     }
@@ -58,7 +61,7 @@ public class CheepControllerTest
     {
         //Arrange
         //Simulate a non-authenticated user
-        _mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => false);
+        _mockController.As<IController>().Setup(bc => bc.GetUser).Returns(() => () =>null);
 
         String newCheep = new Faker().Random.Words();
 

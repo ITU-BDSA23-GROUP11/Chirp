@@ -17,19 +17,18 @@ public class CheepRepositoryTests
 
         AddCheepDto cheep = new AddCheepDto
         {
-            AuthorName = author.Name,
-            AuthorEmail = author.Email,
+            AuthorId = author.AuthorId,
             Text = new Faker().Random.Words()
         };
         
-        CheepDto addedCheep = _mockChirpRepositories.CheepRepository.AddCheep(cheep);
+        CheepDto? addedCheep = _mockChirpRepositories.CheepRepository.AddCheep(cheep);
         
         _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Add(It.IsAny<Cheep>()), Times.Once);
         _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
-        Assert.Equal(Guid.Empty, addedCheep.CheepId);
-        Assert.Equal(author.Name, addedCheep.AuthorName);
-        Assert.Equal(cheep.Text, addedCheep.Text);
-        Assert.True(addedCheep.Timestamp.ToFileTimeUtc() > DateTime.UtcNow.Add(TimeSpan.FromSeconds(-1)).ToFileTimeUtc());
+        Assert.Equal(Guid.Empty, addedCheep?.CheepId);
+        Assert.Equal(author.Name, addedCheep?.AuthorName);
+        Assert.Equal(cheep.Text, addedCheep?.Text);
+        Assert.True(addedCheep?.Timestamp.ToFileTimeUtc() > DateTime.UtcNow.Add(TimeSpan.FromSeconds(-1)).ToFileTimeUtc());
     }
     
     [Fact]
@@ -64,7 +63,7 @@ public class CheepRepositoryTests
     {
         foreach (Author author in _mockChirpRepositories.TestAuthors)
         {
-            int authorCheepCount = _mockChirpRepositories.CheepRepository.GetAuthorCheepCount(author.Name);
+            int authorCheepCount = _mockChirpRepositories.CheepRepository.GetAuthorCheepCount(author.Login);
             Assert.Equal(_mockChirpRepositories.TestAuthors.Single(a => a.AuthorId == author.AuthorId).Cheeps.Count, authorCheepCount);
         }
     }
@@ -80,7 +79,7 @@ public class CheepRepositoryTests
             
             for (int i = 1; i <= pages; i++)
             {
-                List<CheepDto> pageAuthorCheeps = _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPage(author.Name, i);
+                List<CheepDto> pageAuthorCheeps = _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPage(author.Login, i);
 
                 if (i == pages)
                 {

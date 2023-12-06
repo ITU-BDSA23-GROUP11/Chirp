@@ -10,18 +10,18 @@ public static class DbInitializer
     {
         if (!(chirpContext.Authors.Any() && chirpContext.Cheeps.Any()))
         {
-            var a1 = new Author() { Name = "Roger Histand", Login = "Roger+Histand@hotmail.com", AvatarUrl = "https://ui-avatars.com/api/?name=Roger+Histand" };
-            var a2 = new Author() { Name = "Luanna Muro", Login = "Luanna-Muro@ku.dk", AvatarUrl = "https://ui-avatars.com/api/?name=Luanna+Muro" };
-            var a3 = new Author() { Name = "Wendell Ballan", Login = "Wendell-Ballan@gmail.com", AvatarUrl = "https://ui-avatars.com/api/?name=Wendell+Ballan" };
-            var a4 = new Author() { Name = "Nathan Sirmon", Login = "Nathan+Sirmon@dtu.dk", AvatarUrl = "https://ui-avatars.com/api/?name=Nathan+Sirmon" };
-            var a5 = new Author() { Name = "Quintin Sitts", Login = "Quintin+Sitts@itu.dk", AvatarUrl = "https://ui-avatars.com/api/?name=Quintin+Sitts" };
-            var a6 = new Author() { Name = "Mellie Yost", Login = "Mellie+Yost@ku.dk", AvatarUrl = "https://ui-avatars.com/api/?name=Mellie+Yost" };
-            var a7 = new Author() { Name = "Malcolm Janski", Login = "Malcolm-Janski@gmail.com", AvatarUrl = "https://ui-avatars.com/api/?name=Malcolm+Janski" };
-            var a8 = new Author() { Name = "Octavio Wagganer", Login = "Octavio.Wagganer@dtu.dk", AvatarUrl = "https://ui-avatars.com/api/?name=Octavio+Wagganer" };
-            var a9 = new Author() { Name = "Johnnie Calixto", Login = "Johnnie+Calixto@itu.dk", AvatarUrl = "https://ui-avatars.com/api/?name=Johnnie+Calixto" };
-            var a10 = new Author() { Name = "Jacqualine Gilcoine", Login = "Jacqualine.Gilcoine@gmail.com", AvatarUrl = "https://ui-avatars.com/api/?name=Jacqualine+Gilcoine" };
-            var a11 = new Author() { Name = "Helge", Login = "ropf@itu.dk", AvatarUrl = "https://ui-avatars.com/api/?name=Helge" };
-            var a12 = new Author() { Name = "Rasmus", Login = "rnie@itu.dk", AvatarUrl = "https://ui-avatars.com/api/?name=Rasmus" };
+            var a1 = new Author() { Name = "Roger Histand", Login = "rogerhistand", AvatarUrl = "https://ui-avatars.com/api/?name=Roger+Histand" };
+            var a2 = new Author() { Name = "Luanna Muro", Login = "luannamuro", AvatarUrl = "https://ui-avatars.com/api/?name=Luanna+Muro" };
+            var a3 = new Author() { Name = "Wendell Ballan", Login = "wendellballan", AvatarUrl = "https://ui-avatars.com/api/?name=Wendell+Ballan" };
+            var a4 = new Author() { Name = "Nathan Sirmon", Login = "nathansirmon", AvatarUrl = "https://ui-avatars.com/api/?name=Nathan+Sirmon" };
+            var a5 = new Author() { Name = "Quintin Sitts", Login = "quintinsitts", AvatarUrl = "https://ui-avatars.com/api/?name=Quintin+Sitts" };
+            var a6 = new Author() { Name = "Mellie Yost", Login = "mellieyost", AvatarUrl = "https://ui-avatars.com/api/?name=Mellie+Yost" };
+            var a7 = new Author() { Name = "Malcolm Janski", Login = "malcolmjanski", AvatarUrl = "https://ui-avatars.com/api/?name=Malcolm+Janski" };
+            var a8 = new Author() { Name = "Octavio Wagganer", Login = "octaviewagganer", AvatarUrl = "https://ui-avatars.com/api/?name=Octavio+Wagganer" };
+            var a9 = new Author() { Name = "Johnnie Calixto", Login = "johnniecalixto", AvatarUrl = "https://ui-avatars.com/api/?name=Johnnie+Calixto" };
+            var a10 = new Author() { Name = "Jacqualine Gilcoine", Login = "jacqualinegilcoine", AvatarUrl = "https://ui-avatars.com/api/?name=Jacqualine+Gilcoine" };
+            var a11 = new Author() { Name = "Helge", Login = "ropf@itu", AvatarUrl = "https://ui-avatars.com/api/?name=Helge" };
+            var a12 = new Author() { Name = "Rasmus", Login = "rnie@itu", AvatarUrl = "https://ui-avatars.com/api/?name=Rasmus" };
 
             var authors = new List<Author>() { a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12 };
 

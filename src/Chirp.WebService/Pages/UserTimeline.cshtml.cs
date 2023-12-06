@@ -37,7 +37,9 @@ public class UserTimelineModel : PageModel
 
         User.GetUser().RunIfNotNull(user =>
         {
-            AmountOfPages = _cheepRepository.GetAuthorCheepCount(user.Login, user.Login.Equals(author));
+            AmountOfPages =
+                (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(user.Login, user.Login.Equals(author)) /
+                                  32);
         });
         
         //Determine pageNumber
