@@ -1,4 +1,5 @@
 using Bogus;
+using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
 using Chirp.WebService.Controllers;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ public class CheepControllerTest
     
     public CheepControllerTest()
     {
-        _mockController = new Mock<CheepController>(_mockChirpRepositories.AuthorRepository, _mockChirpRepositories.CheepRepository);
+        _mockController = new Mock<CheepController>(_mockChirpRepositories.AuthorRepository, _mockChirpRepositories.CheepRepository, _mockChirpRepositories.LikeRepository);
         _mockController.CallBase = true;
         _mockController.As<IController>().Setup(bc => bc.IsUserAuthenticated).Returns(() => true);
             
@@ -113,4 +114,77 @@ public class CheepControllerTest
         Assert.True(actionResult is BadRequestObjectResult);
     }
 
+    [Fact] //Tests if a cheep is not able to be liked
+    public void LikeCheepReturnsBadTest()
+    {
+        //Arrange
+        string cheepId = new Faker().Random.String(0);
+        //Act
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                { "cheepdId", cheepId }
+            }
+        );
+        //Assert
+        IActionResult actionResult = _cheepController.Like(collection);
+        Assert.True(actionResult is BadRequestObjectResult);
+
+    }
+    
+    [Fact]
+    public void LikeCheepReturnsRedirectTest()
+    {
+        //Arrange
+        Cheep cheep = _mockChirpRepositories.TestCheeps.First();
+        string cheepId = cheep.CheepId.ToString();
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                {"cheepId", cheepId}
+
+            }
+        );
+
+        //Act
+        IActionResult actionResult = _cheepController.Like(collection);
+        //Assert
+        Assert.True(actionResult is RedirectResult);
+    }
+
+    [Fact] //Like is successfully removed
+    public void UnlikeCheepReturnsRedirectTest()
+    {
+        Like like = _mockChirpRepositories.TestLikes.First();
+        string cheepId = like.CheepId.ToString();
+
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                { "cheepId", cheepId }
+            }
+        );
+
+        IActionResult actionResult = _cheepController.Unlike(collection);
+        Assert.True(actionResult is RedirectResult);
+    }
+
+    [Fact]
+    public void DeleteCheepReturnsRedirectTest()
+    {
+        Cheep cheep = _mockChirpRepositories.TestCheeps.First();
+        string cheepId = cheep.CheepId.ToString();
+
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                { "cheepId", cheepId}
+            }
+        );
+        IActionResult actionResult = _cheepController.Delete(collection);
+        Assert.True(actionResult is RedirectResult);
+    }
+
+
+    
 }

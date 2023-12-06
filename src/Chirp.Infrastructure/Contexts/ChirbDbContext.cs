@@ -9,13 +9,13 @@ public class ChirpDbContext : DbContext
 {
     public virtual DbSet<Cheep> Cheeps { get; set; } = null!;
     public virtual DbSet<Author> Authors { get; set; } = null!;
-    
+    public virtual DbSet<Like> Likes { get; set; } = null!;
     public ChirpDbContext() {}
 
     public ChirpDbContext(DbContextOptions<ChirpDbContext> options)
         : base(options)
     { }
-
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Cheep>()
@@ -27,5 +27,7 @@ public class ChirpDbContext : DbContext
         modelBuilder.Entity<Author>()
             .HasMany<Author>(a => a.Follows)
             .WithMany(c => c.FollowedBy);
+        
+        modelBuilder.Entity<Like>().HasKey(x => new { x.LikedByAuthorId, x.CheepId });
     }
 }

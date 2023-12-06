@@ -50,6 +50,7 @@ public class Program
         
         services.AddScoped<IAuthorRepository, AuthorRepository>();
         services.AddScoped<ICheepRepository, CheepRepository>();
+        services.AddScoped<ILikeRepository, LikeRepository>();
         services.AddSingleton(configuration);
         
         var sqlConnectionString = new SqlConnectionStringBuilder(configuration.GetConnectionString("ChirpSqlDb"));
@@ -59,10 +60,12 @@ public class Program
         {
             // Add local password
             sqlConnectionString.Password = password;
-        }
+        } 
         
         services.AddDbContext<ChirpDbContext>(options =>
             options.UseSqlServer(sqlConnectionString.ConnectionString));
+      
+        
     }
     
     private static void ConfigureMiddleware(WebApplication app)

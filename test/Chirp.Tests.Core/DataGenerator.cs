@@ -9,8 +9,10 @@ public class DataGenerator
     {
         public List<Author> Authors;
         public List<Cheep> Cheeps;
-    }
+        public List<Like> Likes;
 
+    }
+    
     public static Faker<Author> GenerateAuthorFaker(bool generateIds = true)
     {
         var authorsFaker = new Faker<Author>()
@@ -40,11 +42,20 @@ public class DataGenerator
         return cheepsFaker;
     }
     
+    public static Faker<Like> GenerateLikesFaker(List<Author> authors, List<Cheep> cheeps)
+    {
+        return new Faker<Like>()
+            .RuleFor(l => l.LikedByAuthorId, f => f.PickRandom(authors).AuthorId)
+            .RuleFor(l => l.CheepId, f => f.PickRandom(cheeps).CheepId);
+    }
+    
     public static AuthorCheepsData GenerateAuthorsAndCheeps(
         int minAuthors = 100,
         int maxAuthors = 200,
         int minCheeps = 500,
         int maxCheeps = 1000,
+        int minLikes = 1000,
+        int maxLikes = 2000,
         bool generateIds = true
     )
     {
@@ -56,10 +67,15 @@ public class DataGenerator
 
         List<Cheep> cheepsData = cheepsFaker.GenerateBetween(minCheeps, maxCheeps);
 
+        var likesFaker = GenerateLikesFaker(authorsData, cheepsData);
+
+        List<Like> likesData = likesFaker.GenerateBetween(minLikes, maxLikes);
+
         return new AuthorCheepsData
         {
             Authors = authorsData,
-            Cheeps = cheepsData
+            Cheeps = cheepsData,
+            Likes = likesData
         };
     }
     

@@ -10,6 +10,7 @@ public class UserTimelineModel : PageModel
 {
     private readonly ICheepRepository _cheepRepository;
     private readonly IAuthorRepository _authorRepository;
+    private readonly ILikeRepository _likeRepository;
     
     public int PageNumber { get; set; }
     public List<CheepDto> Cheeps { get; set; } = new ();
@@ -17,10 +18,11 @@ public class UserTimelineModel : PageModel
 
     public int AmountOfPages { get; set; }
 
-    public UserTimelineModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository)
+    public UserTimelineModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ILikeRepository likeRepository)
     {
         _cheepRepository = cheepRepository;
         _authorRepository = authorRepository;
+        _likeRepository = likeRepository;
     }
 
     public ActionResult OnGet(string author)
@@ -69,5 +71,13 @@ public class UserTimelineModel : PageModel
         }
         
         return Page();   
+    }
+    
+    public bool CheepIsLiked(Guid cheepId)
+    {
+        var authorId = User.GetUserId() ?? Guid.Empty;
+        if (authorId.ToString().Equals(Guid.Empty.ToString())) return false;
+        return _likeRepository.IsLiked(authorId, cheepId);   
+    
     }
 }
