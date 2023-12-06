@@ -11,6 +11,10 @@
 
 <div>
     <h2> @(Model?.Author?.Name ?? routeName)'s Timeline </h2>
+    @{
+        var followerCount = Model?.Follows.Count();
+    }
+    <p class="followers"><i>@followerCount.ToString() Followers.</i></p>
     <partial name="Shared/_AddCheepForm"/>
     @if (Model?.Cheeps.Any() ?? false)
     {

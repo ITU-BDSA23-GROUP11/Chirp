@@ -17,7 +17,6 @@ public class LikeRepository : ILikeRepository
     public LikeRepository(ChirpDbContext chirpDbContext)
     {
         _chirpDbContext = chirpDbContext;
-        
     }
     //Creates a like in DbContext
     public void LikeCheep(Guid authorId, Guid cheepId) 
@@ -92,11 +91,12 @@ public class LikeRepository : ILikeRepository
     //Checks if a like exists
     public bool IsLiked(Guid authorId, Guid cheepId) 
     {
-        if (!_chirpDbContext.Likes.Any(x => x.LikedByAuthorId == authorId && x.CheepId == cheepId))
+        if (_chirpDbContext.Likes.Any(x => x.LikedByAuthorId == authorId && x.CheepId == cheepId))
         {
-            return false;
-        } 
-        return _chirpDbContext.Likes.Any(x => x.LikedByAuthorId == authorId && x.CheepId == cheepId);
+            return true;
+        }
+
+        return false;
     }
 
 }
