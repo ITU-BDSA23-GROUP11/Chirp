@@ -26,6 +26,22 @@ public class ModelsUnitTests
     }
 
     [Fact]
+    public void TestLikeFields()
+    {
+        Guid authorId = Guid.NewGuid();
+        Guid cheepId = Guid.NewGuid();
+
+        Like like = new Like
+        {
+            LikedByAuthorId = authorId,
+            CheepId = cheepId
+        };
+        
+        Assert.Equal(authorId, like.LikedByAuthorId);
+        Assert.Equal(cheepId, like.CheepId);
+    }
+
+    [Fact]
     public void TestCheepFields()
     {
         Author author = DataGenerator.GenerateAuthorFaker().Generate();
