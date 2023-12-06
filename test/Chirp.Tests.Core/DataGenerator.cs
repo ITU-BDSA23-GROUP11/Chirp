@@ -17,7 +17,8 @@ public class DataGenerator
     {
         var authorsFaker = new Faker<Author>()
             .RuleFor(a => a.Name, f => f.Name.FullName())
-            .RuleFor(a => a.Email, (f, a) => f.Internet.Email(a.Name));
+            .RuleFor(a => a.Username, (f, a) => f.Internet.UserName(a.Name))
+            .RuleFor(a => a.AvatarUrl, f => f.Internet.Avatar());
 
         if (generateIds)
         {
@@ -41,6 +42,24 @@ public class DataGenerator
 
         return cheepsFaker;
     }
+
+    public static List<Author> GenerateFollows(List<Author> authors)
+    {
+        var faker = new Faker();
+        var rand = new Random();
+        foreach (Author author in authors)
+        {
+            for (int i = 0; i < rand.Next(3, 10); i++)
+            {
+                var followAuthor = faker.PickRandom(authors);
+                if (followAuthor.AuthorId.ToString().Equals(author.AuthorId.ToString())) continue;
+                author.Follows.Add(followAuthor);
+                followAuthor.FollowedBy.Add(author);
+            }
+        }
+
+        return authors;
+    }
     
     public static Faker<Like> GenerateLikesFaker(List<Author> authors, List<Cheep> cheeps)
     {
@@ -61,7 +80,7 @@ public class DataGenerator
     {
         var authorsFaker = GenerateAuthorFaker(generateIds);
 
-        List<Author> authorsData = authorsFaker.GenerateBetween(minAuthors, maxAuthors);
+        List<Author> authorsData = GenerateFollows(authorsFaker.GenerateBetween(minAuthors, maxAuthors));
 
         var cheepsFaker = GenerateCheepFaker(authorsData, generateIds);
 
@@ -97,28 +116,5 @@ public class DataGenerator
             .RuleFor(u => u.Referer, (_, u) => u.Origin+u.Path);
 
         return urlFaker.GenerateBetween(minAmount, maxAmount);
-    }
-
-    public class FakeClaims
-    {
-        public string? GivenName;
-        public string? Surname;
-        public string? Email;
-        public Guid Id;
-    }
-    
-    public static List<FakeClaims> GenerateUserClaims(
-        int minAmount = 100,
-        int maxAmount = 500
-    )
-    {
-        var claimsFaker = new Faker<FakeClaims>()
-            .RuleFor(c => c.GivenName, f => f.Random.Bool() ? f.Name.FirstName() : null)
-            .RuleFor(c => c.Surname, f => f.Random.Bool() ? f.Name.LastName() : null)
-            .RuleFor(c => c.Email,
-                (f, c) => f.Random.Bool() ? f.Internet.Email(firstName: c.GivenName, lastName: c.Surname) : null)
-            .RuleFor(c => c.Id, f => f.Random.Guid());
-
-        return claimsFaker.GenerateBetween(minAmount, maxAmount);
     }
 }

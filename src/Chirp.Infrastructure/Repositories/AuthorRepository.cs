@@ -25,33 +25,53 @@ public class AuthorRepository : IAuthorRepository
             {
                 AuthorId = authorDto.Id,
                 Name = authorDto.Name,
-                Email = authorDto.Email
+                Username = authorDto.Username,
+                AvatarUrl = authorDto.AvatarUrl
             });
             _chirpDbContext.SaveChanges();
         }
     }
     
-    public List<string> GetFollowsForAuthor(string authorEmail)
+    public List<string> GetFollowsForAuthor(Guid authorId)
     {
-        Author author = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.Email == authorEmail);
+        Author? author = _chirpDbContext.Authors
+            .Include(a => a.Follows)
+            .FirstOrDefault(a => a.AuthorId == authorId);
+        
         if (author == null) return new List<string>();
-        
-        List<string> followsEmails = new List<string>();
-        
-        author.Follows.ForEach(
-            a => followsEmails.Add(a.Email)
-        );
 
-        return followsEmails;
+        return GetFollows(author);
+    }
+    
+    public List<string> GetFollowsForAuthor(string authorUsername)
+    {
+        Author? author = _chirpDbContext.Authors
+            .Include(a => a.Follows)
+            .FirstOrDefault(a => a.Username == authorUsername);
+        
+        if (author == null) return new List<string>();
+
+        return GetFollows(author);
     }
 
-    public void AddFollow(string authorEmail, string followEmail)
+    private List<string> GetFollows(Author author)
     {
-        Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == authorEmail);
+        List<string> followsUsernames = new List<string>();
+        
+        author.Follows.ForEach(
+            a => followsUsernames.Add(a.Username)
+        );
+
+        return followsUsernames;
+    }
+
+    public void AddFollow(Guid authorId, Guid followId)
+    {
+        Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.AuthorId == authorId);
 
         if (userAuthor == null) return;
 
-        Author? followAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.Email == followEmail);
+        Author? followAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.AuthorId == followId);
 
         if (followAuthor == null) return;
 
@@ -64,13 +84,13 @@ public class AuthorRepository : IAuthorRepository
         _chirpDbContext.SaveChanges();
     }
 
-    public void RemoveFollow(string authorEmail, string unfollowEmail)
+    public void RemoveFollow(Guid authorId, Guid unfollowId)
     {
-        Author? userAuthor = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.Email == authorEmail);
+        Author? userAuthor = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.AuthorId == authorId);
 
         if (userAuthor == null) return;
 
-        Author? unfollowAuthor = _chirpDbContext.Authors.Include(a => a.FollowedBy).FirstOrDefault(a => a.Email == unfollowEmail);
+        Author? unfollowAuthor = _chirpDbContext.Authors.Include(a => a.FollowedBy).FirstOrDefault(a => a.AuthorId == unfollowId);
 
         if (unfollowAuthor == null) return;
             
@@ -83,10 +103,18 @@ public class AuthorRepository : IAuthorRepository
         _chirpDbContext.SaveChanges();
     }
 
-    public string GetAuthorNameByEmail(string authorEmail)
+    public AuthorDto? GetAuthorFromUsername(string authorUsername)
     {
-        string name = _chirpDbContext.Authors.Single(a => a.Email == authorEmail).Name;
-        if (name == null) throw new Exception("Could not find name in database");
-        return name;
+        Author? author = _chirpDbContext.Authors.FirstOrDefault(a => a.Username == authorUsername);
+        
+        if (author == null) return null;
+        
+        return new AuthorDto
+        {
+            Id = author.AuthorId,
+            Username = author.Username,
+            Name = author.Name,
+            AvatarUrl = author.AvatarUrl
+        };
     }
 }
