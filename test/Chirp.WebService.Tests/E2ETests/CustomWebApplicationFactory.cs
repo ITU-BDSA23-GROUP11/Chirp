@@ -1,4 +1,5 @@
 ﻿using Chirp.WebService;
+using Chirp.WebService.Tests.E2ETests;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -10,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Chirp.WebService.Tests;
 
-public class CustomWebApplicationFactory : WebApplicationFactory<Program>
+public class CustomWebApplicationFactory : WebApplicationFactoryWithAuth<Program>
 {
     private IHost? _host;
 
@@ -31,8 +32,9 @@ public class CustomWebApplicationFactory : WebApplicationFactory<Program>
 
         // Modify the host builder to use Kestrel instead
         // of TestServer so we can listen on a real address.
+        
         builder.ConfigureWebHost(webHostBuilder => webHostBuilder.UseKestrel());
-
+        
         // Create and start the Kestrel server before the test server,
         // otherwise due to the way the deferred host builder works
         // for minimal hosting, the server will not get "initialized
