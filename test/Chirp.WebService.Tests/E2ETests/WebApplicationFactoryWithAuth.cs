@@ -59,11 +59,10 @@ public class MockAuth : AuthenticationHandler<AuthenticationSchemeOptions>
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         var claims = new[] { 
-            new Claim(ClaimTypes.Name, "PlaywrightTester"), 
-            new Claim(ClaimTypes.Email, "bdsagrup11@gmail.com"), 
-            new Claim(ClaimTypes.GivenName, "E2E"), 
-            new Claim(ClaimTypes.Surname, "User"),
-            new Claim("http://schemas.microsoft.com/identity/claims/objectidentifier", "6c61076a-6dba-4f8f-b7dd-ac9e3f0fb029")
+            new Claim("name", "PlaywrightTester"), 
+            new Claim("avatar_url", "https://avatars.githubusercontent.com/u/118434623?v=4"),
+            new Claim("login", "E2ETEST"),
+            new Claim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", "6c61076a-6dba-4f8f-b7dd-ac9e3f0fb029")
         };
         
         var identity = new ClaimsIdentity(claims, "E2ETest");
