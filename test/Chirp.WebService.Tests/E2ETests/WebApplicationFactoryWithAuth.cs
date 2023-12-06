@@ -55,6 +55,7 @@ public class MockAuth : AuthenticationHandler<AuthenticationSchemeOptions>
     {
     }
     
+    //Used to simulate an authenticated user
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         var claims = new[] { 
@@ -70,9 +71,7 @@ public class MockAuth : AuthenticationHandler<AuthenticationSchemeOptions>
         var ticket = new AuthenticationTicket(principal, "E2EScheme");
 
         var result = AuthenticateResult.Success(ticket);
-
-        Console.WriteLine("break for investigation");
-
+        
         return Task.FromResult(result);
     }
 }
