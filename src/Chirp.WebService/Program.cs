@@ -18,7 +18,7 @@ public class Program
     {
         var webApplicationBuilder = WebApplication.CreateBuilder(args);
         webApplicationBuilder.Configuration.AddEnvironmentVariables();
-        ConfigureServices(webApplicationBuilder.Configuration, webApplicationBuilder.Services, webApplicationBuilder.Environment);
+        ConfigureServices(webApplicationBuilder.Configuration, webApplicationBuilder.Services);
         
         var webApplication = webApplicationBuilder.Build();
         
@@ -29,15 +29,10 @@ public class Program
         webApplication.Run();
     }
 
-    private static void ConfigureServices(IConfiguration configuration, IServiceCollection services, IWebHostEnvironment env)
+    private static void ConfigureServices(IConfiguration configuration, IServiceCollection services)
     {
-        Console.WriteLine(env.EnvironmentName);
-        //Add authentication only if NOT in E2ETesting environment
-        if (!env.IsEnvironment("E2ETesting"))
-        {
-            services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
-                .AddMicrosoftIdentityWebApp(configuration.GetSection("AzureADB2C"));    
-        }
+        services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
+            .AddMicrosoftIdentityWebApp(configuration.GetSection("AzureADB2C"));    
         
         services.AddAuthorization(options =>
         {
