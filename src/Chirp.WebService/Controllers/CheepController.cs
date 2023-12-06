@@ -101,7 +101,7 @@ namespace Chirp.WebService.Controllers
                 Guid id = Guid.Parse(cheepId);
                 if (!CheepRepository.DeleteCheep(id, user.Id)) return NotFound("ERROR: Cheep was not found");
                 
-                return Redirect(Request.GetPathUrl());
+                return Redirect(GetPathUrl());
             });
         }
         
@@ -117,7 +117,7 @@ namespace Chirp.WebService.Controllers
                 
                 AuthorRepository.AddFollow(User.GetUserEmail(), authorToBeFollowed);
                 
-                return Redirect(Request.GetPathUrl());//Redirect to same page
+                return Redirect(GetPathUrl());//Redirect to same page
             });
         }
         
@@ -131,7 +131,7 @@ namespace Chirp.WebService.Controllers
             {
                 String authorToBeUnfollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
                 AuthorRepository.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
-                return Redirect(Request.GetPathUrl());//Redirect to same page
+                return Redirect(GetPathUrl());//Redirect to same page
             });
         }
     }
