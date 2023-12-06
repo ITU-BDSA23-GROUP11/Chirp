@@ -10,18 +10,18 @@ public static class DbInitializer
     {
         if (!(chirpContext.Authors.Any() && chirpContext.Cheeps.Any()))
         {
-            var a1 = new Author() { Name = "Roger Histand", Email = "Roger+Histand@hotmail.com" };
-            var a2 = new Author() { Name = "Luanna Muro", Email = "Luanna-Muro@ku.dk" };
-            var a3 = new Author() { Name = "Wendell Ballan", Email = "Wendell-Ballan@gmail.com" };
-            var a4 = new Author() { Name = "Nathan Sirmon", Email = "Nathan+Sirmon@dtu.dk" };
-            var a5 = new Author() { Name = "Quintin Sitts", Email = "Quintin+Sitts@itu.dk" };
-            var a6 = new Author() { Name = "Mellie Yost", Email = "Mellie+Yost@ku.dk" };
-            var a7 = new Author() { Name = "Malcolm Janski", Email = "Malcolm-Janski@gmail.com" };
-            var a8 = new Author() { Name = "Octavio Wagganer", Email = "Octavio.Wagganer@dtu.dk" };
-            var a9 = new Author() { Name = "Johnnie Calixto", Email = "Johnnie+Calixto@itu.dk" };
-            var a10 = new Author() { Name = "Jacqualine Gilcoine", Email = "Jacqualine.Gilcoine@gmail.com" };
-            var a11 = new Author() { Name = "Helge", Email = "ropf@itu.dk" };
-            var a12 = new Author() { Name = "Rasmus", Email = "rnie@itu.dk" };
+            var a1 = new Author() { Name = "Roger Histand", Login = "Roger+Histand@hotmail.com" };
+            var a2 = new Author() { Name = "Luanna Muro", Login = "Luanna-Muro@ku.dk" };
+            var a3 = new Author() { Name = "Wendell Ballan", Login = "Wendell-Ballan@gmail.com" };
+            var a4 = new Author() { Name = "Nathan Sirmon", Login = "Nathan+Sirmon@dtu.dk" };
+            var a5 = new Author() { Name = "Quintin Sitts", Login = "Quintin+Sitts@itu.dk" };
+            var a6 = new Author() { Name = "Mellie Yost", Login = "Mellie+Yost@ku.dk" };
+            var a7 = new Author() { Name = "Malcolm Janski", Login = "Malcolm-Janski@gmail.com" };
+            var a8 = new Author() { Name = "Octavio Wagganer", Login = "Octavio.Wagganer@dtu.dk" };
+            var a9 = new Author() { Name = "Johnnie Calixto", Login = "Johnnie+Calixto@itu.dk" };
+            var a10 = new Author() { Name = "Jacqualine Gilcoine", Login = "Jacqualine.Gilcoine@gmail.com" };
+            var a11 = new Author() { Name = "Helge", Login = "ropf@itu.dk" };
+            var a12 = new Author() { Name = "Rasmus", Login = "rnie@itu.dk" };
 
             var authors = new List<Author>() { a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12 };
 

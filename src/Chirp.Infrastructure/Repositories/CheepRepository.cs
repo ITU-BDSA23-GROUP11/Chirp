@@ -17,15 +17,11 @@ public class CheepRepository : ICheepRepository
         _authorRepository = authorRepository;
     }
     
-    public CheepDto AddCheep(AddCheepDto cheep)
+    public CheepDto? AddCheep(AddCheepDto cheep)
     {
-        Author author =
-            _chirpDbContext.Authors.FirstOrDefault(a => a.Name == cheep.AuthorName && a.Email == cheep.AuthorEmail) ??
-            new Author
-            {
-                Email = cheep.AuthorEmail,
-                Name = cheep.AuthorName
-            };
+        Author? author = _chirpDbContext.Authors.FirstOrDefault(a => a.Login == cheep.AuthorLogin);
+        
+        if (author == null) return null;
 
         Cheep newCheep = new Cheep
         {
@@ -40,7 +36,7 @@ public class CheepRepository : ICheepRepository
         {
             CheepId = newCheep.CheepId,
             AuthorName = newCheep.Author.Name,
-            AuthorEmail = newCheep.Author.Email,
+            AuthorLogin = newCheep.Author.Login,
             Text = newCheep.Text,
             Timestamp = newCheep.Timestamp
         };
@@ -51,9 +47,9 @@ public class CheepRepository : ICheepRepository
         return _chirpDbContext.Cheeps.Count();
     }
     
-    public int GetAuthorCheepCount(string authorName)
+    public int GetAuthorCheepCount(string authorLogin)
     {
-        return _chirpDbContext.Cheeps.Count(c => c.Author.Name == authorName);
+        return _chirpDbContext.Cheeps.Count(c => c.Author.Login == authorLogin);
     }
     
     public List<CheepDto> GetCheepsForPage(int pageNumber)
@@ -70,7 +66,7 @@ public class CheepRepository : ICheepRepository
                     new CheepDto {
                         CheepId = c.CheepId,
                         AuthorName = c.Author.Name,
-                        AuthorEmail = c.Author.Email,
+                        AuthorLogin = c.Author.Login,
                         Text = c.Text,
                         Timestamp = c.Timestamp
                     }
@@ -79,13 +75,13 @@ public class CheepRepository : ICheepRepository
         });
     }
 
-    public List<CheepDto> GetAuthorCheepsForPage(string authorName, int pageNumber)
+    public List<CheepDto> GetAuthorCheepsForPage(string authorLogin, int pageNumber)
     {
         return FetchWithErrorHandling(() =>
         { 
             return _chirpDbContext
                 .Cheeps
-                .Where(c => c.Author.Name == authorName)
+                .Where(c => c.Author.Name == authorLogin)
                 .Include(c => c.Author)
                 .OrderByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
@@ -94,7 +90,7 @@ public class CheepRepository : ICheepRepository
                     new CheepDto {
                         CheepId = c.CheepId,
                         AuthorName = c.Author.Name,
-                        AuthorEmail = c.Author.Email,
+                        AuthorLogin = c.Author.Login,
                         Text = c.Text,
                         Timestamp = c.Timestamp
                     }
@@ -103,17 +99,17 @@ public class CheepRepository : ICheepRepository
         });
     }
 
-    public List<CheepDto> GetAuthorCheepsForPageAsOwner(string authorName, int pageNumber)
+    public List<CheepDto> GetAuthorCheepsForPageAsOwner(string authorLogin, int pageNumber)
     {
         return FetchWithErrorHandling(() =>
         {
-            var email = _chirpDbContext.Authors.Single(a => a.Name == authorName).Email;
-            List<string> authorFollows = _authorRepository.GetFollowsForAuthor(email);
+            var login = _chirpDbContext.Authors.Single(a => a.Login == authorLogin).Login;
+            List<string> authorFollows = _authorRepository.GetFollowsForAuthor(login);
             return _chirpDbContext
                 .Cheeps
-                .Where(c => authorFollows.Contains(c.Author.Email) || c.Author.Name == authorName)
+                .Where(c => authorFollows.Contains(c.Author.Login))
                 .Include(c => c.Author)
-                .OrderByDescending(c => authorFollows.Contains(c.Author.Name))
+                .OrderByDescending(c => authorFollows.Contains(c.Author.Login))
                 .ThenBy(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
@@ -121,7 +117,7 @@ public class CheepRepository : ICheepRepository
                     new CheepDto {
                         CheepId = c.CheepId,
                         AuthorName = c.Author.Name,
-                        AuthorEmail = c.Author.Email,
+                        AuthorLogin = c.Author.Login,
                         Text = c.Text,
                         Timestamp = c.Timestamp
                     }

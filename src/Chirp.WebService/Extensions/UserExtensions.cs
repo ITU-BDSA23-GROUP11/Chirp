@@ -5,12 +5,23 @@ namespace Chirp.WebService.Extensions;
 public static class UserExtensions
 {
     
-    public static string GetUserFullName(this ClaimsPrincipal claims)
+    public static string? GetUserName(this ClaimsPrincipal claims)
     {
-        var givenNameClaim = claims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.GivenName);
-        var surnameClaim = claims.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Surname);
-        
-        return (givenNameClaim != null && surnameClaim != null) ? $"{givenNameClaim.Value} {surnameClaim.Value}" : "No Name Found";
+        var name = claims.Claims.FirstOrDefault(x => x.Type == "name");
+
+        return name?.Value ?? null;
+    }
+    
+    public static string GetUserAvatar(this ClaimsPrincipal claims)
+    {
+        // IEF with github guarantees avatar url
+        return claims.Claims.FirstOrDefault(x => x.Type == "avatar_url")!.Value;
+    }
+
+    public static string GetUserLogin(this ClaimsPrincipal claims)
+    {
+        // IEF with github guarantees user login
+        return claims.Claims.FirstOrDefault(x => x.Type == "login")!.Value;
     }
 
     public static string GetUserEmail(this ClaimsPrincipal claims)

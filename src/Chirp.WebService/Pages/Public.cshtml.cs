@@ -46,7 +46,7 @@ public class PublicModel : PageModel
         
         Cheeps = _cheepRepository.GetCheepsForPage(PageNumber);
         //Set the follows
-        Follows = _authorRepository.GetFollowsForAuthor(User.GetUserEmail());
+        Follows = _authorRepository.GetFollowsForAuthor(User.GetUserLogin());
         
         return Page();
     }

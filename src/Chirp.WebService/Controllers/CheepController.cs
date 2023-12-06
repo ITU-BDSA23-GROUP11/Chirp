@@ -74,8 +74,7 @@ namespace Chirp.WebService.Controllers
 
                 CheepRepository.AddCheep(new AddCheepDto
                 {
-                    AuthorEmail = GetUserEmail(),
-                    AuthorName = GetUserFullName(),
+                    AuthorLogin = GetUserLogin(),
                     Text = cheepText
                 });
                 return Redirect(GetPathUrl());
@@ -113,9 +112,9 @@ namespace Chirp.WebService.Controllers
         {
             return WithAuth(_ =>
             {
-                String authorToBeFollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
+                String authorToBeFollowed = collection["CheepAuthorLogin"].ToString();//The new account to follow
                 
-                AuthorRepository.AddFollow(User.GetUserEmail(), authorToBeFollowed);
+                AuthorRepository.AddFollow(User.GetUserLogin(), authorToBeFollowed);
                 
                 return Redirect(GetPathUrl());//Redirect to same page
             });
@@ -130,7 +129,7 @@ namespace Chirp.WebService.Controllers
             return WithAuth(_ =>
             {
                 String authorToBeUnfollowed = collection["CheepAuthorEmail"].ToString();//The new account to follow
-                AuthorRepository.RemoveFollow(User.GetUserEmail(), authorToBeUnfollowed);
+                AuthorRepository.RemoveFollow(User.GetUserLogin(), authorToBeUnfollowed);
                 return Redirect(GetPathUrl());//Redirect to same page
             });
         }

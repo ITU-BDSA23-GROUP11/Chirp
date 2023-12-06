@@ -10,16 +10,18 @@ public struct ClientUser
 {
     public required bool IsAuthenticated;
     public Guid Id { get; init; }
-    public string FullName { get; init; }
-    public string Email { get; init; }
+    public string Name { get; init; }
+    public string Login { get; init; }
+    public string AvatarUrl { get; init; }
 }
 
 public abstract class BaseController : Controller, IController
 {
     public virtual Func<bool> IsUserAuthenticated { get; }
     public virtual Func<Guid?> GetUserId { get; }
-    public virtual Func<string> GetUserFullName { get; }
-    public virtual Func<string> GetUserEmail { get; }
+    public virtual Func<string> GetUserName { get; }
+    public virtual Func<string> GetUserLogin { get; }
+    public virtual Func<string> GetUserAvatarUrl { get; }
     public virtual Func<string> GetPathUrl { get; }
     
     protected readonly IAuthorRepository AuthorRepository;
@@ -43,8 +45,9 @@ public abstract class BaseController : Controller, IController
             }
         };
         GetUserId = () => User.GetUserId();
-        GetUserEmail = () => User.GetUserEmail();
-        GetUserFullName = () => User.GetUserFullName();
+        GetUserLogin = () => User.GetUserLogin();
+        GetUserName = () => User.GetUserName() ?? GetUserLogin();
+        GetUserAvatarUrl = () => User.GetUserAvatar();
         GetPathUrl = () => Request.GetPathUrl();
     }
 
@@ -60,16 +63,18 @@ public abstract class BaseController : Controller, IController
             var user = new ClientUser
             {
                 IsAuthenticated = IsUserAuthenticated(),
-                FullName = GetUserFullName(),
-                Email = GetUserEmail(),
+                Name = GetUserName(),
+                Login = GetUserLogin(),
+                AvatarUrl = GetUserAvatarUrl(),
                 Id = userId.Value
             };
             
             AuthorRepository.AddAuthor(new AuthorDto
             {
                 Id = user.Id,
-                Name = user.FullName,
-                Email = user.Email
+                Name = user.Name,
+                Login = user.Login,
+                AvatarUrl = user.AvatarUrl
             });
 
             return protectedFunction(user);

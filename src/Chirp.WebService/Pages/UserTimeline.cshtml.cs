@@ -28,18 +28,20 @@ public class UserTimelineModel : PageModel
     public ActionResult OnGet(string author)
     {
         //Set the follows
-        if (!User.GetUserEmail().Equals(("No Email")))
-        {
-            Follows = _authorRepository.GetFollowsForAuthor(User.GetUserEmail());
-        }
+        // if (!User.GetUserEmail().Equals("No Email"))
+        // {
+        //     Follows = _authorRepository.GetFollowsForAuthor(User.GetUserEmail());
+        // }
+        
+        Follows = _authorRepository.GetFollowsForAuthor(User.GetUserLogin());
         
         //Calculate the total amount of pages needed for pagination
-        if (User.GetUserFullName().Equals(author))
+        if (User.GetUserLogin().Equals(author))
         {
             //The user is the owner -> include follows
             int allCheepsCount = 0;
             allCheepsCount += _cheepRepository.GetAuthorCheepCount(author);
-            foreach (string f in Follows) allCheepsCount += _cheepRepository.GetAuthorCheepCount(_authorRepository.GetAuthorNameByEmail(f));
+            foreach (string f in Follows) allCheepsCount += _cheepRepository.GetAuthorCheepCount(f);
             AmountOfPages = (int)Math.Ceiling((double)allCheepsCount / 32);
         }
         else
@@ -61,7 +63,7 @@ public class UserTimelineModel : PageModel
             PageNumber = 0;
         }
 
-        if (User.GetUserFullName().Equals(author))
+        if (User.GetUserLogin().Equals(author))
         {
             Cheeps = _cheepRepository.GetAuthorCheepsForPageAsOwner(author, PageNumber);
         }
