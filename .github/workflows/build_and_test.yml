@@ -28,7 +28,7 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Install playwright
-        run: dotnet pwsh tests/Chirp.WebService.Tests/bin/Debug/net7.0/playwright.ps1 install
+        run: dotnet pwsh test/Chirp.WebService.Tests/bin/Debug/net7.0/playwright.ps1 install
         
       - name: Test
         run: dotnet test --no-build --verbosity normal
