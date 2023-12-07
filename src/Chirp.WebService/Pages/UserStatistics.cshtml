@@ -1,5 +1,7 @@
 ﻿@page "/{author}/stats"
 @using Microsoft.AspNetCore.Authorization
+@using Chirp.Core.Dto
+@using Chirp.WebService.Models
 @model Chirp.WebService.Pages.UserStatisticsModel
 @attribute [AllowAnonymous]
 
@@ -11,6 +13,8 @@
 
 <main class="flex flex-col gap-4 p-4 overflow-auto bg-gray-100 dark:bg-gray-700">
     <h1 class="text-3xl text-black font-bold">Stats</h1>
+    
+    <!--Following-->
     <div class="flex flex-col rounded-2xl shadow-lg">
         <div class="flex justify-center items-center bg-[#3498db] rounded-t-2xl">
             <p class="text-xl text-white font-semibold py-[8px]">Following: @(Model.Following.Count)</p>
@@ -22,6 +26,30 @@
             </div>
         }
     </div>
+    
+    <!--Likes-->
+    <div class="flex flex-col rounded-2xl shadow-lg">
+        <div class="flex justify-center items-center bg-[#3498db] rounded-t-2xl">
+            <p class="text-xl text-white font-semibold py-[8px]">Liked Cheeps</p>
+        </div>
+        @foreach (CheepDto c in Model.LikesCheeps)
+        {
+            CheepPartialModel cpm = new CheepPartialModel
+            {
+                AuthorAvatarUrl = c.AuthorAvatarUrl,
+                AuthorName = c.AuthorName,
+                AuthorUsername = c.AuthorUsername,
+                AuthorId = c.AuthorId,
+                CheepId = c.CheepId,
+                Timestamp = c.Timestamp,
+                Text = c.Text,
+                isLikedByUser = true
+            };
+            
+            <partial name="_CheepCardPartial" model=@(cpm)/>
+        }
+    </div>
+    
 </main>
 @*<partial name="Shared/_BodyPartial" model=@Model.Cheeps />
 <partial name="Shared/_FooterPartial" model=@Model.FooterPartialModel />

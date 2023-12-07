@@ -16,7 +16,11 @@ public class UserStatisticsModel : PageModel
     
     public List<CheepPartialModel> Cheeps { get; set; } = new ();
 
-    public List<string> Following { get; set; } = new List<string>();
+    public List<string>? Following { get; set; } = new List<string>();
+
+    public List<LikeDto> Likes { get; set; } = new List<LikeDto>();
+
+    public List<CheepDto> LikesCheeps { get; set; } = new List<CheepDto>();
     public FooterPartialModel FooterPartialModel { get; set; }
 
     public UserStatisticsModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ILikeRepository likeRepository)
@@ -29,10 +33,21 @@ public class UserStatisticsModel : PageModel
     public ActionResult OnGet(string author)
     {
         Following = _authorRepository.GetFollowsForAuthor(author);
+
+        AuthorDto? authorDto = _authorRepository.GetAuthorFromUsername(author);
+
+        Likes = _likeRepository.GetLikesByAuthorId(authorDto.Id);
+
+        HashSet<Guid> likeIds = new HashSet<Guid>();
         
+        foreach(LikeDto like in Likes)
+        {
+            likeIds.Add(like.CheepId);
+        }
+
+        //From the likes -> find liked cheeps
+        LikesCheeps = _cheepRepository.GetCheepsFromIds(likeIds);
         
-        
-        Console.WriteLine("break");
         // Get amount of pages
         var amountOfPages = User.GetUser().RunIfNotNull(user =>
         {
