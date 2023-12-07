@@ -15,6 +15,7 @@ public static class UserExtensions
     public static ClaimsUser? GetUser(this ClaimsPrincipal claims)
     {
         var name = claims.Claims.FirstOrDefault(x => x.Type == "name");
+        if (name?.Value.Equals("unknown") ?? true) name = null;
         var avatarUrl = claims.Claims.FirstOrDefault(x => x.Type == "avatar_url");
         var username = claims.Claims.FirstOrDefault(x => x.Type == "login");
         var id = claims.Claims.FirstOrDefault(y =>
