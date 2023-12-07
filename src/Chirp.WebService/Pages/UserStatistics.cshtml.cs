@@ -1,5 +1,6 @@
 ﻿using Chirp.Core.Dto;
 using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Repositories;
 using Chirp.WebService.Extensions;
 using Chirp.WebService.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,8 @@ public class UserStatisticsModel : PageModel
     private readonly ILikeRepository _likeRepository;
     
     public List<CheepPartialModel> Cheeps { get; set; } = new ();
+
+    public List<string> Following { get; set; } = new List<string>();
     public FooterPartialModel FooterPartialModel { get; set; }
 
     public UserStatisticsModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ILikeRepository likeRepository)
@@ -25,6 +28,11 @@ public class UserStatisticsModel : PageModel
     
     public ActionResult OnGet(string author)
     {
+        Following = _authorRepository.GetFollowsForAuthor(author);
+        
+        
+        
+        Console.WriteLine("break");
         // Get amount of pages
         var amountOfPages = User.GetUser().RunIfNotNull(user =>
         {
