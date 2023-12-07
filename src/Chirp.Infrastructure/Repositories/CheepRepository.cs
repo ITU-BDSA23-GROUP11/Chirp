@@ -90,6 +90,28 @@ public class CheepRepository : ICheepRepository
         });
     }
 
+    public List<CheepDto> GetCheepsFromIds(HashSet<Guid> cheepIds)
+    {
+        return FetchWithErrorHandling(() =>
+        {
+            return _chirpDbContext.Cheeps
+                .Include(c => c.Author)
+                .Where(c => cheepIds.Contains(c.CheepId))
+                .Select<Cheep, CheepDto>(c =>
+                    new CheepDto
+                    {
+                        CheepId = c.CheepId,
+                        AuthorId = c.Author.AuthorId,
+                        AuthorName = c.Author.Name,
+                        AuthorUsername = c.Author.Username,
+                        AuthorAvatarUrl = c.Author.AvatarUrl,
+                        Text = c.Text,
+                        Timestamp = c.Timestamp
+                    })
+                .ToList();
+        });
+    }
+
     public List<CheepDto> GetAuthorCheepsForPage(string authorUsername, int pageNumber)
     {
         return FetchWithErrorHandling(() =>
