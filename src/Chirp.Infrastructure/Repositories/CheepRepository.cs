@@ -49,13 +49,13 @@ public class CheepRepository : ICheepRepository
         return _chirpDbContext.Cheeps.Count();
     }
     
-    public int GetAuthorCheepCount(string authorUsername, bool withFollows = false)
+    public int GetAuthorCheepCount(string authorUsername, Guid? authUser = null)
     {
         int cheepCount = _chirpDbContext.Cheeps.Count(c => c.Author.Username == authorUsername);
         
-        if (withFollows)
+        if (authUser is not null)
         {
-            List<string> follows = _authorRepository.GetFollowsForAuthor(authorUsername);
+            List<string> follows = _authorRepository.GetFollowsForAuthor((Guid)authUser);
             cheepCount += _chirpDbContext
                 .Cheeps
                 .Include(c => c.Author)
