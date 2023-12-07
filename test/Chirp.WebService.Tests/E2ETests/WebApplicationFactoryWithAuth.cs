@@ -15,29 +15,6 @@ public class WebApplicationFactoryWithAuth<TProgram> : WebApplicationFactory<TPr
         builder.ConfigureServices(s =>
         {
             //Remove the default DBContext configuration
-            var descriptor = s.SingleOrDefault(
-                d => d.ServiceType ==
-                     typeof(DbContextOptions<ChirpDbContext>));
-
-            if (descriptor != null)
-            {
-                s.Remove(descriptor);
-            }
-            
-            //Create an in-memory DB instance
-            s.AddDbContext<ChirpDbContext>(options =>
-            {
-                options.UseInMemoryDatabase("MemoryDB");
-            });
-            
-            using (var scope = s.BuildServiceProvider().CreateScope())
-            {
-                var dbContext = scope.ServiceProvider.GetRequiredService<ChirpDbContext>();
-                dbContext.Database.EnsureCreated();
-
-                DbInitializer.SeedDatabase(dbContext);
-            }
-            
             s.AddAuthentication(defaultScheme: "E2EScheme")
                 .AddScheme<AuthenticationSchemeOptions, MockAuth>(
                     "E2EScheme",options => {});
