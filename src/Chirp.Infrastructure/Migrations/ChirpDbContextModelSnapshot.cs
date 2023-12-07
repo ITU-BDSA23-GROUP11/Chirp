@@ -17,7 +17,7 @@ namespace Chirp.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "7.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -84,6 +84,33 @@ namespace Chirp.Infrastructure.Migrations
                     b.ToTable("Cheeps");
                 });
 
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Comment", b =>
+                {
+                    b.Property<Guid>("CommentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CheepId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("nvarchar(160)");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CommentId");
+
+                    b.HasIndex("CheepId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Chirp.Infrastructure.Models.Like", b =>
                 {
                     b.Property<Guid>("LikedByAuthorId")
@@ -123,9 +150,22 @@ namespace Chirp.Infrastructure.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Comment", b =>
+                {
+                    b.HasOne("Chirp.Infrastructure.Models.Author", "Author")
+                        .WithMany("Comments")
+                        .HasForeignKey("CheepId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
             modelBuilder.Entity("Chirp.Infrastructure.Models.Author", b =>
                 {
                     b.Navigation("Cheeps");
+
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }
