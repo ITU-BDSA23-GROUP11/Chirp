@@ -1,12 +1,11 @@
-﻿@page "/{author}"
-@using Microsoft.AspNetCore.Authorization
-@model Chirp.WebService.Pages.UserTimelineModel
+@page "/"
 @attribute [AllowAnonymous]
+@using Microsoft.AspNetCore.Authorization
+@model Chirp.WebService.Pages.PublicTimelineModel
 
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
-    var routeName = HttpContext.GetRouteValue("author");
 }
 
 <partial name="Shared/_BodyPartial" model=@Model.Cheeps />

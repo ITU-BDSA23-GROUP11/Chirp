@@ -1,0 +1,55 @@
+@model Chirp.WebService.Models.FooterPartialModel
+
+<footer class="flex items-center justify-center gap-4 p-4 bg-white dark:bg-gray-800">
+    @if (Model.PreviousLink is not null)
+    {
+        <a
+            class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 underline-offset-4 hover:underline h-10 px-4 py-2 text-[#cc6e6e] hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-400"
+            href="@Model.PreviousLink">
+            Prev
+        </a>
+    }
+    
+    @if (Model.FirstLink is not null)
+    {
+        <a class="text-gray-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-400" href="@Model.FirstLink">
+            1
+        </a>
+        <p>...</p>
+    }
+    
+    @if (Model.PreviousLink is not null && Model.PreviousPage is not null)
+    {
+        <a class="text-gray-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-400" href="@Model.PreviousLink">
+            @Model.PreviousPage
+        </a>
+    }
+    
+    <p class="text-gray-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-400">
+        @Model.CurrentPage
+    </p>
+    
+    @if (Model.NextLink is not null && Model.NextPage is not null)
+    {
+        <a class="text-gray-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-400" href="@Model.NextLink">
+            @Model.NextPage
+        </a>
+    }
+    
+    @if (Model.LastLink is not null && Model.LastPage is not null)
+    {
+        <p>...</p>
+        <a class="text-gray-900 hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-400" href="@Model.LastLink">
+            @Model.LastPage
+        </a>
+    }
+    
+    @if (Model.NextLink is not null)
+    {
+        <a
+            class="text-[#cc6e6e] hover:text-gray-600 dark:text-gray-100 dark:hover:text-gray-400"
+            href="@Model.NextLink">
+            Next
+        </a>
+    }
+</footer>

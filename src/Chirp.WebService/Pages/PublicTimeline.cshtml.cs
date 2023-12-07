@@ -1,4 +1,4 @@
-﻿using Chirp.Core.Dto;
+using Chirp.Core.Dto;
 using Chirp.Core.Repositories;
 using Chirp.WebService.Extensions;
 using Chirp.WebService.Models;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Chirp.WebService.Pages;
 
-public class UserTimelineModel : PageModel
+public class PublicTimelineModel: PageModel
 {
     private readonly ICheepRepository _cheepRepository;
     private readonly IAuthorRepository _authorRepository;
@@ -15,49 +15,30 @@ public class UserTimelineModel : PageModel
     
     public List<CheepPartialModel> Cheeps { get; set; } = new ();
     public FooterPartialModel FooterPartialModel { get; set; }
-
-    public UserTimelineModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ILikeRepository likeRepository)
+    
+    public PublicTimelineModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ILikeRepository likeRepository)
     {
         _cheepRepository = cheepRepository;
         _authorRepository = authorRepository;
         _likeRepository = likeRepository;
     }
-    
-    public ActionResult OnGet(string author)
+
+    public ActionResult OnGet()
     {
-        // Get amount of pages
-        var amountOfPages = User.GetUser().RunIfNotNull(user =>
-        {
-            return (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(author, user.Id) / 32);
-        }, (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(author) / 32));
-        
-        // Get page number
+        var amountOfPages = (int)Math.Ceiling((double)_cheepRepository.GetCheepCount() / 32);
         int pageNumber = 1;
+        
         if (Request.Query.ContainsKey("page") && int.TryParse(Request.Query["page"], out int pageParameter))
         {
             //If parameter is too large -> set to max
             pageNumber = (pageParameter > amountOfPages) ? amountOfPages : pageParameter;
         }
-
-        // Get cheep dtos
-        var cheepDtos = new List<CheepDto>();
-        User.GetUser().RunIfNotNull(user =>
-        {
-            if (user.Username.Equals(author))
-            {
-                cheepDtos = _cheepRepository.GetAuthorCheepsForPageAsOwner(user.Id, pageNumber);
-            }
-            else
-            {
-                cheepDtos = _cheepRepository.GetAuthorCheepsForPage(author, pageNumber);
-            }
-        }, () =>
-        {
-            cheepDtos = _cheepRepository.GetAuthorCheepsForPage(author, pageNumber);
-        });
         
-        // Build models
+        var cheepDtos = _cheepRepository.GetCheepsForPage(pageNumber);
+        
         var cheepPartialModels = new List<CheepPartialModel>();
+        
+        //Set the follows
         User.GetUser().RunIfNotNull(user =>
         {
             var follows = _authorRepository.GetFollowsForAuthor(user.Id);
@@ -102,7 +83,7 @@ public class UserTimelineModel : PageModel
 
         FooterPartialModel = new FooterPartialModel
         {
-            FirstLink = pageNumber > 2 ? $"/?page=1" : null,
+            FirstLink = pageNumber > 2 ? "/?page=1" : null,
             
             PreviousLink = pageNumber > 1 ? $"/?page={pageNumber-1}" : null,
             PreviousPage = pageNumber > 1 ? pageNumber-1 : null,
