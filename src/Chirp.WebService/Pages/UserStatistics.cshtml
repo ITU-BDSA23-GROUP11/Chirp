@@ -12,12 +12,12 @@
 <main class="flex flex-col gap-4 p-4 overflow-auto bg-gray-100 dark:bg-gray-700">
     <h1 class="text-3xl text-black font-bold">Stats</h1>
     <div class="flex flex-col rounded-2xl shadow-lg">
-        <div class="flex justify-center items-center bg-[#34495e] rounded-t-2xl">
+        <div class="flex justify-center items-center bg-[#3498db] rounded-t-2xl">
             <p class="text-xl text-white font-semibold py-[8px]">Following: @(Model.Following.Count)</p>
         </div>
         @foreach(string s in Model.Following)
         {
-            <div class=" py-3 px-5">
+            <div class=" py-3 px-5 flex justify-between">
                 <a href="/@(s)">@(s)</a>
             </div>
         }
