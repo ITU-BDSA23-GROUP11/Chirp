@@ -89,10 +89,9 @@ public class LikeRepository : ILikeRepository
             ).ToList().First();
     }
     //Checks if a like exists
-    public bool IsLiked(Guid authorId, Guid cheepId) 
+     public bool IsLiked(Guid authorId, Guid cheepId)
     {
-        _chirpDbContext.Likes.Any(x => x.LikedByAuthorId == authorId && x.CheepId == cheepId);
-       
+        return _chirpDbContext.Likes.Any(x => x.LikedByAuthorId == authorId && x.CheepId == cheepId);
     }
 
 }
