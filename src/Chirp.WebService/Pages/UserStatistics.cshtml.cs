@@ -1,5 +1,6 @@
 ﻿using Chirp.Core.Dto;
 using Chirp.Core.Repositories;
+using Chirp.Infrastructure.Repositories;
 using Chirp.WebService.Extensions;
 using Chirp.WebService.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -7,16 +8,22 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Chirp.WebService.Pages;
 
-public class UserTimelineModel : PageModel
+public class UserStatisticsModel : PageModel
 {
     private readonly ICheepRepository _cheepRepository;
     private readonly IAuthorRepository _authorRepository;
     private readonly ILikeRepository _likeRepository;
     
     public List<CheepPartialModel> Cheeps { get; set; } = new ();
+
+    public List<string>? Following { get; set; } = new List<string>();
+
+    public List<LikeDto> Likes { get; set; } = new List<LikeDto>();
+
+    public List<CheepDto> LikesCheeps { get; set; } = new List<CheepDto>();
     public FooterPartialModel FooterPartialModel { get; set; }
 
-    public UserTimelineModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ILikeRepository likeRepository)
+    public UserStatisticsModel(ICheepRepository cheepRepository, IAuthorRepository authorRepository, ILikeRepository likeRepository)
     {
         _cheepRepository = cheepRepository;
         _authorRepository = authorRepository;
@@ -25,6 +32,22 @@ public class UserTimelineModel : PageModel
     
     public ActionResult OnGet(string author)
     {
+        Following = _authorRepository.GetFollowsForAuthor(author);
+
+        AuthorDto? authorDto = _authorRepository.GetAuthorFromUsername(author);
+
+        Likes = _likeRepository.GetLikesByAuthorId(authorDto.Id);
+
+        HashSet<Guid> likeIds = new HashSet<Guid>();
+        
+        foreach(LikeDto like in Likes)
+        {
+            likeIds.Add(like.CheepId);
+        }
+
+        //From the likes -> find liked cheeps
+        LikesCheeps = _cheepRepository.GetCheepsFromIds(likeIds);
+        
         // Get amount of pages
         var amountOfPages = User.GetUser().RunIfNotNull(user =>
         {
@@ -117,10 +140,5 @@ public class UserTimelineModel : PageModel
         };
         
         return Page();
-    }
-
-    public int GetLikeCount(Guid cheepId)
-    {
-        return _likeRepository.LikeCount(cheepId);
     }
 }

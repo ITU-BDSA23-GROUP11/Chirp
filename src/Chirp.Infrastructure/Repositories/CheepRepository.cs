@@ -49,13 +49,13 @@ public class CheepRepository : ICheepRepository
         return _chirpDbContext.Cheeps.Count();
     }
     
-    public int GetAuthorCheepCount(string authorUsername, bool withFollows = false)
+    public int GetAuthorCheepCount(string authorUsername, Guid? authUser = null)
     {
         int cheepCount = _chirpDbContext.Cheeps.Count(c => c.Author.Username == authorUsername);
         
-        if (withFollows)
+        if (authUser is not null)
         {
-            List<string> follows = _authorRepository.GetFollowsForAuthor(authorUsername);
+            List<string> follows = _authorRepository.GetFollowsForAuthor((Guid)authUser);
             cheepCount += _chirpDbContext
                 .Cheeps
                 .Include(c => c.Author)
@@ -86,6 +86,28 @@ public class CheepRepository : ICheepRepository
                         Timestamp = c.Timestamp
                     }
                 )
+                .ToList();
+        });
+    }
+
+    public List<CheepDto> GetCheepsFromIds(HashSet<Guid> cheepIds)
+    {
+        return FetchWithErrorHandling(() =>
+        {
+            return _chirpDbContext.Cheeps
+                .Include(c => c.Author)
+                .Where(c => cheepIds.Contains(c.CheepId))
+                .Select<Cheep, CheepDto>(c =>
+                    new CheepDto
+                    {
+                        CheepId = c.CheepId,
+                        AuthorId = c.Author.AuthorId,
+                        AuthorName = c.Author.Name,
+                        AuthorUsername = c.Author.Username,
+                        AuthorAvatarUrl = c.Author.AvatarUrl,
+                        Text = c.Text,
+                        Timestamp = c.Timestamp
+                    })
                 .ToList();
         });
     }
