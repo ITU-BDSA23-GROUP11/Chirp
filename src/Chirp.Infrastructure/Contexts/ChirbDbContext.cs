@@ -23,18 +23,19 @@ public class ChirpDbContext : DbContext
             .HasOne<Author>(c => c.Author)
             .WithMany(a => a.Cheeps)
             .HasForeignKey("AuthorId")
-            .IsRequired();
+            .IsRequired().OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Cheep>().HasMany<Comment>(c => c.Comments);
+        
         modelBuilder.Entity<Author>()
             .HasMany<Author>(a => a.Follows)
             .WithMany(c => c.FollowedBy);
         
         modelBuilder.Entity<Like>().HasKey(x => new { x.LikedByAuthorId, x.CheepId });
 
-        modelBuilder.Entity<Comment>()
-            .HasOne<Cheep>(c => c.Cheep)
-            .WithMany(a => a.Comments)
+        /*modelBuilder.Entity<Comment>()
+            .HasOne<Cheep>(c => c.Cheep).WithMany(c => c.Comments)
             .HasForeignKey("CheepId")
-            .IsRequired();
+            .IsRequired().OnDelete(DeleteBehavior.Restrict);*/
     }
 }
