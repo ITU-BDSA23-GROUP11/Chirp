@@ -1,6 +1,5 @@
 using Chirp.Core.Repositories;
 using Microsoft.EntityFrameworkCore;
-using Chirp.Infrastructure;
 using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -23,8 +22,6 @@ public class Program
         var webApplication = webApplicationBuilder.Build();
         
         ConfigureMiddleware(webApplication);
-        
-        BootstrapDb(webApplication);
         
         webApplication.Run();
     }
@@ -90,25 +87,5 @@ public class Program
 
         app.MapRazorPages();
         app.MapControllers();
-    }
-    
-    private static void BootstrapDb(IHost host)
-    {
-        using (var scope = host.Services.CreateScope())
-        {
-            var services = scope.ServiceProvider;
-
-            try
-            {
-                var chirpDbContext = services.GetRequiredService<ChirpDbContext>();
-                chirpDbContext.Database.Migrate();
-                DbInitializer.SeedDatabase(chirpDbContext);
-            }
-            catch (Exception ex)
-            {
-                var logger = services.GetRequiredService<ILogger<Program>>();
-                logger.LogError(ex, "An error occurred creating the DB.");
-            }
-        }
     }
 }

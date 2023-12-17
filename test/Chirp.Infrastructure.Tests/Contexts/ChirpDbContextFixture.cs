@@ -39,6 +39,6 @@ public class ChirpDbContextFixture : IDisposable
     
     public void Dispose()
     {
-        _container.StopAsync().Wait();
+        _container.DisposeAsync().AsTask().Wait();
     }
 }

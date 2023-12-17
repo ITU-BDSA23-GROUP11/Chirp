@@ -11,7 +11,7 @@ namespace Chirp.WebService.Tests.Controllers;
 
 public class CheepControllerTest
 {
-    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepository();
+    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepositories();
     private readonly CheepController _cheepController;
     private readonly Mock<CheepController> _mockController;
     

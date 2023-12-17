@@ -8,11 +8,15 @@
 
     <ItemGroup>
         <PackageReference Include="Bogus" Version="34.0.2" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.13" />
         <PackageReference Include="Moq" Version="4.20.69" />
+        <PackageReference Include="Scrutor" Version="4.2.2" />
+        <PackageReference Include="Testcontainers.SqlEdge" Version="3.6.0" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Chirp.Infrastructure\Chirp.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\src\Chirp.WebService\Chirp.WebService.csproj" />
     </ItemGroup>
     
 </Project>

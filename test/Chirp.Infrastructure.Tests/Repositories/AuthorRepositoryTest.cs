@@ -8,7 +8,7 @@ namespace Chirp.Infrastructure.Tests.Repositories;
 
 public class AuthorRepositoryTest
 {
-    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepository();
+    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepositories();
     
     [Fact]
     public void AddAuthorTest()

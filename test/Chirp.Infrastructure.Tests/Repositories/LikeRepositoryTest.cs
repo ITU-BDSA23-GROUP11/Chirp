@@ -9,7 +9,7 @@ namespace Chirp.Infrastructure.Tests.Repositories;
 
 public class LikeRepositoryTest
 {
-    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepository();
+    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepositories();
 
     [Fact] //Tests if a like is added to the database
     public void LikeCheepTest() 
