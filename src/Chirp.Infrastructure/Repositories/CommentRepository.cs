@@ -9,14 +9,11 @@ namespace Chirp.Infrastructure.Repositories;
 public class CommentRepository : ICommentRepository
 {
     private readonly ChirpDbContext _chirpDbContext;
-    private readonly ICheepRepository _cheepRepository;
-    private readonly IAuthorRepository _authorRepository;
 
-    public CommentRepository(ChirpDbContext chirpDbContext, ICheepRepository cheepRepository, IAuthorRepository authorRepository)
+    public CommentRepository(ChirpDbContext chirpDbContext)
     {
         _chirpDbContext = chirpDbContext;
-        _cheepRepository = cheepRepository;
-        _authorRepository = authorRepository;
+      
     }
     //Add a comment to a cheep
     public CommentDto? AddCommentDto(AddCommentDto comment)

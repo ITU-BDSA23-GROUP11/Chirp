@@ -4,6 +4,7 @@ namespace Chirp.Infrastructure.Models;
 /*Model of a comment that will be shown on each cheep*/
 public class Comment
 {
+    [Key]
     public Guid CommentId { get; set; }
     private Cheep _cheep = null!;
     public Cheep Cheep
