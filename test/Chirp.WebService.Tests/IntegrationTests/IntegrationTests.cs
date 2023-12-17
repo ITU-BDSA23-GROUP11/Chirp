@@ -11,7 +11,7 @@ public sealed class IntegrationTests : IClassFixture<WebApplicationFixture>
     
     public IntegrationTests(WebApplicationFixture webApplicationFixture)
     {
-        _httpClient = webApplicationFixture.GetClient();
+        _httpClient = webApplicationFixture.GetClient().Client;
     }
     
     [Fact]  
