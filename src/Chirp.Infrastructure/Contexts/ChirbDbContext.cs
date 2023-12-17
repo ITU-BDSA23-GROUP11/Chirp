@@ -32,7 +32,7 @@ public class ChirpDbContext : DbContext
         modelBuilder.Entity<Like>().HasKey(x => new { x.LikedByAuthorId, x.CheepId });
 
         modelBuilder.Entity<Comment>()
-            .HasOne<Author>(c => c.Author)
+            .HasOne<Cheep>(c => c.Cheep)
             .WithMany(a => a.Comments)
             .HasForeignKey("CheepId")
             .IsRequired();
