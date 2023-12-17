@@ -4,6 +4,7 @@ using Chirp.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Infrastructure.Migrations
 {
     [DbContext(typeof(ChirpDbContext))]
-    partial class ChirpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231217184411_AddCommentsUpdated")]
+    partial class AddCommentsUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,9 +149,33 @@ namespace Chirp.Infrastructure.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Comment", b =>
+                {
+                    b.HasOne("Chirp.Infrastructure.Models.Author", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Chirp.Infrastructure.Models.Cheep", "Cheep")
+                        .WithMany("Comments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+
+                    b.Navigation("Cheep");
+                });
+
             modelBuilder.Entity("Chirp.Infrastructure.Models.Author", b =>
                 {
                     b.Navigation("Cheeps");
+                });
+
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Cheep", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }

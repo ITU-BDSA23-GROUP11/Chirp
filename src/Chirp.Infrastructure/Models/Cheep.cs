@@ -27,4 +27,6 @@ public class Cheep
     public List<Like> Likes { get; set; } = new ();
     
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+
+    public List<Comment> Comments { get; set; } = new List<Comment>();
 }

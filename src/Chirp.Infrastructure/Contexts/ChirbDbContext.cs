@@ -28,6 +28,12 @@ public class ChirpDbContext : DbContext
             .HasForeignKey("AuthorId")
             .IsRequired();
 
+        modelBuilder.Entity<Cheep>()
+            .HasMany<Comment>(c => c.Comments)
+            .WithOne(c => c.Cheep)
+            .HasForeignKey("CommentId")
+            .IsRequired();
+
         modelBuilder.Entity<Author>()
             .HasMany<Author>(a => a.Follows)
             .WithMany(c => c.FollowedBy);
