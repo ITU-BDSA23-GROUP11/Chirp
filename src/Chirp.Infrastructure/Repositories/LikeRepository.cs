@@ -1,8 +1,8 @@
+using System.Diagnostics.CodeAnalysis;
 using Chirp.Core.Dto;
 using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure.Repositories;
 
@@ -17,7 +17,6 @@ public class LikeRepository : ILikeRepository
     public LikeRepository(ChirpDbContext chirpDbContext)
     {
         _chirpDbContext = chirpDbContext;
-        
     }
     //Creates a like in DbContext
     public void LikeCheep(Guid authorId, Guid cheepId) 
@@ -45,6 +44,7 @@ public class LikeRepository : ILikeRepository
         }
     }
     //Counts amount of likes of a cheep
+    [SuppressMessage("ReSharper.DPA", "DPA0006: Large number of DB commands", MessageId = "count: 128")]
     public int LikeCount(Guid cheepId) 
     {
         return _chirpDbContext.Likes.Count(x => x.CheepId == cheepId);
@@ -90,13 +90,8 @@ public class LikeRepository : ILikeRepository
             ).ToList().First();
     }
     //Checks if a like exists
-    public bool IsLiked(Guid authorId, Guid cheepId) 
+    public bool IsLiked(Guid authorId, Guid cheepId)
     {
-        if (!_chirpDbContext.Likes.Any(x => x.LikedByAuthorId == authorId && x.CheepId == cheepId))
-        {
-            return false;
-        } 
         return _chirpDbContext.Likes.Any(x => x.LikedByAuthorId == authorId && x.CheepId == cheepId);
     }
-
 }

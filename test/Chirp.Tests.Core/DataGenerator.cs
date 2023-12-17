@@ -10,6 +10,7 @@ public class DataGenerator
         public List<Author> Authors;
         public List<Cheep> Cheeps;
         public List<Like> Likes;
+        public List<Comment> Comments;
 
     }
     
@@ -26,6 +27,20 @@ public class DataGenerator
         }
 
         return authorsFaker;
+    }
+
+    public static Faker<Comment> GenerateCommentsFaker(List<Author> authors, List<Cheep> cheeps, bool generateIds = true)
+    {
+        var commentsFaker = new Faker<Comment>()
+            .RuleFor(c => c.Author, f => f.PickRandom(authors))
+            .RuleFor(c => c.Cheep, f => f.PickRandom(cheeps))
+            .RuleFor(c => c.Text, f => f.Random.Words());
+        if (generateIds)
+        {
+            commentsFaker.RuleFor(c => c.CommentId, f => f.Random.Guid());
+        }
+
+        return commentsFaker;
     }
     
     public static Faker<Cheep> GenerateCheepFaker(List<Author> authors, bool generateIds = true)
@@ -75,6 +90,8 @@ public class DataGenerator
         int maxCheeps = 1000,
         int minLikes = 1000,
         int maxLikes = 2000,
+        int minComments = 5,
+        int maxComments = 10,
         bool generateIds = true
     )
     {
@@ -90,11 +107,16 @@ public class DataGenerator
 
         List<Like> likesData = likesFaker.GenerateBetween(minLikes, maxLikes);
 
+        var commentsFaker = GenerateCommentsFaker(authorsData, cheepsData, generateIds);
+        
+        List<Comment> commentsData = commentsFaker.GenerateBetween(minComments, maxComments);
+        
         return new AuthorCheepsData
         {
             Authors = authorsData,
             Cheeps = cheepsData,
-            Likes = likesData
+            Likes = likesData,
+            Comments = commentsData
         };
     }
     

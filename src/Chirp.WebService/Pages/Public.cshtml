@@ -25,6 +25,10 @@
                         </strong>
                         @cheep.Text
                         <small>&mdash; @cheep.Timestamp</small>
+                         @{ 
+                             var cheepLikes = Model.GetLikeCount(cheep.CheepId);
+                         }
+                        <p class="likes"><i>@cheepLikes.ToString() Likes.</i></p>
                         <partial name="Shared/_DeleteCheepForm" model=@cheep/>
                         @{
                             if (Model.Follows.Any(s => s == cheep.AuthorUsername))
@@ -44,7 +48,6 @@
                             {
                                 <partial name="Shared/_LikeCheepForm" model="@cheep"/>
                             }
-                            
                         }
                     </p>
                 </li>

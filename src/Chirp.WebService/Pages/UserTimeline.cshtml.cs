@@ -118,4 +118,9 @@ public class UserTimelineModel : PageModel
         
         return Page();
     }
+
+    public int GetLikeCount(Guid cheepId)
+    {
+        return _likeRepository.LikeCount(cheepId);
+    }
 }

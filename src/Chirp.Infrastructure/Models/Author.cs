@@ -20,7 +20,8 @@ public class Author
     [Required] public required string AvatarUrl { get; set; }
     
     public ICollection<Cheep> Cheeps { get; } = new List<Cheep>();
-
+    public ICollection<Comment> Comments { get; } = new List<Comment>();
     public List<Author> Follows { get; set; } = new ();
     public List<Author> FollowedBy { get; set; } = new ();
+    
 }

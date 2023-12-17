@@ -10,6 +10,7 @@ public class ChirpDbContext : DbContext
     public virtual DbSet<Cheep> Cheeps { get; set; } = null!;
     public virtual DbSet<Author> Authors { get; set; } = null!;
     public virtual DbSet<Like> Likes { get; set; } = null!;
+    public virtual DbSet<Comment> Comments { get; set; } = null!;
     public ChirpDbContext() {}
 
     public ChirpDbContext(DbContextOptions<ChirpDbContext> options)
@@ -22,12 +23,19 @@ public class ChirpDbContext : DbContext
             .HasOne<Author>(c => c.Author)
             .WithMany(a => a.Cheeps)
             .HasForeignKey("AuthorId")
-            .IsRequired();
+            .IsRequired().OnDelete(DeleteBehavior.Restrict);
 
+        modelBuilder.Entity<Cheep>().HasMany<Comment>(c => c.Comments);
+        
         modelBuilder.Entity<Author>()
             .HasMany<Author>(a => a.Follows)
             .WithMany(c => c.FollowedBy);
         
         modelBuilder.Entity<Like>().HasKey(x => new { x.LikedByAuthorId, x.CheepId });
+
+        /*modelBuilder.Entity<Comment>()
+            .HasOne<Cheep>(c => c.Cheep).WithMany(c => c.Comments)
+            .HasForeignKey("CheepId")
+            .IsRequired().OnDelete(DeleteBehavior.Restrict);*/
     }
 }
