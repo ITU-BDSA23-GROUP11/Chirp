@@ -1,6 +1,5 @@
 using Chirp.Core.Repositories;
 using Chirp.Core.Dto;
-using Chirp.WebService.Extensions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Chirp.WebService.Controllers

@@ -14,7 +14,11 @@ public class ChirpDbContext : DbContext
 
     public ChirpDbContext(DbContextOptions<ChirpDbContext> options)
         : base(options)
-    { }
+    {
+       
+        Database.Migrate(); // Required for tests
+        DbInitializer.SeedDatabase(this);
+    }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
