@@ -37,7 +37,7 @@ public class CommentRepository : ICommentRepository
         return new CommentDto
         {
             CommentId = newComment.CommentId,
-            CheepId = newComment.CheepId,
+            CheepId = newComment.Cheep.CheepId,
             AuthorId = newComment.Author.AuthorId,
             AuthorName = newComment.Author.Name,
             AuthorAvatarUrl = newComment.Author.AvatarUrl,
@@ -64,7 +64,7 @@ public class CommentRepository : ICommentRepository
                         AuthorId = c.Author.AuthorId,
                         AuthorName = c.Author.Name,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
-                        CheepId = c.CheepId,
+                        CheepId = c.Cheep.CheepId,
                         Text = c.Text,
                         Timestamp = c.Timestamp
                     }
