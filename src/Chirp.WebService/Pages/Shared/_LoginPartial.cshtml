@@ -1,4 +1,4 @@
-@using Chirp.WebService.Extensions
+@using Chirp.Core.Extensions
 
 @* ReSharper disable Mvc.AreaNotResolved *@
 @{
@@ -11,6 +11,9 @@
         <a href="/">public timeline</a> |
         <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">logout [@(user?.Name)]</a> |
         <a href="https://BDSAGROUP11CHIRP.b2clogin.com/BDSAGROUP11CHIRP.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_DELETE_MY_ACCOUNT&client_id=beb64166-c054-4fd6-b6a0-41828e2bae4b&nonce=defaultNonce&redirect_uri=https%3A%2F%2Fjwt.ms&scope=openid&response_type=id_token&prompt=login">delete my account</a>
+        <form asp-controller="User" asp-action="DeleteAccount">
+            <button asp-controller="User" asp-action="DeleteAccount" type="submit" >delete my account 2.0</button>
+        </form>
     </div>
 }
 else

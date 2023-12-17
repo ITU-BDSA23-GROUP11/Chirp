@@ -31,7 +31,19 @@ public class ChirpDbContext : DbContext
         modelBuilder.Entity<Author>()
             .HasMany<Author>(a => a.Follows)
             .WithMany(c => c.FollowedBy);
-        
-        modelBuilder.Entity<Like>().HasKey(x => new { x.LikedByAuthorId, x.CheepId });
+
+        modelBuilder.Entity<Like>()
+            .HasOne<Author>(l => l.LikedByAuthor)
+            .WithMany(a => a.Likes)
+            .HasForeignKey("AuthorId")
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
+
+        modelBuilder.Entity<Like>()
+            .HasOne<Cheep>(l => l.Cheep)
+            .WithMany(c => c.Likes)
+            .HasForeignKey("CheepId")
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
     }
 }

@@ -77,8 +77,8 @@ public class DataGenerator
     public static Faker<Like> GenerateLikesFaker(List<Author> authors, List<Cheep> cheeps)
     {
         return new Faker<Like>()
-            .RuleFor(l => l.LikedByAuthorId, f => f.PickRandom(authors).AuthorId)
-            .RuleFor(l => l.CheepId, f => f.PickRandom(cheeps).CheepId);
+            .RuleFor(l => l.LikedByAuthor, f => f.PickRandom(authors))
+            .RuleFor(l => l.Cheep, f => f.PickRandom(cheeps));
     }
     
     public static AuthorCheepsData GenerateAuthorsAndCheeps(

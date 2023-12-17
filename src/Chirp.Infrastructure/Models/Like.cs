@@ -5,7 +5,8 @@ namespace Chirp.Infrastructure.Models;
 public class Like
 {
     [Key]
-    public Guid CheepId { get; set; }
-    public Guid LikedByAuthorId { get; set; }
-   
+    public Guid LikeId { get; set; }
+    public Cheep Cheep { get; set; } = null!;
+    public Author LikedByAuthor { get; set; } = null!;
+
 }
