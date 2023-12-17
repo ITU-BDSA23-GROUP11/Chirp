@@ -43,7 +43,10 @@ public class MockWebApplicationFactoryWithAuth : DbFixture, IAsyncLifetime, IDis
     public async Task InitializeAsync()
     {
         Playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-        Browser = await Playwright.Chromium.LaunchAsync();
+        Browser = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
+        {
+            Args = new []{"--ignore-https-errors"}
+        });
         await _host.StartAsync();
     }
 
