@@ -2,8 +2,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
-using Chirp.Core.Repositories;
-using Chirp.Infrastructure.Contexts;
 using Chirp.Tests.Core.Fixtures;
 using Chirp.WebService;
 using Microsoft.AspNetCore.Authentication;
@@ -16,19 +14,19 @@ using Microsoft.Playwright;
 using Xunit;
 using Program = Chirp.WebService.Program;
 
-namespace Chirp.Tests.Core;
+namespace Chirp.Tests.Core.Factories;
 
 public class MockWebApplicationFactoryWithAuth : DbFixture, IAsyncLifetime, IDisposable
 {
-    private readonly IHost host;
-    private IPlaywright Playwright { get; set; }
-    public IBrowser Browser { get; private set; }
+    private readonly IHost _host;
+    private IPlaywright? Playwright { get; set; }
+    public IBrowser? Browser { get; private set; }
     public string BaseUrl { get; } = $"https://localhost:{GetRandomUnusedPort()}";
     
     public MockWebApplicationFactoryWithAuth()
     {
-        host = Program
-        .CreateHostBuilder(null)
+        _host = Program
+        .CreateHostBuilder(null!)
         .ConfigureWebHostDefaults(webBuilder => {
             webBuilder.UseStartup<Startup>();
             webBuilder.UseUrls(BaseUrl);
@@ -37,7 +35,7 @@ public class MockWebApplicationFactoryWithAuth : DbFixture, IAsyncLifetime, IDis
         .ConfigureServices(services => {
             services
                 .AddAuthentication(defaultScheme: "E2EScheme")
-                .AddScheme<AuthenticationSchemeOptions, MockAuth>("E2EScheme",options => {});
+                .AddScheme<AuthenticationSchemeOptions, MockAuth>("E2EScheme",_ => {});
         })
         .Build();
     }
@@ -46,19 +44,19 @@ public class MockWebApplicationFactoryWithAuth : DbFixture, IAsyncLifetime, IDis
     {
         Playwright = await Microsoft.Playwright.Playwright.CreateAsync();
         Browser = await Playwright.Chromium.LaunchAsync();
-        await host.StartAsync();
+        await _host.StartAsync();
     }
 
     public async Task DisposeAsync()
     {
-        await host.StopAsync();
-        host?.Dispose();
+        await _host.StopAsync();
+        _host.Dispose();
         Playwright?.Dispose();
     }
 
-    public void Dispose()
+    public new void Dispose()
     {
-        host?.Dispose();
+        _host.Dispose();
         Playwright?.Dispose();
     }
 

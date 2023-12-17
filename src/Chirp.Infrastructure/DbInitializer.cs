@@ -1,4 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
 using Chirp.Infrastructure.Models;
 using Chirp.Infrastructure.Contexts;
 

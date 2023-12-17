@@ -1,5 +1,4 @@
 using Bogus;
-using Chirp.Core.Dto;
 using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
