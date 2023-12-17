@@ -14,13 +14,16 @@ public struct MockChirpRepositories
     public ICheepRepository CheepRepository;
     public IAuthorRepository AuthorRepository;
     public ILikeRepository LikeRepository;
+    public ICommentRepository CommentRepository;
     public List<Author> TestAuthors;
     public List<Cheep> TestCheeps;
     public List<Like> TestLikes;
+    public List<Comment> TestComments;
     public Mock<ChirpDbContext> MockChirpDbContext;
     public Mock<DbSet<Author>> MockAuthorsDbSet;
     public Mock<DbSet<Cheep>> MockCheepsDbSet;
     public Mock<DbSet<Like>> MockLikesDbSet;
+    public Mock<DbSet<Comment>> MockCommentsDbSet;
 
 }
 
@@ -31,6 +34,7 @@ public static class MockRepositoryFactory
         var mockAuthorsDbSet = new Mock<DbSet<Author>>();
         var mockCheepsDbSet = new Mock<DbSet<Cheep>>();
         var mockLikesDbSet = new Mock<DbSet<Like>>();
+        var mockCommentsDbSet = new Mock<DbSet<Comment>>();
         
         DataGenerator.AuthorCheepsData data = DataGenerator.GenerateAuthorsAndCheeps();
         
@@ -50,29 +54,39 @@ public static class MockRepositoryFactory
             mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.Expression).Returns(data.Likes.AsQueryable().Expression);
             mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.ElementType).Returns(data.Likes.AsQueryable().ElementType);
             mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.GetEnumerator()).Returns(data.Likes.AsQueryable().GetEnumerator());
+
+            mockCommentsDbSet.As<IQueryable<Comment>>().Setup(m => m.Provider).Returns(data.Comments.AsQueryable().Provider);
+            mockCommentsDbSet.As<IQueryable<Comment>>().Setup(m => m.Expression).Returns(data.Comments.AsQueryable().Expression);
+            mockCommentsDbSet.As<IQueryable<Comment>>().Setup(m => m.ElementType).Returns(data.Comments.AsQueryable().ElementType);
+            mockCommentsDbSet.As<IQueryable<Comment>>().Setup(m => m.GetEnumerator()).Returns(data.Comments.AsQueryable().GetEnumerator);
         }
         
         var mockChirpDbContext = new Mock<ChirpDbContext>();
         mockChirpDbContext.Setup(m => m.Authors).Returns(mockAuthorsDbSet.Object);
         mockChirpDbContext.Setup(m => m.Cheeps).Returns(mockCheepsDbSet.Object);
         mockChirpDbContext.Setup(m => m.Likes).Returns(mockLikesDbSet.Object);
+        mockChirpDbContext.Setup(m => m.Comments).Returns(mockCommentsDbSet.Object);
 
         IAuthorRepository authorRepository = new AuthorRepository(mockChirpDbContext.Object);
         ICheepRepository cheepRepository = new CheepRepository(mockChirpDbContext.Object, authorRepository);
         ILikeRepository likeRepository = new LikeRepository(mockChirpDbContext.Object);
+        ICommentRepository commentRepository = new CommentRepository(mockChirpDbContext.Object);
         
         return new MockChirpRepositories
         {
             CheepRepository = cheepRepository,
             AuthorRepository = authorRepository,
             LikeRepository = likeRepository,
+            CommentRepository = commentRepository,
             TestAuthors = data.Authors,
             TestCheeps = data.Cheeps,
             TestLikes = data.Likes,
+            TestComments = data.Comments,
             MockChirpDbContext = mockChirpDbContext,
             MockAuthorsDbSet = mockAuthorsDbSet,
             MockCheepsDbSet = mockCheepsDbSet,
             MockLikesDbSet = mockLikesDbSet,
+            MockCommentsDbSet = mockCommentsDbSet
         };
     }
 }
