@@ -90,6 +90,9 @@ namespace Chirp.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("CheepId")
                         .HasColumnType("uniqueidentifier");
 
@@ -105,6 +108,8 @@ namespace Chirp.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CommentId");
+
+                    b.HasIndex("AuthorId");
 
                     b.HasIndex("CheepId");
 
@@ -154,17 +159,30 @@ namespace Chirp.Infrastructure.Migrations
                 {
                     b.HasOne("Chirp.Infrastructure.Models.Author", "Author")
                         .WithMany("Comments")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Chirp.Infrastructure.Models.Cheep", "Cheep")
+                        .WithMany("Comments")
                         .HasForeignKey("CheepId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Author");
+
+                    b.Navigation("Cheep");
                 });
 
             modelBuilder.Entity("Chirp.Infrastructure.Models.Author", b =>
                 {
                     b.Navigation("Cheeps");
 
+                    b.Navigation("Comments");
+                });
+
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Cheep", b =>
+                {
                     b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
