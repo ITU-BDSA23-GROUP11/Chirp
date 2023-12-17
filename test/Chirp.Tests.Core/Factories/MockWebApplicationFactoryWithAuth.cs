@@ -21,7 +21,7 @@ public class MockWebApplicationFactoryWithAuth : DbFixture, IAsyncLifetime, IDis
     private readonly IHost _host;
     private IPlaywright? Playwright { get; set; }
     public IBrowser? Browser { get; private set; }
-    public string BaseUrl { get; } = $"https://localhost:{GetRandomUnusedPort()}";
+    public string BaseUrl { get; } = $"http://localhost:{GetRandomUnusedPort()}";
     
     public MockWebApplicationFactoryWithAuth()
     {
@@ -43,10 +43,7 @@ public class MockWebApplicationFactoryWithAuth : DbFixture, IAsyncLifetime, IDis
     public async Task InitializeAsync()
     {
         Playwright = await Microsoft.Playwright.Playwright.CreateAsync();
-        Browser = await Playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions
-        {
-            Args = new []{"--ignore-https-errors"}
-        });
+        Browser = await Playwright.Chromium.LaunchAsync();
         await _host.StartAsync();
     }
 
