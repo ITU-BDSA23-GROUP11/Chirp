@@ -11,18 +11,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        
+      - run: sudo apt-get update
+          
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: texlive-base texlive-xetex pandoc
+          version: 1.0
+          
+      - run: pandoc --version
       
       - run: |
-          sudo apt-get update
-          sudo apt-get install texlive-xetex
-      
-      - name: Convert md to pdf
-        uses: docker://pandoc/core:2.9
-        with:
-          args: >- # allows you to break string into multiple lines
-            --standalone
-            --pdf-engine=xelatex
-            --output=docs/2023_itubdsa_group_11_report.pdf
-            -f markdown
-            -t pdf
-            docs/report.md
+          pandoc
+          --standalone=true
+          --pdf-engine=xelatex
+          --output=docs/2023_itubdsa_group_11_report.pdf
+          -f markdown
+          -t pdf
+          docs/report.md
