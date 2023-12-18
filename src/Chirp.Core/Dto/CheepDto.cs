@@ -15,4 +15,6 @@ public class CheepDto
     public required string AuthorAvatarUrl { get; init; }
     public required string Text { get; init; }
     public required DateTime Timestamp { get; init; }
+
+    public required List<CommentDto> CommentDtos { get; init; }
 }

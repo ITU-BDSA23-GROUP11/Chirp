@@ -40,7 +40,8 @@ public class CheepRepository : ICheepRepository
             AuthorUsername = newCheep.Author.Username,
             AuthorAvatarUrl = newCheep.Author.AvatarUrl,
             Text = newCheep.Text,
-            Timestamp = newCheep.Timestamp
+            Timestamp = newCheep.Timestamp,
+            CommentDtos = new List<CommentDto>()
         };
     }
     
@@ -83,7 +84,18 @@ public class CheepRepository : ICheepRepository
                         AuthorUsername = c.Author.Username,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
-                        Timestamp = c.Timestamp
+                        Timestamp = c.Timestamp,
+                        CommentDtos = c.Comments.Select<Comment, CommentDto>(com => new CommentDto
+                        {
+                            AuthorId = com.CommentAuthor.AuthorId,
+                            CheepId = com.Cheep.CheepId,
+                            AuthorName = com.CommentAuthor.Name,
+                            AuthorUsername = com.CommentAuthor.Username,
+                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                            CommentId = com.CommentId,
+                            Text = com.Text,
+                            Timestamp = com.Timestamp
+                        }).ToList()
                     }
                 )
                 .ToList();
@@ -106,7 +118,8 @@ public class CheepRepository : ICheepRepository
                         AuthorUsername = c.Author.Username,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
-                        Timestamp = c.Timestamp
+                        Timestamp = c.Timestamp,
+                        CommentDtos = new List<CommentDto>()
                     })
                 .ToList();
         });
@@ -131,7 +144,8 @@ public class CheepRepository : ICheepRepository
                         AuthorUsername = c.Author.Username,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
-                        Timestamp = c.Timestamp
+                        Timestamp = c.Timestamp,
+                        CommentDtos = new List<CommentDto>()
                     }
                 )
                 .ToList();
@@ -159,7 +173,8 @@ public class CheepRepository : ICheepRepository
                         AuthorUsername = c.Author.Username,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
-                        Timestamp = c.Timestamp
+                        Timestamp = c.Timestamp,
+                        CommentDtos = new List<CommentDto>()
                     }
                 )
                 .ToList();
@@ -190,5 +205,30 @@ public class CheepRepository : ICheepRepository
         _chirpDbContext.SaveChanges();
         
         return true; 
+    }
+
+    public bool AddComment(Guid cheepId, AddCommentDto _comment)
+    {
+        Cheep? cheep = _chirpDbContext.Cheeps
+            .SingleOrDefault(c => c.CheepId == cheepId);
+
+        if (cheep == null) return false;
+        
+        //Build the comment
+        Comment comment = new Comment
+        {
+            CommentId = Guid.NewGuid(),
+            Timestamp = DateTime.UtcNow,
+            Text = _comment.Text,
+            Cheep = _chirpDbContext.Cheeps.Single(c => c.CheepId == _comment.CheepId),
+            CommentAuthor = _chirpDbContext.Authors.Single(a => a.AuthorId == _comment.AuthorId)
+        };
+
+        _chirpDbContext.Cheeps.Update(cheep);
+        _chirpDbContext.Comments.Add(comment);
+        //cheep.Comments.Add(comment);
+        _chirpDbContext.SaveChanges();
+        
+        return true;
     }
 }

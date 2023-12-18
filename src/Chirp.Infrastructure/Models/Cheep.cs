@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Chirp.Core.Dto;
 
 namespace Chirp.Infrastructure.Models;
 
@@ -28,5 +29,5 @@ public class Cheep
     
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 
-    public List<Comment> Comments { get; set; } = new List<Comment>();
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
 }

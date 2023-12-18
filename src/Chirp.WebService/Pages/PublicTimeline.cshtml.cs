@@ -56,7 +56,17 @@ public class PublicTimelineModel: PageModel
                     Text = cheepDto.Text,
                     isLikedByUser = likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString())),
                     likesAmount = _likeRepository.LikeCount(cheepDto.CheepId),
-                    isFollowedByUser = !follows.Contains(cheepDto.AuthorUsername)
+                    isFollowedByUser = !follows.Contains(cheepDto.AuthorUsername),
+                    CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
+                    {
+                        AuthorAvatarUrl = c.AuthorAvatarUrl,
+                        AuthorId = c.AuthorId,
+                        AuthorUsername = c.AuthorUsername,
+                        AuthorName = c.AuthorName,
+                        Timestamp = c.Timestamp,
+                        Text = c.Text,
+                        CheepId = c.CheepId
+                    }).ToList()
                 });
             }
         }, () =>
@@ -74,7 +84,17 @@ public class PublicTimelineModel: PageModel
                     Text = cheepDto.Text,
                     likesAmount = _likeRepository.LikeCount(cheepDto.CheepId),
                     isLikedByUser = null,
-                    isFollowedByUser = null
+                    isFollowedByUser = null,
+                    CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
+                    {
+                        AuthorAvatarUrl = c.AuthorAvatarUrl,
+                        AuthorId = c.AuthorId,
+                        AuthorUsername = c.AuthorUsername,
+                        AuthorName = c.AuthorName,
+                        Timestamp = c.Timestamp,
+                        Text = c.Text,
+                        CheepId = c.CheepId
+                    }).ToList()
                 });
             }
         });

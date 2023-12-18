@@ -10,6 +10,7 @@ public class ChirpDbContext : DbContext
     public virtual DbSet<Cheep> Cheeps { get; set; } = null!;
     public virtual DbSet<Author> Authors { get; set; } = null!;
     public virtual DbSet<Like> Likes { get; set; } = null!;
+    public virtual DbSet<Comment> Comments { get; set; } = null!;
     public ChirpDbContext() {}
 
     public ChirpDbContext(DbContextOptions<ChirpDbContext> options)
@@ -21,22 +22,30 @@ public class ChirpDbContext : DbContext
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
+    { 
         modelBuilder.Entity<Cheep>()
             .HasOne<Author>(c => c.Author)
             .WithMany(a => a.Cheeps)
             .HasForeignKey("AuthorId")
             .IsRequired();
-
-        modelBuilder.Entity<Cheep>()
-            .HasMany<Comment>(c => c.Comments)
-            .WithOne(c => c.Cheep)
-            .HasForeignKey("CommentId")
-            .IsRequired();
-
+        
         modelBuilder.Entity<Author>()
             .HasMany<Author>(a => a.Follows)
             .WithMany(c => c.FollowedBy);
+        
+        modelBuilder.Entity<Comment>()
+            .HasOne<Author>(c => c.CommentAuthor)
+            .WithMany(a => a.Comments)
+            .HasForeignKey("AuthorId")
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
+
+        modelBuilder.Entity<Comment>()
+            .HasOne<Cheep>(c => c.Cheep)
+            .WithMany(c => c.Comments)
+            .HasForeignKey("CheepId")
+            .OnDelete(DeleteBehavior.Restrict)
+            .IsRequired(false);
 
         modelBuilder.Entity<Like>()
             .HasOne<Author>(l => l.LikedByAuthor)
