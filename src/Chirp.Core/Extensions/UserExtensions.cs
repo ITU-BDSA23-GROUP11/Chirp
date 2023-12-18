@@ -1,6 +1,6 @@
 using System.Security.Claims;
 
-namespace Chirp.WebService.Extensions;
+namespace Chirp.Core.Extensions;
 
 public struct ClaimsUser
 {

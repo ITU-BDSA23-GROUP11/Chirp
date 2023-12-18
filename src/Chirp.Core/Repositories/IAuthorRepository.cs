@@ -16,4 +16,6 @@ public interface IAuthorRepository
     public void AddFollow(Guid authorId, Guid followId);
 
     public void RemoveFollow(Guid authorId, Guid unfollowAuthorId);
+
+    public bool DeleteAuthor(Guid authorId);
 }

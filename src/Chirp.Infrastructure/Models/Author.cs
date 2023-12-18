@@ -23,4 +23,5 @@ public class Author
 
     public List<Author> Follows { get; set; } = new ();
     public List<Author> FollowedBy { get; set; } = new ();
+    public List<Like> Likes { get; set; } = new ();
 }
