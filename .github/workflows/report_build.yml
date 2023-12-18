@@ -11,10 +11,14 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - run: ls -la
-      - uses: docker://pandoc/core:2.9
+      - name: Install latex
+        run: sudo apt-get update && sudo apt-get install texlive texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
+      - name: Convert md to pdf
+        uses: docker://pandoc/core:2.9
         with:
           args: >- # allows you to break string into multiple lines
             --standalone
             --output=docs/2023_itubdsa_group_11_report.pdf
+            -f markdown
+            -t pdf
             docs/report.md
