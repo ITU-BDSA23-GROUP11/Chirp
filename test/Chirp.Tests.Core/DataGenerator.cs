@@ -1,5 +1,8 @@
 using Bogus;
+using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Models;
+using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Chirp.Tests.Core;
 
@@ -10,7 +13,17 @@ public class DataGenerator
         public List<Author> Authors;
         public List<Cheep> Cheeps;
         public List<Like> Likes;
+    }
 
+    public struct ChirpDbContextData
+    {
+        public List<Author> Authors;
+        public List<Cheep> Cheeps;
+        public List<Like> Likes;
+        public Mock<ChirpDbContext> MockChirpDbContext;
+        public Mock<DbSet<Author>> MockDbAuthorsSet;
+        public Mock<DbSet<Cheep>> MockDbCheepsSet;
+        public Mock<DbSet<Like>> MockDbLikesSet;
     }
     
     public static Faker<Author> GenerateAuthorFaker(bool generateIds = true)
@@ -61,11 +74,17 @@ public class DataGenerator
         return authors;
     }
     
-    public static Faker<Like> GenerateLikesFaker(List<Author> authors, List<Cheep> cheeps)
+    public static Faker<Like> GenerateLikesFaker(List<Author> authors, List<Cheep> cheeps, bool generateIds = true)
     {
-        return new Faker<Like>()
-            .RuleFor(l => l.LikedByAuthorId, f => f.PickRandom(authors).AuthorId)
-            .RuleFor(l => l.CheepId, f => f.PickRandom(cheeps).CheepId);
+        var likesFaker = new Faker<Like>()
+            .RuleFor(l => l.LikedByAuthor, f => f.PickRandom(authors))
+            .RuleFor(l => l.Cheep, f => f.PickRandom(cheeps));
+        if (generateIds)
+        {
+            likesFaker.RuleFor(c => c.LikeId, f => f.Random.Guid());
+        }
+
+        return likesFaker;
     }
     
     public static AuthorCheepsData GenerateAuthorsAndCheeps(
@@ -95,6 +114,86 @@ public class DataGenerator
             Authors = authorsData,
             Cheeps = cheepsData,
             Likes = likesData
+        };
+    }
+
+    public static ChirpDbContextData GenerateMockChirpDbContext(bool withErrorProvocation = false)
+    {
+        var mockAuthorsDbSet = new Mock<DbSet<Author>>();
+        var mockCheepsDbSet = new Mock<DbSet<Cheep>>();
+        var mockLikesDbSet = new Mock<DbSet<Like>>();
+        
+        AuthorCheepsData data = GenerateAuthorsAndCheeps();
+        
+        // If mock db sets are not set up, it will throw an exception which will be caught by FetchWithErrorHandling
+        if (!withErrorProvocation) {
+            mockAuthorsDbSet.As<IQueryable<Author>>().Setup(m => m.Provider).Returns(data.Authors.AsQueryable().Provider);
+            mockAuthorsDbSet.As<IQueryable<Author>>().Setup(m => m.Expression).Returns(data.Authors.AsQueryable().Expression);
+            mockAuthorsDbSet.As<IQueryable<Author>>().Setup(m => m.ElementType).Returns(data.Authors.AsQueryable().ElementType);
+            mockAuthorsDbSet.As<IQueryable<Author>>().Setup(m => m.GetEnumerator()).Returns(data.Authors.AsQueryable().GetEnumerator());
+            mockAuthorsDbSet
+                .Setup(m => m.Add(It.IsAny<Author>()))
+                .Callback((Author author) =>
+                {
+                    data.Authors.Add(author);
+                });
+            mockAuthorsDbSet
+                .Setup(m => m.Remove(It.IsAny<Author>()))
+                .Callback((Author author) =>
+                {
+                    data.Authors.Remove(author);
+                });
+            
+            mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.Provider).Returns(data.Cheeps.AsQueryable().Provider);
+            mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.Expression).Returns(data.Cheeps.AsQueryable().Expression);
+            mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.ElementType).Returns(data.Cheeps.AsQueryable().ElementType);
+            mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.GetEnumerator()).Returns(data.Cheeps.AsQueryable().GetEnumerator());
+            mockCheepsDbSet
+                .Setup(m => m.Add(It.IsAny<Cheep>()))
+                .Callback((Cheep cheep) =>
+                {
+                    data.Cheeps.Add(cheep);
+                });
+            mockCheepsDbSet
+                .Setup(m => m.Add(It.IsAny<Cheep>()))
+                .Callback((Cheep cheep) =>
+                {
+                    data.Cheeps.Remove(cheep);
+                });
+
+
+            mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.Provider).Returns(data.Likes.AsQueryable().Provider);
+            mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.Expression).Returns(data.Likes.AsQueryable().Expression);
+            mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.ElementType).Returns(data.Likes.AsQueryable().ElementType);
+            mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.GetEnumerator()).Returns(data.Likes.AsQueryable().GetEnumerator());
+            mockLikesDbSet
+                .Setup(m => m.Add(It.IsAny<Like>()))
+                .Callback((Like like) =>
+                {
+                    data.Likes.Add(like);
+                });
+            mockLikesDbSet
+                .Setup(m => m.Add(It.IsAny<Like>()))
+                .Callback((Like like) =>
+                {
+                    data.Likes.Remove(like);
+                });
+        }
+        
+        var mockChirpDbContext = new Mock<ChirpDbContext>();
+        mockChirpDbContext.Setup(m => m.Authors).Returns(mockAuthorsDbSet.Object);
+        mockChirpDbContext.Setup(m => m.Cheeps).Returns(mockCheepsDbSet.Object);
+        mockChirpDbContext.Setup(m => m.Likes).Returns(mockLikesDbSet.Object);
+
+        return new ChirpDbContextData
+        {
+            Authors = data.Authors,
+            Cheeps = data.Cheeps,
+            Likes = data.Likes,
+            MockChirpDbContext = mockChirpDbContext,
+            MockDbAuthorsSet = mockAuthorsDbSet,
+            MockDbCheepsSet = mockCheepsDbSet,
+            MockDbLikesSet = mockLikesDbSet
         };
     }
     

@@ -10,7 +10,7 @@
 }
 
 <div>
-    <h2> @(Model?.Author?.Name ?? routeName)'s Timeline </h2>
+    <h2 id="userTimeline"> @(Model?.Author?.Name ?? routeName)'s Timeline </h2>
     <partial name="Shared/_AddCheepForm"/>
     @if (Model?.Cheeps.Any() ?? false)
     {

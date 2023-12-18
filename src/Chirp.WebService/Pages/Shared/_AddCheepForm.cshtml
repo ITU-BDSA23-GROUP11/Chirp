@@ -1,4 +1,4 @@
-@using Chirp.WebService.Extensions
+@using Chirp.Core.Extensions
 
 @{
     var user = User.GetUser();
@@ -8,7 +8,7 @@
     <div class="cheepbox">
         <h3>What's on your mind @(user?.Name)?</h3>
         <form asp-controller="Cheep" asp-action="Create">
-            <input style="float: left" type="text" name="cheepText">
+            <input style="float: left" type="text" name="cheepText" placeholder="This is a cheep...">
             <input type="submit" value="Share">
         </form>
     </div>
