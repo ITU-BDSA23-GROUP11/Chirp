@@ -25,6 +25,7 @@ jobs:
               - 'docs/diagrams/*'
         
   buildReport:
+    name: Build Report
     needs: changes
     if: ${{ needs.changes.outputs.report == 'true' }}
     runs-on: ubuntu-latest
