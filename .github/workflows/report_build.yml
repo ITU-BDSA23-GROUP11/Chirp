@@ -11,20 +11,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        
-
-      - name: Install tex tool
-        run: |
+      
+      - run: |
           sudo apt-get update
-          sudo apt-get install texlive-latex-base
-          sudo apt-get install pdflatex
+          sudo apt-get install texlive-xetex
       
       - name: Convert md to pdf
         uses: docker://pandoc/core:2.9
         with:
           args: >- # allows you to break string into multiple lines
             --standalone
-            --pdf-engine=pdflatex
+            --pdf-engine=xelatex
             --output=docs/2023_itubdsa_group_11_report.pdf
             -f markdown
             -t pdf
