@@ -1,4 +1,5 @@
 ﻿using Chirp.Core.Dto;
+using Chirp.Core.Extensions;
 using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Repositories;
 using Chirp.WebService.Extensions;
