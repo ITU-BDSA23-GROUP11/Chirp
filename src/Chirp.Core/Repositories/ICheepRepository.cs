@@ -13,4 +13,6 @@ public interface ICheepRepository
     public List<CheepDto> GetCheepsFromIds(HashSet<Guid> cheepId);
     public bool DeleteCheep(Guid cheepId, Guid authorId);
     public bool AddComment(Guid cheepId, AddCommentDto comment);
+
+    public bool DeleteComment(Guid cheepId, Guid commentId);
 }

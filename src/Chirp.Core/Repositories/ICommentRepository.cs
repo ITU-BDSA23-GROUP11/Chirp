@@ -1,19 +1,15 @@
-﻿namespace Chirp.Core.Repositories;
-using Dto;
+﻿using Chirp.Core.Dto;
+
+namespace Chirp.Core.Repositories;
 
 public interface ICommentRepository
 {
-    public CommentDto? AddComment(AddCommentDto comment);
-    
-    
-    
-    public CheepDto? AddCheep(AddCheepDto cheep);
-    public int GetCheepCount();
-    public int GetAuthorCheepCount(string authorUsername, Guid? authUser = null);
-    public List<CheepDto> GetCheepsForPage(int pageNumber);
-    public List<CheepDto> GetAuthorCheepsForPage(string authorUsername, int pageNumber);
-    public List<CheepDto> GetAuthorCheepsForPageAsOwner(Guid authorId, int pageNumber);
+    public bool AddComment(AddCommentDto commentDto);//Add a comment to a cheep
 
-    public List<CheepDto> GetCheepsFromIds(HashSet<Guid> cheepId);
-    public bool DeleteCheep(Guid cheepId, Guid authorId);
+    public bool DeleteComment(Guid commentId);//Remove a comment
+    /*
+    public CommentDto? AddCommentDto(AddCommentDto commentDto); //Add a comment to a cheep
+    public List<CommentDto>GetCommentsForCheep(int amountOfComments); //Show a specific amount of cheeps underneath a cheep
+    public bool DeleteComment(Guid commentId); //Deletes a comment from the database
+    */
 }
