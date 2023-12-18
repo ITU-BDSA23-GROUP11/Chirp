@@ -16,6 +16,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - run: chmod +x /usr/local/bin/docker-entrypoint.sh
       - uses: docker://pandoc/core:2.9
         with:
           args: >-
