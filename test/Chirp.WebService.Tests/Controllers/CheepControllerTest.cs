@@ -1,8 +1,8 @@
 using Bogus;
+using Chirp.Core.Extensions;
 using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
 using Chirp.WebService.Controllers;
-using Chirp.WebService.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using Moq;
@@ -11,7 +11,7 @@ namespace Chirp.WebService.Tests.Controllers;
 
 public class CheepControllerTest
 {
-    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepository();
+    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepositories();
     private readonly CheepController _cheepController;
     private readonly Mock<CheepController> _mockController;
     
@@ -159,7 +159,7 @@ public class CheepControllerTest
     public void UnlikeCheepReturnsRedirectTest()
     {
         Like like = _mockChirpRepositories.TestLikes.First();
-        string cheepId = like.CheepId.ToString();
+        string cheepId = like.Cheep.CheepId.ToString();
 
         IFormCollection collection = new FormCollection(
             new Dictionary<string, StringValues>
