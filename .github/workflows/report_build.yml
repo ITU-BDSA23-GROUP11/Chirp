@@ -5,7 +5,7 @@ on:
   - pull_request
 
 jobs:
-  check-if-report-changed:
+  changes:
     runs-on: ubuntu-latest
     outputs:
       src: ${{ steps.changes.outputs.src }}
