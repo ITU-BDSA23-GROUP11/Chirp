@@ -17,6 +17,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install texlive-latex-base
+          sudo apt-get install pdf-latex
       
       - name: Convert md to pdf
         uses: docker://pandoc/core:2.9
