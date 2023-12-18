@@ -13,6 +13,7 @@ public class DataGenerator
         public List<Author> Authors;
         public List<Cheep> Cheeps;
         public List<Like> Likes;
+        public List<Comment> Comments;
     }
 
     public struct ChirpDbContextData
@@ -20,10 +21,12 @@ public class DataGenerator
         public List<Author> Authors;
         public List<Cheep> Cheeps;
         public List<Like> Likes;
+        public List<Comment> Comments;
         public Mock<ChirpDbContext> MockChirpDbContext;
         public Mock<DbSet<Author>> MockDbAuthorsSet;
         public Mock<DbSet<Cheep>> MockDbCheepsSet;
         public Mock<DbSet<Like>> MockDbLikesSet;
+        public Mock<DbSet<Comment>> MockDbCommentsSet;
     }
     
     public static Faker<Author> GenerateAuthorFaker(bool generateIds = true)
@@ -86,6 +89,21 @@ public class DataGenerator
 
         return likesFaker;
     }
+
+    public static Faker<Comment> GenerateCommentsFaker(List<Author> authors, List<Cheep> cheeps, bool generateIds = true)
+    {
+        var commentsFaker = new Faker<Comment>()
+            .RuleFor(c => c.CommentAuthor, f => f.PickRandom(authors))
+            .RuleFor(c => c.Cheep, f => f.PickRandom(cheeps))
+            .RuleFor(c => c.Timestamp, f => f.Date.Past())
+            .RuleFor(c => c.Text, f => f.Random.Words());
+        if (generateIds)
+        {
+            commentsFaker.RuleFor(c => c.CommentId, f => f.Random.Guid());
+        }
+
+        return commentsFaker;
+    }
     
     public static AuthorCheepsData GenerateAuthorsAndCheeps(
         int minAuthors = 100,
@@ -94,6 +112,8 @@ public class DataGenerator
         int maxCheeps = 1000,
         int minLikes = 1000,
         int maxLikes = 2000,
+        int minComments = 5,
+        int maxComments = 100,
         bool generateIds = true
     )
     {
@@ -109,11 +129,16 @@ public class DataGenerator
 
         List<Like> likesData = likesFaker.GenerateBetween(minLikes, maxLikes);
 
+        var commentsFaker = GenerateCommentsFaker(authorsData, cheepsData, generateIds);
+
+        List<Comment> commentsData = commentsFaker.GenerateBetween(minComments, maxComments);
+
         return new AuthorCheepsData
         {
             Authors = authorsData,
             Cheeps = cheepsData,
-            Likes = likesData
+            Likes = likesData,
+            Comments = commentsData
         };
     }
 
@@ -122,6 +147,7 @@ public class DataGenerator
         var mockAuthorsDbSet = new Mock<DbSet<Author>>();
         var mockCheepsDbSet = new Mock<DbSet<Cheep>>();
         var mockLikesDbSet = new Mock<DbSet<Like>>();
+        var mockCommentsDbSet = new Mock<DbSet<Comment>>();
         
         AuthorCheepsData data = GenerateAuthorsAndCheeps();
         
@@ -178,22 +204,44 @@ public class DataGenerator
                 {
                     data.Likes.Remove(like);
                 });
+
+            mockCommentsDbSet.As<IQueryable<Comment>>().Setup(m => m.Provider)
+                .Returns(data.Comments.AsQueryable().Provider);
+            mockCommentsDbSet.As<IQueryable<Comment>>().Setup(m => m.Expression)
+                .Returns(data.Comments.AsQueryable().Expression);
+            mockCommentsDbSet.As<IQueryable<Comment>>().Setup(m => m.ElementType)
+                .Returns(data.Comments.AsQueryable().ElementType);
+            mockCommentsDbSet.As<IQueryable<Comment>>().Setup(m => m.GetEnumerator())
+                .Returns(data.Comments.AsQueryable().GetEnumerator);
+            mockCommentsDbSet.Setup(m => m.Add(It.IsAny<Comment>()))
+                .Callback((Comment comment) =>
+                {
+                    data.Comments.Add(comment);
+                });
+            mockCommentsDbSet.Setup(m => m.Add(It.IsAny<Comment>()))
+                .Callback((Comment comment) =>
+                {
+                    data.Comments.Remove(comment);
+                });
         }
         
         var mockChirpDbContext = new Mock<ChirpDbContext>();
         mockChirpDbContext.Setup(m => m.Authors).Returns(mockAuthorsDbSet.Object);
         mockChirpDbContext.Setup(m => m.Cheeps).Returns(mockCheepsDbSet.Object);
         mockChirpDbContext.Setup(m => m.Likes).Returns(mockLikesDbSet.Object);
+        mockChirpDbContext.Setup(m => m.Comments).Returns(mockCommentsDbSet.Object);
 
         return new ChirpDbContextData
         {
             Authors = data.Authors,
             Cheeps = data.Cheeps,
             Likes = data.Likes,
+            Comments = data.Comments,
             MockChirpDbContext = mockChirpDbContext,
             MockDbAuthorsSet = mockAuthorsDbSet,
             MockDbCheepsSet = mockCheepsDbSet,
-            MockDbLikesSet = mockLikesDbSet
+            MockDbLikesSet = mockLikesDbSet,
+            MockDbCommentsSet = mockCommentsDbSet
         };
     }
     
