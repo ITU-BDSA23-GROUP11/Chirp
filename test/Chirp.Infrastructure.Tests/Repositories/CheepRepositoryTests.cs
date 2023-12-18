@@ -2,6 +2,7 @@ using Bogus;
 using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
+using Microsoft.Build.Framework;
 using Moq;
 
 namespace Chirp.Infrastructure.Tests.Repositories;
@@ -136,5 +137,36 @@ public class CheepRepositoryTests
             .CheepRepository
             .GetCheepsForPage(0);
         Assert.Empty(cheeps);
+    }
+
+    [Fact]
+    public void TestGetCheepsFromIds()
+    {
+        //Arrange
+        List<Cheep> cheeps = _mockChirpRepositories.TestCheeps;
+        HashSet<Guid> cheepIds = new HashSet<Guid>();
+        for (var i = 0; i < 10; i++)
+        {
+            cheepIds.Add(cheeps[i].CheepId);
+        }
+        //Act
+        List<CheepDto> cheepsFromId = _mockChirpRepositories.CheepRepository.GetCheepsFromIds(cheepIds);
+        
+        //Assert
+        int expectedAmount = 10;
+        Assert.Equal(expectedAmount, cheepsFromId.Count);
+    }
+
+    [Fact]
+    public void TestGetAuthorCheepsForPageAsOwner()
+    {
+        //Arrange
+        Guid authorId = _mockChirpRepositories.TestCheeps.First().Author.AuthorId;
+
+        //Act
+        List<CheepDto> actualList =
+            _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPageAsOwner(authorId, 1);
+        //Assert
+        Assert.NotEmpty(actualList);
     }
 }
