@@ -12,21 +12,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         
-      - run: |
-          sudo apt-get update
-          sudo apt-get --reinstall install texlive
-          sudo apt-get --reinstall install textlive-xetex
-          sudo apt-get --reinstall install pandoc
-          
-      - run: sudo fmtutil-sys --all
+      - run: sudo apt-get update
         
-#      - uses: awalsh128/cache-apt-pkgs-action@latest
-#        with:
-#          packages: texlive texlive-xetex pandoc
-#          version: 1.0
-          
+      - uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: pandoc texlive-base texlive-latex-recommended texlive-fonts-recommended
+          version: 1.0
       
-          
-      - run: pandoc --version
-      
-      - run: pandoc --pdf-engine=pdflatex --output=docs/2023_itubdsa_group_11_report.pdf -f markdown -t pdf docs/report.md
+      - run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf
