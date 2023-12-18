@@ -29,7 +29,7 @@ public class LikeRepository : ILikeRepository
         Cheep? cheep = _chirpDbContext.Cheeps.Include(c => c.Likes).SingleOrDefault(c => c.CheepId == cheepId);
         if (author is null) return;
         if (cheep is null) return;
-        if (author.Likes.Any(l => l.Cheep.CheepId == cheepId)) return; // Already liked
+        if (author.Likes.Any(l => l.Cheep.CheepId.ToString() == cheepId.ToString())) return; // Already liked
 
         _chirpDbContext.Likes.Add(new Like
         {

@@ -31,17 +31,22 @@ public class ModelsUnitTests
     [Fact]
     public void TestLikeFields()
     {
-        Guid authorId = Guid.NewGuid();
-        Guid cheepId = Guid.NewGuid();
-
+        var author = DataGenerator.GenerateAuthorFaker().Generate();
+        var cheepId = Guid.NewGuid();
+        var cheep = new Cheep
+        {
+            CheepId = cheepId,
+            Author = author,
+            Text = new Faker().Random.Words()
+        };
         Like like = new Like
         {
-            LikedByAuthorId = authorId,
-            CheepId = cheepId
+            LikedByAuthor = author,
+            Cheep = cheep
         };
         
-        Assert.Equal(authorId, like.LikedByAuthorId);
-        Assert.Equal(cheepId, like.CheepId);
+        Assert.Equal(author.AuthorId.ToString(), like.LikedByAuthor.AuthorId.ToString());
+        Assert.Equal(cheepId.ToString(), like.Cheep.CheepId.ToString());
     }
 
     [Fact]
