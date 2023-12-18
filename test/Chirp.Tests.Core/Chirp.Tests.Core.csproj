@@ -9,10 +9,15 @@
     <ItemGroup>
         <PackageReference Include="Bogus" Version="34.0.2" />
         <PackageReference Include="Moq" Version="4.20.70" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.13" />
+        <PackageReference Include="Microsoft.Playwright" Version="1.40.0" />
+        <PackageReference Include="Testcontainers.SqlEdge" Version="3.6.0" />
+        <PackageReference Include="xunit.extensibility.core" Version="2.6.2" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\Chirp.Infrastructure\Chirp.Infrastructure.csproj" />
+      <ProjectReference Include="..\..\src\Chirp.WebService\Chirp.WebService.csproj" />
     </ItemGroup>
     
 </Project>

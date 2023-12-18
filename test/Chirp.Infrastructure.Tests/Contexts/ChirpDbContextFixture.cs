@@ -27,18 +27,23 @@ public class ChirpDbContextFixture : IDisposable
 
         // Add mock data to DB
         using var context = new ChirpDbContext(_options);
-        if (context.Database.EnsureCreated())
-        {   
-            context.Authors.AddRange(Data.Authors);
-            context.Cheeps.AddRange(Data.Cheeps);
-            context.SaveChanges();
-        }
+        context.Database.Migrate();
+        
+        context.Cheeps.RemoveRange(context.Cheeps);
+        context.Authors.RemoveRange(context.Authors);
+        context.Likes.RemoveRange(context.Likes);
+        context.SaveChanges();
+        
+        context.Authors.AddRange(Data.Authors);
+        context.Cheeps.AddRange(Data.Cheeps);
+        context.SaveChanges();
+        
     }
 
     public ChirpDbContext GetContext() => new (_options);
     
     public void Dispose()
     {
-        _container.StopAsync().Wait();
+        _container.DisposeAsync().AsTask().Wait();
     }
 }

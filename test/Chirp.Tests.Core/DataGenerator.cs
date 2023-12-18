@@ -1,5 +1,8 @@
 using Bogus;
+using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Models;
+using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Chirp.Tests.Core;
 
@@ -10,14 +13,25 @@ public class DataGenerator
         public List<Author> Authors;
         public List<Cheep> Cheeps;
         public List<Like> Likes;
+    }
 
+    public struct ChirpDbContextData
+    {
+        public List<Author> Authors;
+        public List<Cheep> Cheeps;
+        public List<Like> Likes;
+        public Mock<ChirpDbContext> MockChirpDbContext;
+        public Mock<DbSet<Author>> MockDbAuthorsSet;
+        public Mock<DbSet<Cheep>> MockDbCheepsSet;
+        public Mock<DbSet<Like>> MockDbLikesSet;
     }
     
     public static Faker<Author> GenerateAuthorFaker(bool generateIds = true)
     {
         var authorsFaker = new Faker<Author>()
             .RuleFor(a => a.Name, f => f.Name.FullName())
-            .RuleFor(a => a.Email, (f, a) => f.Internet.Email(a.Name));
+            .RuleFor(a => a.Username, (f, a) => f.Internet.UserName(a.Name))
+            .RuleFor(a => a.AvatarUrl, f => f.Internet.Avatar());
 
         if (generateIds)
         {
@@ -41,12 +55,36 @@ public class DataGenerator
 
         return cheepsFaker;
     }
-    
-    public static Faker<Like> GenerateLikesFaker(List<Author> authors, List<Cheep> cheeps)
+
+    public static List<Author> GenerateFollows(List<Author> authors)
     {
-        return new Faker<Like>()
-            .RuleFor(l => l.LikedByAuthorId, f => f.PickRandom(authors).AuthorId)
-            .RuleFor(l => l.CheepId, f => f.PickRandom(cheeps).CheepId);
+        var faker = new Faker();
+        var rand = new Random();
+        foreach (Author author in authors)
+        {
+            for (int i = 0; i < rand.Next(3, 10); i++)
+            {
+                var followAuthor = faker.PickRandom(authors);
+                if (followAuthor.AuthorId.ToString().Equals(author.AuthorId.ToString())) continue;
+                author.Follows.Add(followAuthor);
+                followAuthor.FollowedBy.Add(author);
+            }
+        }
+
+        return authors;
+    }
+    
+    public static Faker<Like> GenerateLikesFaker(List<Author> authors, List<Cheep> cheeps, bool generateIds = true)
+    {
+        var likesFaker = new Faker<Like>()
+            .RuleFor(l => l.LikedByAuthor, f => f.PickRandom(authors))
+            .RuleFor(l => l.Cheep, f => f.PickRandom(cheeps));
+        if (generateIds)
+        {
+            likesFaker.RuleFor(c => c.LikeId, f => f.Random.Guid());
+        }
+
+        return likesFaker;
     }
     
     public static AuthorCheepsData GenerateAuthorsAndCheeps(
@@ -61,7 +99,7 @@ public class DataGenerator
     {
         var authorsFaker = GenerateAuthorFaker(generateIds);
 
-        List<Author> authorsData = authorsFaker.GenerateBetween(minAuthors, maxAuthors);
+        List<Author> authorsData = GenerateFollows(authorsFaker.GenerateBetween(minAuthors, maxAuthors));
 
         var cheepsFaker = GenerateCheepFaker(authorsData, generateIds);
 
@@ -76,6 +114,86 @@ public class DataGenerator
             Authors = authorsData,
             Cheeps = cheepsData,
             Likes = likesData
+        };
+    }
+
+    public static ChirpDbContextData GenerateMockChirpDbContext(bool withErrorProvocation = false)
+    {
+        var mockAuthorsDbSet = new Mock<DbSet<Author>>();
+        var mockCheepsDbSet = new Mock<DbSet<Cheep>>();
+        var mockLikesDbSet = new Mock<DbSet<Like>>();
+        
+        AuthorCheepsData data = GenerateAuthorsAndCheeps();
+        
+        // If mock db sets are not set up, it will throw an exception which will be caught by FetchWithErrorHandling
+        if (!withErrorProvocation) {
+            mockAuthorsDbSet.As<IQueryable<Author>>().Setup(m => m.Provider).Returns(data.Authors.AsQueryable().Provider);
+            mockAuthorsDbSet.As<IQueryable<Author>>().Setup(m => m.Expression).Returns(data.Authors.AsQueryable().Expression);
+            mockAuthorsDbSet.As<IQueryable<Author>>().Setup(m => m.ElementType).Returns(data.Authors.AsQueryable().ElementType);
+            mockAuthorsDbSet.As<IQueryable<Author>>().Setup(m => m.GetEnumerator()).Returns(data.Authors.AsQueryable().GetEnumerator());
+            mockAuthorsDbSet
+                .Setup(m => m.Add(It.IsAny<Author>()))
+                .Callback((Author author) =>
+                {
+                    data.Authors.Add(author);
+                });
+            mockAuthorsDbSet
+                .Setup(m => m.Remove(It.IsAny<Author>()))
+                .Callback((Author author) =>
+                {
+                    data.Authors.Remove(author);
+                });
+            
+            mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.Provider).Returns(data.Cheeps.AsQueryable().Provider);
+            mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.Expression).Returns(data.Cheeps.AsQueryable().Expression);
+            mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.ElementType).Returns(data.Cheeps.AsQueryable().ElementType);
+            mockCheepsDbSet.As<IQueryable<Cheep>>().Setup(m => m.GetEnumerator()).Returns(data.Cheeps.AsQueryable().GetEnumerator());
+            mockCheepsDbSet
+                .Setup(m => m.Add(It.IsAny<Cheep>()))
+                .Callback((Cheep cheep) =>
+                {
+                    data.Cheeps.Add(cheep);
+                });
+            mockCheepsDbSet
+                .Setup(m => m.Add(It.IsAny<Cheep>()))
+                .Callback((Cheep cheep) =>
+                {
+                    data.Cheeps.Remove(cheep);
+                });
+
+
+            mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.Provider).Returns(data.Likes.AsQueryable().Provider);
+            mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.Expression).Returns(data.Likes.AsQueryable().Expression);
+            mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.ElementType).Returns(data.Likes.AsQueryable().ElementType);
+            mockLikesDbSet.As<IQueryable<Like>>().Setup(m => m.GetEnumerator()).Returns(data.Likes.AsQueryable().GetEnumerator());
+            mockLikesDbSet
+                .Setup(m => m.Add(It.IsAny<Like>()))
+                .Callback((Like like) =>
+                {
+                    data.Likes.Add(like);
+                });
+            mockLikesDbSet
+                .Setup(m => m.Add(It.IsAny<Like>()))
+                .Callback((Like like) =>
+                {
+                    data.Likes.Remove(like);
+                });
+        }
+        
+        var mockChirpDbContext = new Mock<ChirpDbContext>();
+        mockChirpDbContext.Setup(m => m.Authors).Returns(mockAuthorsDbSet.Object);
+        mockChirpDbContext.Setup(m => m.Cheeps).Returns(mockCheepsDbSet.Object);
+        mockChirpDbContext.Setup(m => m.Likes).Returns(mockLikesDbSet.Object);
+
+        return new ChirpDbContextData
+        {
+            Authors = data.Authors,
+            Cheeps = data.Cheeps,
+            Likes = data.Likes,
+            MockChirpDbContext = mockChirpDbContext,
+            MockDbAuthorsSet = mockAuthorsDbSet,
+            MockDbCheepsSet = mockCheepsDbSet,
+            MockDbLikesSet = mockLikesDbSet
         };
     }
     
@@ -97,28 +215,5 @@ public class DataGenerator
             .RuleFor(u => u.Referer, (_, u) => u.Origin+u.Path);
 
         return urlFaker.GenerateBetween(minAmount, maxAmount);
-    }
-
-    public class FakeClaims
-    {
-        public string? GivenName;
-        public string? Surname;
-        public string? Email;
-        public Guid Id;
-    }
-    
-    public static List<FakeClaims> GenerateUserClaims(
-        int minAmount = 100,
-        int maxAmount = 500
-    )
-    {
-        var claimsFaker = new Faker<FakeClaims>()
-            .RuleFor(c => c.GivenName, f => f.Random.Bool() ? f.Name.FirstName() : null)
-            .RuleFor(c => c.Surname, f => f.Random.Bool() ? f.Name.LastName() : null)
-            .RuleFor(c => c.Email,
-                (f, c) => f.Random.Bool() ? f.Internet.Email(firstName: c.GivenName, lastName: c.Surname) : null)
-            .RuleFor(c => c.Id, f => f.Random.Guid());
-
-        return claimsFaker.GenerateBetween(minAmount, maxAmount);
     }
 }

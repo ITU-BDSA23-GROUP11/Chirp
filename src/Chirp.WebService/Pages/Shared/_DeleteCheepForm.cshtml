@@ -1,7 +1,10 @@
-@using Chirp.WebService.Extensions
+@using Chirp.Core.Extensions
 @model Chirp.Core.Dto.CheepDto
 
-@if (User.GetUserEmail().Equals(Model.AuthorEmail))
+@{
+    var user = User.GetUser();
+}
+@if (user?.Username.Equals(Model.AuthorUsername) ?? false)
 {
      <form asp-controller="Cheep" asp-action="Delete" style="display:inline;">
          <input type="hidden" name="cheepId" value="@Model.CheepId"/>

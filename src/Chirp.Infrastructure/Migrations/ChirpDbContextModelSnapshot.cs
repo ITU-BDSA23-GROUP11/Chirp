@@ -17,7 +17,7 @@ namespace Chirp.Infrastructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.13")
+                .HasAnnotation("ProductVersion", "7.0.14")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -43,15 +43,17 @@ namespace Chirp.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("AvatarUrl")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Username")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("AuthorId");
 
@@ -84,13 +86,21 @@ namespace Chirp.Infrastructure.Migrations
 
             modelBuilder.Entity("Chirp.Infrastructure.Models.Like", b =>
                 {
-                    b.Property<Guid>("LikedByAuthorId")
+                    b.Property<Guid>("LikeId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CheepId")
+                    b.Property<Guid?>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("LikedByAuthorId", "CheepId");
+                    b.Property<Guid?>("CheepId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("LikeId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.HasIndex("CheepId");
 
                     b.ToTable("Likes");
                 });
@@ -121,9 +131,33 @@ namespace Chirp.Infrastructure.Migrations
                     b.Navigation("Author");
                 });
 
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Like", b =>
+                {
+                    b.HasOne("Chirp.Infrastructure.Models.Author", "LikedByAuthor")
+                        .WithMany("Likes")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Chirp.Infrastructure.Models.Cheep", "Cheep")
+                        .WithMany("Likes")
+                        .HasForeignKey("CheepId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Cheep");
+
+                    b.Navigation("LikedByAuthor");
+                });
+
             modelBuilder.Entity("Chirp.Infrastructure.Models.Author", b =>
                 {
                     b.Navigation("Cheeps");
+
+                    b.Navigation("Likes");
+                });
+
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Cheep", b =>
+                {
+                    b.Navigation("Likes");
                 });
 #pragma warning restore 612, 618
         }
