@@ -1,0 +1,27 @@
+name: Build Project Report
+
+permissions:
+  contents: write
+  pull-requests: write
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  BuildReport:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - run: ls -la
+      - uses: docker://pandoc/core:2.9
+        with:
+          args: >-
+            docs/report.md
+            --output=docs/2023_itubdsa_group_11_report.pdf
+            --from=markdown
+            --to=pdf
+            --pdf-engine=xelatex
