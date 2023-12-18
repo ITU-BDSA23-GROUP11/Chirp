@@ -2,11 +2,12 @@ name: .NET Code Coverage
 permissions:
   contents: write
   pull-requests: write
+
 on:
-  workflow_run:
-    workflows: [Build Report]
-    types:
-      - completed
+  push:
+    branches: [ main, develop, release ]
+  pull_request:
+    branches: [ main, develop, release ]
 
 jobs:
   BuildAndTestWithCoverage:
