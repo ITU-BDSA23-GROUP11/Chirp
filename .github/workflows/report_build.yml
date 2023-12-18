@@ -47,10 +47,4 @@ jobs:
       - name: Generate report pdf
         run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf
         
-      - name: Add report as its own commit
-        run: |
-          git config --global user.email "reportgenerator@bdsagroup11.dk"
-          git config --global user.name "Report Generator"
-          git add .
-          git commit -m "Formatted report"
-          git push
+      - uses: stefanzweifel/git-auto-commit-action@v5
