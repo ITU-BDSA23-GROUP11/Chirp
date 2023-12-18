@@ -8,11 +8,16 @@ on: push
 
 jobs:
   pandoc:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Install latex
-        run: apt install texlive-latex-base
+        
+
+      - name: Install tex tool
+        run: |
+          sudo apt-get update
+          sudo apt-get install texlive-latex-base
+      
       - name: Convert md to pdf
         uses: docker://pandoc/core:2.9
         with:
