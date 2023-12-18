@@ -1,15 +1,13 @@
-using Bogus;
 using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
 using Moq;
-using NuGet.Frameworks;
 
 namespace Chirp.Infrastructure.Tests.Repositories;
 
 public class LikeRepositoryTest
 {
-    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepository();
+    private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepositories();
 
     [Fact] //Tests if a like is added to the database
     public void LikeCheepTest() 
@@ -33,11 +31,9 @@ public class LikeRepositoryTest
         //Arrange
         Like like = _mockChirpRepositories.TestLikes.First();
         //Act
-        _mockChirpRepositories.LikeRepository.LikeCheep(like.LikedByAuthorId, like.CheepId);
+        _mockChirpRepositories.LikeRepository.LikeCheep(like.LikedByAuthor.AuthorId, like.Cheep.CheepId);
         //Assert
         _mockChirpRepositories.MockLikesDbSet.Verify(m => m.Add(It.IsAny<Like>()), Times.Never);
-        
-        
     }
 
     [Fact] //Tests the return of a list of likes based on a cheeps id. 
@@ -70,10 +66,10 @@ public class LikeRepositoryTest
         //Arrange
         Like testLike = _mockChirpRepositories.TestLikes.First();
         //Act
-        LikeDto testLikeDto = _mockChirpRepositories.LikeRepository.GetLike(testLike.LikedByAuthorId, testLike.CheepId);
+        LikeDto testLikeDto = _mockChirpRepositories.LikeRepository.GetLike(testLike.LikedByAuthor.AuthorId, testLike.Cheep.CheepId);
         //Assert
-        Assert.Equal(testLikeDto.LikedByAuthorId, testLike.LikedByAuthorId);
-        Assert.Equal(testLikeDto.CheepId, testLike.CheepId);
+        Assert.Equal(testLikeDto.LikedByAuthorId, testLike.LikedByAuthor.AuthorId);
+        Assert.Equal(testLikeDto.CheepId, testLike.Cheep.CheepId);
     }
 
     [Fact] //Tests if a like exists with a boolean value
@@ -82,7 +78,7 @@ public class LikeRepositoryTest
         //Arrange
         Like testLike = _mockChirpRepositories.TestLikes.First();
         //Act
-        bool actualVal = _mockChirpRepositories.LikeRepository.IsLiked(testLike.LikedByAuthorId, testLike.CheepId);
+        bool actualVal = _mockChirpRepositories.LikeRepository.IsLiked(testLike.LikedByAuthor.AuthorId, testLike.Cheep.CheepId);
         //Assert
         Assert.True(actualVal);
     }
@@ -104,7 +100,7 @@ public class LikeRepositoryTest
         bool isHigherThanZero = false;
         Like like = _mockChirpRepositories.TestLikes.First();
 
-        int likeCount = _mockChirpRepositories.LikeRepository.LikeCount(like.CheepId);
+        int likeCount = _mockChirpRepositories.LikeRepository.LikeCount(like.Cheep.CheepId);
        
         if (likeCount > 0)
         {

@@ -117,4 +117,31 @@ public class AuthorRepository : IAuthorRepository
             AvatarUrl = author.AvatarUrl
         };
     }
+
+    public bool DeleteAuthor(Guid authorId) =>
+        WithErrorHandlingDefaultValue(false, () =>
+        {
+            Author? author = _chirpDbContext.Authors.Include(a => a.Likes).FirstOrDefault(a => a.AuthorId == authorId);
+            if (author is null) throw new NullReferenceException("Author not found");
+            
+            // Delete user likes
+            _chirpDbContext.Likes.RemoveRange(author.Likes);
+            // Delete user
+            _chirpDbContext.Authors.Remove(author);
+            
+            _chirpDbContext.SaveChanges();
+            return true;
+        });
+
+    private T WithErrorHandlingDefaultValue<T>(T defaultValue, Func<T> function) where T : struct
+    {
+        try
+        {
+            return function();
+        }
+        catch
+        {
+            return defaultValue;
+        }
+    }
 }

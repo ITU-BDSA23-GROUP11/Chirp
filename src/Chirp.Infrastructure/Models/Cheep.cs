@@ -24,6 +24,7 @@ public class Cheep
         MaxLength(160, ErrorMessage = "Cheeps must contain less than 160 characters") //Defined minimum length is not required
     ]
     public string Text { get; set; } = "";
+    public List<Like> Likes { get; set; } = new ();
     
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
 }
