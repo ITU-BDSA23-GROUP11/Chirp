@@ -35,12 +35,13 @@ jobs:
         
       - name: Update apt-get
         run: sudo apt-get update
-
-      - name: Get tex and pandoc packages
-        uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: pandoc texlive-base texlive-latex-recommended texlive-fonts-recommended
-          version: 1.0
+      
+      - name: Install tex and pandoc packages with apt-get
+        run: |
+          sudo apt-get install -y --reinstall pandoc
+          sudo apt-get install -y --reinstall texlive-base
+          sudo apt-get install -y --reinstall texlive-latex-recommended
+          sudo apt-get install -y --reinstall -reinstall texlive-fonts-recommended
 
       - name: Generate report pdf
         run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf
