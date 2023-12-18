@@ -7,12 +7,19 @@ permissions:
 on: push
 
 jobs:
-  convert_via_pandoc:
+  pandoc:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
-      - uses: lothindir/pandoc-markdown-action@v0.1
+      - name: Install latex
+        run: apt install texlive-latex-base
+      - name: Convert md to pdf
+        uses: docker://pandoc/core:2.9
         with:
-          markdown: "docs/report.md"
-          pdf: "docs/2023_itubdsa_group_11_report.pdf"
-          template: "kate,monochrome"
+          args: >- # allows you to break string into multiple lines
+            --standalone
+            --pdf-engine=pdflatex
+            --output=docs/2023_itubdsa_group_11_report.pdf
+            -f markdown
+            -t pdf
+            docs/report.md
