@@ -12,12 +12,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         
-      - run: sudo apt-get update
+      - run: |
+          sudo apt-get update
+          sudo apt-get --reinstall install texlive
+          sudo apt-get --reinstall install textlive-xetex
+          sudo apt-get --reinstall install pandoc
           
-      - uses: awalsh128/cache-apt-pkgs-action@latest
-        with:
-          packages: texlive-base texlive-xetex pandoc
-          version: 1.0
+      - run: sudo fmtutil-sys --all
+        
+#      - uses: awalsh128/cache-apt-pkgs-action@latest
+#        with:
+#          packages: texlive texlive-xetex pandoc
+#          version: 1.0
+          
+      
           
       - run: pandoc --version
       
