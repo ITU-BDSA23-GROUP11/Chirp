@@ -23,7 +23,6 @@ jobs:
       
       - run: |
           pandoc
-          --standalone
           --pdf-engine=xelatex
           --output=docs/2023_itubdsa_group_11_report.pdf
           -f markdown
