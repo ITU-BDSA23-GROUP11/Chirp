@@ -28,8 +28,8 @@
     <p class="text-gray-800 dark:text-gray-200">
         @Model.Text
     </p>
-    <div class="flex items-center flex-col gap-4 content-start">
-        <div class="flex flex-row space-x-2">
+    <div class="gap-4 flex flex-col space-y-3">
+        <div class="flex gap-2">
             @if (Model.isLikedByUser is not null)
                     {
                         @if (Model.isLikedByUser ?? false)
@@ -142,29 +142,37 @@
                         }
                     }
         </div>
-        
         <!--Comment section -->
         <div>
-            <form asp-controller="Cheep" asp-action="Comment" style="display:inline;" class="flex flex-row">
+            <form asp-controller="Comment" asp-action="Add" style="display:inline;" class="flex">
                 <input type="hidden" name="AuthorId" value="@user?.Id"/>
                 <input type="hidden" name="CheepId" value="@Model.CheepId"/>
                 <input name="__RequestVerificationToken" type="hidden"/>
-                <input type="text" name="CommentText" value="" placeholder="Write a comment" class="border-solid rounded-sm shadow-sm p-4 border-black"/>
-                @Html.AntiForgeryToken()
-                <button type="submit" class="justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 flex items-center gap-2">
-                    Post comment
-                </button>
+                <div class="flex items-center w-full gap-2">
+                    <div class="my-4 flex-grow w-full">
+                        <input class="border rounded-lg px-4 py-2" style="width:100%" type="text" placeholder="Write a comment..." name="CommentText"/>
+                    </div>
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 flex items-center gap-2">
+                        Post comment
+                    </button>
+                </div>
             </form>
         </div>
     </div>
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-4 w-full">
         @if (Model.CheepComments != null)
         {
-            @foreach (CommentPartialModel com in Model.CheepComments)
-            {
-                //Build a model for the CommentPartial
-                <partial name="_CommentPartial" model="@com"/>
-            }
+            <div class="flex flex-grow">
+            <div class="flex flex-col gap-2">
+                            @foreach (CommentPartialModel com in Model.CheepComments)
+                                        {
+                                            //Build a model for the CommentPartial
+                                            <partial name="_CommentPartial" model="@com"/>
+                                        }
+                        </div>    
+            </div>
+            
         }
     </div>
 </div>

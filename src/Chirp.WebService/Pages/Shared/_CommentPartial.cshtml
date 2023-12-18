@@ -6,24 +6,44 @@
     var user = User.GetUser();
 }
 
-<div class="flex flex-col gap-4 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 border text-card-foreground">
+<div class="flex flex-auto gap-4 px-4 py-2 rounded-lg shadow-lg bg-white dark:bg-gray-800 border text-card-foreground w-full">
     <div class="flex items-center gap-4">
         <a href="/@Model.AuthorUsername">
-            <span class="relative flex shrink-0 overflow-hidden rounded-full w-12 h-12">
+            <span class="relative flex shrink-0 overflow-hidden rounded-full w-6 h-6">
                 <img
                     alt="Comment user avatar"
                     class="rounded-full aspect-square object-cover"
-                    height="48"
+                    height="24"
                     src="@Model.AuthorAvatarUrl"
-                    width="48"/>
+                    width="24"/>
             </span>
         </a>
-        <div>
-            <a href="/@Model.AuthorUsername" class="text-lg font-bold text-gray-900 dark:text-gray-100">@Model.AuthorName</a>
-            <p class="text-sm text-gray-500 dark:text-gray-400">@Model.Timestamp</p>
-        </div>
-    </div>
-    <div>
+        <div class="flex flex-col gap-2">
+            <div>
+                <a href="/@Model.AuthorUsername" class="text-sm font-bold text-gray-900 dark:text-gray-100">@Model.AuthorName</a>
+                <p class="text-xs text-gray-500 dark:text-gray-400">@Model.Timestamp</p>
+            </div>
+            <div>
+                </div>
+                            <!-- If the user has written the original cheep or the comment -> allowed to delete -->
+                            @if (user?.Id == @Model.AuthorId || user?.Id == @Model.CheepAuthorId)
+                            {
+                                <div>
+                                    <form asp-controller="Comment" asp-action="Delete" style="display:inline;" class="flex">
+                                        <input type="hidden" name="CommentId" value="@Model.CommentId"/>
+                                        <input name="__RequestVerificationToken" type="hidden"/>
+                                        <div class="flex items-center w-full gap-2">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-red-500 text-white hover:bg-accent hover:text-accent-foreground px-3 py-2 flex items-center gap-2">
+                                                Delete comment
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            }
+            </div>
+            </div>
+    <div class="flex items-center">
         <p>@Model.Text</p>
     </div>
 </div>

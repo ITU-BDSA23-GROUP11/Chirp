@@ -12,6 +12,7 @@ public class CommentDto
     public required Guid CommentId { get; init; }
     public required Guid AuthorId { get; init; }
     
+    public required Guid CheepAuthorId { get; init; }
     public required Guid CheepId { get; init; }
     public required string? AuthorName { get; init; }
     public required string AuthorUsername { get; init; }
