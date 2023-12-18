@@ -24,6 +24,12 @@
                 <UserHelpText>Add help text here</UserHelpText>
                 <UserInputType>Paragraph</UserInputType>
             </ClaimType>
+
+            <ClaimType Id="emptyClaim">
+                <DisplayName></DisplayName>
+                <DataType>string</DataType>
+                <UserInputType>Readonly</UserInputType>
+            </ClaimType>
         </ClaimsSchema>
 
         <ClaimsTransformations>
@@ -60,6 +66,15 @@
                 </InputParameters>
                 <OutputClaims>
                     <OutputClaim ClaimTypeReferenceId="userMessage" TransformationClaimType="createdClaim" />
+                </OutputClaims>
+            </ClaimsTransformation>
+
+            <ClaimsTransformation Id="CreateRedirectLink" TransformationMethod="CreateStringClaim">
+                <InputParameters>
+                    <InputParameter Id="value" DataType="string" Value="Go back to Chirp" />
+                </InputParameters>
+                <OutputClaims>
+                    <OutputClaim ClaimTypeReferenceId="emptyClaim" TransformationClaimType="createdClaim" />
                 </OutputClaims>
             </ClaimsTransformation>
         </ClaimsTransformations>
@@ -103,8 +118,8 @@
                     <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.SelfAssertedAttributeProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
                     <Metadata>
                         <Item Key="ContentDefinitionReferenceId">api.selfasserted</Item>
-                        <Item Key="setting.showContinueButton">false</Item>
-                        <Item Key="setting.showCancelButton">false</Item>
+                        <Item Key="setting.showContinueButton">true</Item>
+                        <Item Key="setting.showCancelButton">true</Item>
                     </Metadata>
                     <InputClaimsTransformations>
                         <InputClaimsTransformation ReferenceId="CreateAccountDeletedMessage" />
@@ -127,7 +142,7 @@
                     <Protocol Name="Proprietary" Handler="Web.TPEngine.Providers.SelfAssertedAttributeProvider, Web.TPEngine, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
                     <Metadata>
                         <Item Key="ContentDefinitionReferenceId">api.selfasserted</Item>
-                        <Item Key="setting.showContinueButton">false</Item>
+                        <Item Key="setting.showContinueButton">true</Item>
                         <Item Key="setting.showCancelButton">true</Item>
                     </Metadata>
                     <InputClaimsTransformations>
@@ -210,6 +225,12 @@
 
                 <!-- Sample: This step present the account has been deleted message -->
                 <OrchestrationStep Order="7" Type="ClaimsExchange">
+                    <Preconditions>
+                        <Precondition Type="ClaimsExist" ExecuteActionsIf="true">
+                            <Value>objectId</Value>
+                            <Action>SkipThisOrchestrationStep</Action>
+                        </Precondition>
+                    </Preconditions>
                     <ClaimsExchanges>
                         <ClaimsExchange Id="SelfAsserted-AccountHasBeenDeleted" TechnicalProfileReferenceId="SelfAsserted-AccountHasBeenDeleted" />
                     </ClaimsExchanges>

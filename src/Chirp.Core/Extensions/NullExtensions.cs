@@ -1,6 +1,6 @@
 using System.Runtime.CompilerServices;
 
-namespace Chirp.WebService.Extensions;
+namespace Chirp.Core.Extensions;
 
 public static class NullExtensions
 {
