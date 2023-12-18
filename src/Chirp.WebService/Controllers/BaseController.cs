@@ -14,11 +14,13 @@ public abstract class BaseController : Controller, IController
     protected readonly IAuthorRepository AuthorRepository;
     protected readonly ICheepRepository CheepRepository;
     protected readonly ILikeRepository LikeRepository;
+    protected readonly ICommentRepository CommentRepository;
     
-    protected BaseController(IAuthorRepository authorRepository, ICheepRepository cheepRepository, ILikeRepository likeRepository)
+    protected BaseController(IAuthorRepository authorRepository, ICheepRepository cheepRepository, ILikeRepository likeRepository, ICommentRepository commentRepository)
     {
         AuthorRepository = authorRepository;
         CheepRepository = cheepRepository;
+        CommentRepository = commentRepository;
         
         GetUser = () => User.GetUser();
         LikeRepository = likeRepository;
