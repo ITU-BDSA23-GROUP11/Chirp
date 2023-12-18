@@ -6,6 +6,7 @@ on:
 
 jobs:
   changes:
+    name: Check for report changes
     runs-on: ubuntu-latest
     outputs:
       report: ${{ steps.changes.outputs.report }}
@@ -49,4 +50,7 @@ jobs:
       - name: Generate report pdf
         run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf
         
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - name: Commit new report
+        uses: actions-js/push@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
