@@ -1,22 +1,39 @@
 name: Build Project Report
 
-permissions:
-  contents: write
-  pull-requests: write
-
-on: push
+on: pull_request
 
 jobs:
   pandoc:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     steps:
-      - uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            report:
+              - 'docs/report.md'
+              - 'docs/images/*'
+              - 'docs/diagrams/*'
+      
+      - if: steps.changes.outputs.report == 'true'
+        run: sudo apt-get update
         
-      - run: sudo apt-get update
-        
-      - uses: awalsh128/cache-apt-pkgs-action@latest
+      - if: steps.changes.outputs.report == 'true'
+        uses: awalsh128/cache-apt-pkgs-action@latest
         with:
           packages: pandoc texlive-base texlive-latex-recommended texlive-fonts-recommended
           version: 1.0
       
-      - run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf
+      - if: steps.changes.outputs.report == 'true'
+        run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf
+        
+      - if: steps.changes.outputs.report == 'true'
+        run: git add .
+
+      - if: steps.changes.outputs.report == 'true'
+        run: git commit -m "Formatted report"
+
+      - if: steps.changes.outputs.report == 'true'
+        run: git push
