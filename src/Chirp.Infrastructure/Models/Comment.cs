@@ -7,14 +7,15 @@ public class Comment
     [Key]
     public Guid CommentId { get; set; }
     
-    private Author _author = null!;
+    private Author _commentAuthor = null!;
     
-    public Author Author
+    public Author CommentAuthor
     {
-        get => _author;
+        get => _commentAuthor;
         set
         {
-            _author = value;
+            value.Comments.Add(this);
+            _commentAuthor = value;
         }
     }
     
@@ -25,6 +26,7 @@ public class Comment
         get => _cheep;
         set
         {
+            value.Comments.Add(this);
             _cheep = value;
         }
     }
