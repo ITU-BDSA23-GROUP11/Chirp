@@ -4,24 +4,15 @@ permissions:
   contents: write
   pull-requests: write
 
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: push
 
 jobs:
-  BuildReport:
+  convert_via_pandoc:
     runs-on: ubuntu-22.04
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - run: chmod +x /usr/local/bin/docker-entrypoint.sh
       - uses: docker://pandoc/core:2.9
         with:
-          args: >-
-            docs/report.md
+          args: >- # allows you to break string into multiple lines
+            --standalone
             --output=docs/2023_itubdsa_group_11_report.pdf
-            --from=markdown
-            --to=pdf
-            --pdf-engine=xelatex
+            docs/report.md
