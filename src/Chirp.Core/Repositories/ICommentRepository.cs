@@ -1,8 +1,12 @@
-namespace Chirp.Core.Repositories;
+﻿namespace Chirp.Core.Repositories;
 using Dto;
 
-public interface ICheepRepository
+public interface ICommentRepository
 {
+    public CommentDto? AddComment(AddCommentDto comment);
+    
+    
+    
     public CheepDto? AddCheep(AddCheepDto cheep);
     public int GetCheepCount();
     public int GetAuthorCheepCount(string authorUsername, Guid? authUser = null);
@@ -12,5 +16,4 @@ public interface ICheepRepository
 
     public List<CheepDto> GetCheepsFromIds(HashSet<Guid> cheepId);
     public bool DeleteCheep(Guid cheepId, Guid authorId);
-    public bool AddComment(Guid cheepId, AddCommentDto comment);
 }
