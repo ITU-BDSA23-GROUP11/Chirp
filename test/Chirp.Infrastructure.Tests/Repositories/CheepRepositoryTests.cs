@@ -30,6 +30,19 @@ public class CheepRepositoryTests
         Assert.Equal(cheep.Text, addedCheep?.Text);
         Assert.True(addedCheep?.Timestamp.ToFileTimeUtc() > DateTime.UtcNow.Add(TimeSpan.FromSeconds(-1)).ToFileTimeUtc());
     }
+
+    [Fact]
+    public void DeleteCheepTest()
+    {
+        Cheep cheep = _mockChirpRepositories.TestCheeps.First();
+        Guid cheepId = cheep.CheepId;
+        Guid authorId = cheep.Author.AuthorId;
+
+        _mockChirpRepositories.CheepRepository.DeleteCheep(cheepId, authorId);
+        
+        _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Remove(It.IsAny<Cheep>()), Times.Once);
+        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+    }
     
     [Fact]
     public void TestGetCheepCount()
