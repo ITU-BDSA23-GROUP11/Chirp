@@ -1,10 +1,10 @@
 name: .NET Build and Test
 
 on:
-  push:
-    branches: [ main, develop, release ]
-  pull_request:
-    branches: [ main, develop, release ]
+  workflow_run:
+    workflows: [Build Report]
+    types:
+      - completed
 
 jobs:
   BuildAndTest:
