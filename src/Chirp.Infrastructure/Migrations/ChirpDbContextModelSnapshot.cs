@@ -104,7 +104,9 @@ namespace Chirp.Infrastructure.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("Comment");
+                    b.HasIndex("CheepId");
+
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Chirp.Infrastructure.Models.Like", b =>
@@ -145,10 +147,15 @@ namespace Chirp.Infrastructure.Migrations
 
                     b.Navigation("Author");
                 });
-
+            
             modelBuilder.Entity("Chirp.Infrastructure.Models.Author", b =>
                 {
                     b.Navigation("Cheeps");
+                });
+
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Cheep", b =>
+                {
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }
