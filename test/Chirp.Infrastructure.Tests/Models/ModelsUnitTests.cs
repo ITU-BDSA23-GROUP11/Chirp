@@ -11,16 +11,19 @@ public class ModelsUnitTests
     public void TestAuthorFields()
     {
         string name = new Faker().Name.FullName();
-        string email = new Faker().Internet.Email(name);
+        string username = new Faker().Internet.UserName(name);
+        string avatarUrl = new Faker().Internet.Avatar();
 
         Author author = new Author
         {
             Name = name,
-            Email = email
+            Username = username,
+            AvatarUrl = avatarUrl
         };
 
         Assert.Equal(name, author.Name);
-        Assert.Equal(email, author.Email);
+        Assert.Equal(username, author.Username);
+        Assert.Equal(avatarUrl, author.AvatarUrl);
         Assert.Equal(Guid.Empty, author.AuthorId);
         Assert.Empty(author.Cheeps);
     }
@@ -28,17 +31,22 @@ public class ModelsUnitTests
     [Fact]
     public void TestLikeFields()
     {
-        Guid authorId = Guid.NewGuid();
-        Guid cheepId = Guid.NewGuid();
-
+        var author = DataGenerator.GenerateAuthorFaker().Generate();
+        var cheepId = Guid.NewGuid();
+        var cheep = new Cheep
+        {
+            CheepId = cheepId,
+            Author = author,
+            Text = new Faker().Random.Words()
+        };
         Like like = new Like
         {
-            LikedByAuthorId = authorId,
-            CheepId = cheepId
+            LikedByAuthor = author,
+            Cheep = cheep
         };
         
-        Assert.Equal(authorId, like.LikedByAuthorId);
-        Assert.Equal(cheepId, like.CheepId);
+        Assert.Equal(author.AuthorId.ToString(), like.LikedByAuthor.AuthorId.ToString());
+        Assert.Equal(cheepId.ToString(), like.Cheep.CheepId.ToString());
     }
 
     [Fact]
@@ -55,7 +63,7 @@ public class ModelsUnitTests
         };
 
         Assert.Equal(text, cheep.Text);
-        Assert.Equal(author.Name, cheep.Author.Name);
+        Assert.Equal(author.AuthorId, cheep.Author.AuthorId);
     }
 
     [Fact]
@@ -79,7 +87,8 @@ public class ModelsUnitTests
         var author = new Author
         {
             Name = "1234",
-            Email = "test@email.com"
+            Username = new Faker().Internet.UserName(),
+            AvatarUrl = new Faker().Internet.Avatar()
         };
 
         var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
@@ -93,41 +102,14 @@ public class ModelsUnitTests
         var author = new Author
         {
             Name = new string('a', 51),
-            Email = "test@email.com"
+            Username = new Faker().Internet.UserName(),
+            AvatarUrl = new Faker().Internet.Avatar()
 
         };
 
         var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
             (() => Validator.ValidateObject(author, new ValidationContext(author), true));
         Assert.Contains("Username must contain less than 50 characters", exception.Message);
-    }
-
-    [Fact]
-    public void ExceptionTestEmailFormat()
-    {
-        var author = new Author
-        {
-            Name = "testingEmail",
-            Email = "FailMail"
-        };
-        var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
-            (() => Validator.ValidateObject(author, new ValidationContext(author), true));
-        Assert.Contains("Invalid email format.", exception.Message);
-    }
-
-    [Fact]
-    public void ExceptionTestEmailLength()
-    {
-        var author = new Author
-        {
-            Name = "testingEmail",
-            Email = "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm" +
-                    "mmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" +
-                    "aiiiiiiiiiiiiiiiiiiiiiilllllllllllllllllllll@email.com"
-        };
-        var exception = Assert.Throws<System.ComponentModel.DataAnnotations.ValidationException>
-            (() => Validator.ValidateObject(author, new ValidationContext(author), true));
-        Assert.Contains("Email must be less than 100 characters", exception.Message);
     }
 
     [Fact]
