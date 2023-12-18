@@ -59,9 +59,9 @@ public class AuthorRepositoryTest
     public void GetFollowsForAuthorTest()
     {
         //Arrange
-        Author authorToBeFollowed = _mockChirpRepositories.TestAuthors.Last();
+        Author author = _mockChirpRepositories.TestAuthors.Last();
         //Act
-        List<string> followerList = _mockChirpRepositories.AuthorRepository.GetFollowsForAuthor(authorToBeFollowed.Username);
+        List<string> followerList = _mockChirpRepositories.AuthorRepository.GetFollowsForAuthor(author.AuthorId);
         //Assert
         Assert.NotEmpty(followerList);
     }
@@ -82,7 +82,21 @@ public class AuthorRepositoryTest
         Assert.True(isFollowedByRemoved);
         _mockChirpRepositories.MockChirpDbContext.Verify(db => db.SaveChanges(), Times.Once);
     }
+
+    [Fact]
+    public void DeleteAuthorTest()
+    {
+        Author author = _mockChirpRepositories.TestAuthors.First();
+
+        bool? isRemoved =_mockChirpRepositories.AuthorRepository.DeleteAuthor(author.AuthorId);
+        
+        _mockChirpRepositories.MockAuthorsDbSet.Verify(m => m.Remove(It.IsAny<Author>()), Times.Once);
+        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+        
+        Assert.True(isRemoved);
+    }
     
+   
     
 }
 
