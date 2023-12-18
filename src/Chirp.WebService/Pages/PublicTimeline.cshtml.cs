@@ -61,6 +61,8 @@ public class PublicTimelineModel: PageModel
                     {
                         AuthorAvatarUrl = c.AuthorAvatarUrl,
                         AuthorId = c.AuthorId,
+                        CheepAuthorId = c.CheepAuthorId,
+                        CommentId = c.CommentId,
                         AuthorUsername = c.AuthorUsername,
                         AuthorName = c.AuthorName,
                         Timestamp = c.Timestamp,
@@ -89,6 +91,8 @@ public class PublicTimelineModel: PageModel
                     {
                         AuthorAvatarUrl = c.AuthorAvatarUrl,
                         AuthorId = c.AuthorId,
+                        CheepAuthorId = c.CheepAuthorId,
+                        CommentId = c.CommentId,
                         AuthorUsername = c.AuthorUsername,
                         AuthorName = c.AuthorName,
                         Timestamp = c.Timestamp,

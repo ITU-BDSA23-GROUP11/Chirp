@@ -85,10 +85,11 @@ public class CheepRepository : ICheepRepository
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
                         Timestamp = c.Timestamp,
-                        CommentDtos = c.Comments.Select<Comment, CommentDto>(com => new CommentDto
+                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
                         {
                             AuthorId = com.CommentAuthor.AuthorId,
                             CheepId = com.Cheep.CheepId,
+                            CheepAuthorId = com.Cheep.Author.AuthorId,
                             AuthorName = com.CommentAuthor.Name,
                             AuthorUsername = com.CommentAuthor.Username,
                             AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
@@ -229,6 +230,21 @@ public class CheepRepository : ICheepRepository
         //cheep.Comments.Add(comment);
         _chirpDbContext.SaveChanges();
         
+        return true;
+    }
+
+    public bool DeleteComment(Guid cheepId, Guid commentId)
+    {
+        Cheep? cheep = _chirpDbContext.Cheeps.Include(c => c.Comments)
+            .SingleOrDefault(c => c.CheepId == cheepId);
+        
+        Comment? comment = _chirpDbContext.Comments.SingleOrDefault(c => c.CommentId == commentId);
+
+        if (cheep == null || comment == null) return false;
+        
+        _chirpDbContext.Comments.Remove(comment);
+        _chirpDbContext.SaveChanges();
+
         return true;
     }
 }
