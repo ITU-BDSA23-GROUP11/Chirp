@@ -1,0 +1,33 @@
+﻿@using Chirp.Core.Dto
+@using Chirp.Core.Extensions
+@using Chirp.WebService.Extensions
+@using Chirp.WebService.Models
+@using Microsoft.EntityFrameworkCore.Metadata.Internal
+
+@{
+    var user = User.GetUser();
+    var username = user?.Username;
+}
+
+
+
+<div class="flex flex-col gap-4 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 border text-card-foreground">
+    <div class="gap-2 flex flex-col">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">What's on your mind @username?</h3>
+        <div>
+            <form asp-controller="Cheep" asp-action="Create" style="display:inline;" class="flex">
+                <input type="hidden" name="AuthorId" value="@user?.Id"/>
+                <input name="__RequestVerificationToken" type="hidden"/>
+                <div class="flex items-center w-full gap-2">
+                    <div class="my-4 flex-grow w-full">
+                        <input class="border rounded-lg px-4 py-2" style="width:100%" type="text" placeholder="Write your own cheep here!" name="cheepText"/>
+                    </div>
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 flex items-center gap-2">
+                        Publish Cheep!
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

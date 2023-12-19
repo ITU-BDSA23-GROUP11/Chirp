@@ -1,6 +1,18 @@
+@using Chirp.Core.Extensions
 @model List<Chirp.WebService.Models.CheepPartialModel>
 
+@{
+    var user = User.GetUser();
+}
+
 <main class="flex flex-col gap-4 p-4 overflow-auto bg-gray-100 dark:bg-gray-700" id="messagelist">
+    <!--Input box for creating a cheep if the user is signed in-->
+    @if (user is not null)
+    {
+        <partial name="_WriteCheepPartial"/>
+    }
+    
+    <!--Create the cheeps for the page-->
     @if (Model.Any())
     {
         @foreach (var cheep in Model)
