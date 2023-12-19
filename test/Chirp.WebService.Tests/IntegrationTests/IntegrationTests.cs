@@ -36,7 +36,7 @@ public sealed class IntegrationTests : IClassFixture<WebApplicationFixture>
         HtmlDocument doc = new HtmlDocument();
         doc.LoadHtml(htmlContent);
         
-        int amountOfListItems = doc.DocumentNode.SelectNodes("//*[@id='cheeps']").Count();
+        int amountOfListItems = doc.DocumentNode.SelectNodes("//*[@class='cheeps']").Count();
         
         Assert.Equal(32, amountOfListItems);
     }

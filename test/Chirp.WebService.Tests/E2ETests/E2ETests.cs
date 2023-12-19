@@ -19,7 +19,7 @@ public class E2ETests : IClassFixture<MockWebApplicationFactoryWithAuth>
         await page.GotoAsync(_fixture.BaseUrl);
         
         //XPath for author name
-        var authorXPath = "//*[@id='messagelist']/div[1]/div[1]/div/a";
+        var authorXPath = "//*[@id='messagelist']/div[2]/div[1]/div[1]/a";
     
         var authorButton = await page.QuerySelectorAsync(authorXPath);
     

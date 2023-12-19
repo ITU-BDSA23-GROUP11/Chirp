@@ -40,7 +40,7 @@ public class LikeRepositoryTest
     public void GetLikesByCheepIdTest()
     {
         //Arrange
-        Cheep cheep = _mockChirpRepositories.TestCheeps.First();
+        Cheep cheep = _mockChirpRepositories.TestLikes.First().Cheep;
         //Act
         List<LikeDto> testList = _mockChirpRepositories.LikeRepository.GetLikesByCheepId(cheep.CheepId);
         //Assert
