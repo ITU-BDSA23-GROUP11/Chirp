@@ -144,6 +144,19 @@
                             </form>
                         }
                     }
+            
+            @if (Model.AuthorId == user?.Id)
+                {
+                    <form asp-controller="Cheep" asp-action="Delete" style="display:inline;">
+                        <input type="hidden" name="CheepAuthorId" value="@Model.AuthorId"/>
+                        <input type="hidden" name="cheepId" value="@Model.CheepId"/>
+                        <input name="__RequestVerificationToken" type="hidden"/>
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-red-500 text-white hover:bg-accent hover:text-accent-foreground px-3 py-2 flex items-center gap-2">
+                            Delete Cheep
+                        </button>
+                    </form>
+                }
         </div>
         <!--Comment section -->
         <div>
