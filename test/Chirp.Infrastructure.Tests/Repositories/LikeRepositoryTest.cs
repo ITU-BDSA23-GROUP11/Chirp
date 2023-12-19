@@ -108,22 +108,19 @@ public class LikeRepositoryTest
         }
         Assert.True(isHigherThanZero);
     }
-    /*
+
     [Fact] //Tests if a like is removed from the database
     public void UnlikeCheepTest() 
     {
         //Arrange
         Like like = _mockChirpRepositories.TestLikes.First();
         //Act
-        _mockChirpRepositories.LikeRepository.UnlikeCheep(like.LikedByAuthorId, like.CheepId);
+        _mockChirpRepositories.LikeRepository.UnlikeCheep(like.LikedByAuthor.AuthorId, like.Cheep.CheepId);
         
         //Assert
         _mockChirpRepositories.MockLikesDbSet.Verify(m => m.Remove(like), Times.Once);
         _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
         
-        bool liked = _mockChirpRepositories.LikeRepository.IsLiked(like.LikedByAuthorId, like.CheepId);
-        Assert.False(liked);
-    
     }
-    */
+    
 }
