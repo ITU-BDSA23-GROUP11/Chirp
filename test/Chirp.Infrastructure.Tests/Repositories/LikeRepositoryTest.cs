@@ -52,7 +52,7 @@ public class LikeRepositoryTest
     public void GetLikesByAuthorId() 
     {
         //Arrange
-        Author author = _mockChirpRepositories.TestAuthors.First();
+        Author author = _mockChirpRepositories.TestLikes.First().LikedByAuthor;
         //Act
         List<LikeDto> testList = _mockChirpRepositories.LikeRepository.GetLikesByAuthorId(author.AuthorId);
         //Assert
