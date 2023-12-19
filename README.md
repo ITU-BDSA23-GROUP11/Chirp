@@ -27,8 +27,8 @@ It can be downloaded from the from [the _'Download .NET 7.0'_ website](https://d
 > _Make sure to download `.NET 7.0` and not `.NET 8.0`, as **Chirp** will not work otherwise_.
 
 Thereafter, depending on what you want to do, here are the setup guides for the main application, and for tests:
-- [How to set up **_Chirp_**]()
-- [How to set up tests]()
+- [How to set up **_Chirp_**](#how-to-set-up-chirp)
+- [How to set up tests](#how-to-set-up-tests)
 
 ## How to set up **_Chirp_**
 The main requirement needed to run **_Chirp_**, other than .NET, is an `azure-sql-edge` Docker container, for which the setup guide is below.
