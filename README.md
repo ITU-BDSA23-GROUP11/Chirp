@@ -69,7 +69,7 @@ Tests have only one requirement, which is needed to run end-to-end tests: playwr
 
 First of all, the powershell dotnet tool is needed, which can be installed with the following command:
 ```shell
-dotnet tool install PowerShell --version 7.3.10
+dotnet tool install PowerShell --version 7.4.0
 ```
 
 After running the tests the first time, and failing, the cause will be due to playwright not be installed. This can can be solved by running the following command:
