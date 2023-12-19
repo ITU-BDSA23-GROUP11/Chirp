@@ -1,0 +1,53 @@
+name: Build Project Report
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  changes:
+    name: Check for report changes
+    runs-on: ubuntu-latest
+    outputs:
+      report: ${{ steps.changes.outputs.report }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Filter paths
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          base: ${{ github.ref }}
+          filters: |     
+            report:
+              - 'docs/report.md'
+              - 'docs/images/*'
+              - 'docs/diagrams/*'
+        
+  buildReport:
+    name: Build Report
+    needs: changes
+    if: ${{ needs.changes.outputs.report == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        
+      - name: Update apt-get
+        run: sudo apt-get update
+      
+      - name: Install tex and pandoc packages with apt-get
+        run: |
+          sudo apt-get install -y --reinstall pandoc
+          sudo apt-get install -y --reinstall texlive-base
+          sudo apt-get install -y --reinstall texlive-latex-recommended
+          sudo apt-get install -y --reinstall texlive-fonts-recommended
+
+      - name: Generate report pdf
+        run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf
+        
+      - uses: stefanzweifel/git-auto-commit-action@v5
