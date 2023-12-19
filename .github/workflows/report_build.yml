@@ -45,8 +45,9 @@ jobs:
           sudo apt-get install -y --reinstall texlive-base
           sudo apt-get install -y --reinstall texlive-latex-recommended
           sudo apt-get install -y --reinstall texlive-fonts-recommended
+          sudo apt-get install -y --reinstall inkscape
 
       - name: Generate report pdf
-        run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf
+        run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf --pdf-engine-opt "--shell-escape"
         
       - uses: stefanzweifel/git-auto-commit-action@v5
