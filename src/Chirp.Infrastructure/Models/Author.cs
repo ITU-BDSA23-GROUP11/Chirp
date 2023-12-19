@@ -21,6 +21,8 @@ public class Author
     
     public ICollection<Cheep> Cheeps { get; } = new List<Cheep>();
 
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
     public List<Author> Follows { get; set; } = new ();
     public List<Author> FollowedBy { get; set; } = new ();
     public List<Like> Likes { get; set; } = new ();

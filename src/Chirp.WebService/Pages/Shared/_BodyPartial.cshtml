@@ -1,0 +1,16 @@
+@using Chirp.Core.Extensions
+@model List<Chirp.WebService.Models.CheepPartialModel>
+
+@{
+    var user = User.GetUser();
+}
+
+<main class="flex flex-col gap-4 p-4 overflow-auto bg-gray-100 dark:bg-gray-700" id="messagelist">
+    @if (Model.Any())
+    {
+        @foreach (var cheep in Model)
+        {
+            <partial name="_CheepCardPartial" model=@cheep/>
+        }
+    }
+</main>

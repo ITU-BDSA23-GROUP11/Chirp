@@ -67,6 +67,33 @@ public class ModelsUnitTests
     }
 
     [Fact]
+    public void TestCommentFields()
+    {
+        Author author = DataGenerator.GenerateAuthorFaker().Generate();
+        String text = new Faker().Random.Words();
+
+        Cheep cheep = new Cheep
+        {
+            Author = author,
+            Text = text
+        };
+
+        String commentText = new Faker().Random.Words();
+        Comment comment = new Comment
+        {
+            Cheep = cheep,
+            CommentAuthor = author,
+            CommentId = Guid.NewGuid(),
+            Timestamp = DateTime.UtcNow,
+            Text = commentText
+        };
+        
+        Assert.Equal(commentText, comment.Text);
+        Assert.Equal(author.AuthorId, comment.CommentAuthor.AuthorId);
+        Assert.Equal(cheep.CheepId, comment.Cheep.CheepId);
+    }
+
+    [Fact]
     public void TestCheepModelCorrectTimestamp()
     {
         var author = DataGenerator.GenerateAuthorFaker().Generate();
