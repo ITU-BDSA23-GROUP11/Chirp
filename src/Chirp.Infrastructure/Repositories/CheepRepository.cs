@@ -163,7 +163,7 @@ public class CheepRepository : ICheepRepository
                 .Where(c => authorFollows.Contains(c.Author.Username) || c.Author.AuthorId.ToString().Equals(authorId.ToString()))
                 .Include(c => c.Author)
                 .OrderByDescending(c => authorFollows.Contains(c.Author.Username))
-                .ThenBy(c => c.Timestamp)
+                .ThenByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
                 .Select<Cheep, CheepDto>(c =>
@@ -207,6 +207,4 @@ public class CheepRepository : ICheepRepository
         
         return true; 
     }
-
-    
 }

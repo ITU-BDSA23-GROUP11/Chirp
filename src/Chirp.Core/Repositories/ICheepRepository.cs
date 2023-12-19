@@ -12,5 +12,4 @@ public interface ICheepRepository
 
     public List<CheepDto> GetCheepsFromIds(HashSet<Guid> cheepId);
     public bool DeleteCheep(Guid cheepId, Guid authorId);
-   
 }
