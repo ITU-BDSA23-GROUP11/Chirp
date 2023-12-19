@@ -41,7 +41,18 @@ public class CheepRepository : ICheepRepository
             AuthorAvatarUrl = newCheep.Author.AvatarUrl,
             Text = newCheep.Text,
             Timestamp = newCheep.Timestamp,
-            CommentDtos = new List<CommentDto>()
+            CommentDtos = newCheep.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
+            {
+                AuthorId = com.CommentAuthor.AuthorId,
+                CheepId = com.Cheep.CheepId,
+                CheepAuthorId = com.Cheep.Author.AuthorId,
+                AuthorName = com.CommentAuthor.Name,
+                AuthorUsername = com.CommentAuthor.Username,
+                AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                CommentId = com.CommentId,
+                Text = com.Text,
+                Timestamp = com.Timestamp
+            }).ToList()
         };
     }
     
@@ -120,7 +131,18 @@ public class CheepRepository : ICheepRepository
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
                         Timestamp = c.Timestamp,
-                        CommentDtos = new List<CommentDto>()
+                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
+                        {
+                            AuthorId = com.CommentAuthor.AuthorId,
+                            CheepId = com.Cheep.CheepId,
+                            CheepAuthorId = com.Cheep.Author.AuthorId,
+                            AuthorName = com.CommentAuthor.Name,
+                            AuthorUsername = com.CommentAuthor.Username,
+                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                            CommentId = com.CommentId,
+                            Text = com.Text,
+                            Timestamp = com.Timestamp
+                        }).ToList()
                     })
                 .ToList();
         });
@@ -146,7 +168,18 @@ public class CheepRepository : ICheepRepository
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
                         Timestamp = c.Timestamp,
-                        CommentDtos = new List<CommentDto>()
+                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
+                        {
+                            AuthorId = com.CommentAuthor.AuthorId,
+                            CheepId = com.Cheep.CheepId,
+                            CheepAuthorId = com.Cheep.Author.AuthorId,
+                            AuthorName = com.CommentAuthor.Name,
+                            AuthorUsername = com.CommentAuthor.Username,
+                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                            CommentId = com.CommentId,
+                            Text = com.Text,
+                            Timestamp = com.Timestamp
+                        }).ToList()
                     }
                 )
                 .ToList();
@@ -175,7 +208,18 @@ public class CheepRepository : ICheepRepository
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
                         Timestamp = c.Timestamp,
-                        CommentDtos = new List<CommentDto>()
+                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
+                        {
+                            AuthorId = com.CommentAuthor.AuthorId,
+                            CheepId = com.Cheep.CheepId,
+                            CheepAuthorId = com.Cheep.Author.AuthorId,
+                            AuthorName = com.CommentAuthor.Name,
+                            AuthorUsername = com.CommentAuthor.Username,
+                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                            CommentId = com.CommentId,
+                            Text = com.Text,
+                            Timestamp = com.Timestamp
+                        }).ToList()
                     }
                 )
                 .ToList();
