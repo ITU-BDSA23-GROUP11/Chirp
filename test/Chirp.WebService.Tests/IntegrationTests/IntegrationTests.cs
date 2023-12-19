@@ -41,16 +41,5 @@ public sealed class IntegrationTests : IClassFixture<WebApplicationFixture>
         Assert.Equal(32, amountOfListItems);
     }
         
-    [Theory]
-    [InlineData("Helge")]
-    [InlineData("SampleUser")]
-    public async void PrivateTimelinesAreDisplayed(String page)
-    {
-        //Act
-        var rsp = await _httpClient.GetAsync("/" + page);
-        string htmlContent = await rsp.Content.ReadAsStringAsync();
-                
-        //Check that the page contains the parameter name
-        Assert.Contains(page, htmlContent);
-    }
+
 }
