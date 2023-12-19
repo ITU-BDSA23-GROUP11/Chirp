@@ -102,4 +102,7 @@ dotnet dev-certs https
 ---
 
 # How to run tests
-TODO
+To run tests, given the it is set up (see [How to set up tests](#how-to-set-up-tests)), simply run the following command:
+```shell
+dotnet test --verbosity normal
+```
