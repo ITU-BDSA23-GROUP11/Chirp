@@ -103,17 +103,17 @@ public class UserTimelineModel : PageModel
 
         FooterPartialModel = new FooterPartialModel
         {
-            FirstLink = pageNumber > 2 ? $"/?page=1" : null,
+            FirstLink = pageNumber > 2 ? $"/{author}?page=1" : null,
             
-            PreviousLink = pageNumber > 1 ? $"/?page={pageNumber-1}" : null,
+            PreviousLink = pageNumber > 1 ? $"/{author}?page={pageNumber-1}" : null,
             PreviousPage = pageNumber > 1 ? pageNumber-1 : null,
             
             CurrentPage = pageNumber,
             
-            NextLink = pageNumber < amountOfPages ? $"/?page={pageNumber+1}" : null,
+            NextLink = pageNumber < amountOfPages ? $"/{author}?page={pageNumber+1}" : null,
             NextPage = pageNumber < amountOfPages ? pageNumber+1 : null,
             
-            LastLink = pageNumber < amountOfPages-1 ? $"/?page={amountOfPages}" : null,
+            LastLink = pageNumber < amountOfPages-1 ? $"/{author}?page={amountOfPages}" : null,
             LastPage = pageNumber < amountOfPages-1 ? amountOfPages : null,
         };
         
