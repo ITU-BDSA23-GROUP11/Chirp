@@ -1,7 +1,7 @@
 name: Build Project Report
 
 on:
-  push:
+  push
 
 jobs:
   changes:
@@ -45,8 +45,6 @@ jobs:
           sudo apt-get install -y --reinstall texlive-base
           sudo apt-get install -y --reinstall texlive-latex-recommended
           sudo apt-get install -y --reinstall texlive-fonts-recommended
-          
-      - run: pandoc --version
 
       - name: Generate report pdf
         run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf
