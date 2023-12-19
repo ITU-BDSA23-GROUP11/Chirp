@@ -1,5 +1,6 @@
 ﻿@page "/{author}"
 @using Microsoft.AspNetCore.Authorization
+@using Chirp.Core.Extensions
 @model Chirp.WebService.Pages.UserTimelineModel
 @attribute [AllowAnonymous]
 
@@ -7,6 +8,13 @@
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
     var routeName = HttpContext.GetRouteValue("author");
+    var user = User.GetUser();
+}
+
+<!--Only display the WriteCheepPartial on the users timeline, not on others-->
+@if(user?.Name == routeName.ToString())
+{
+    <partial name="Shared/_WriteCheepPartial"/>
 }
 
 <partial name="Shared/_BodyPartial" model=@Model.Cheeps />
