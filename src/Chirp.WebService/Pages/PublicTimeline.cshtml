@@ -1,0 +1,13 @@
+@page "/"
+@attribute [AllowAnonymous]
+@using Microsoft.AspNetCore.Authorization
+@model Chirp.WebService.Pages.PublicTimelineModel
+
+@{
+    ViewData["Title"] = "Chirp!";
+    Layout = "Shared/_Layout";
+}
+
+<partial name="Shared/_WriteCheepPartial"/>
+<partial name="Shared/_BodyPartial" model="@Model.Cheeps"/>
+<partial name="Shared/_FooterPartial" model=@Model.FooterPartialModel />

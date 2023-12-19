@@ -54,5 +54,49 @@ public class AuthorRepositoryTest
         //Assert
         Assert.Equal(author.AuthorId, resAuthor?.Id);
     }
+
+    [Fact]
+    public void GetFollowsForAuthorTest()
+    {
+        //Arrange
+        Author author = _mockChirpRepositories.TestAuthors.Last();
+        //Act
+        List<string> followerList = _mockChirpRepositories.AuthorRepository.GetFollowsForAuthor(author.AuthorId);
+        //Assert
+        Assert.NotEmpty(followerList);
+    }
+
+    [Fact]
+    public void RemoveFollowTest()
+    {
+        //Arrange
+        Author author = _mockChirpRepositories.TestAuthors.First();
+        Author unfollowAuthor = author.Follows.First();
+        //Act
+        _mockChirpRepositories.AuthorRepository.RemoveFollow(author.AuthorId, unfollowAuthor.AuthorId);
+        
+        bool isFollowingRemoved = !author.Follows.Any(a => a.AuthorId == unfollowAuthor.AuthorId);
+        bool isFollowedByRemoved = !unfollowAuthor.FollowedBy.Any(a => a.AuthorId == author.AuthorId);
+        //Assert
+        Assert.True(isFollowingRemoved);
+        Assert.True(isFollowedByRemoved);
+        _mockChirpRepositories.MockChirpDbContext.Verify(db => db.SaveChanges(), Times.Once);
+    }
+
+    [Fact]
+    public void DeleteAuthorTest()
+    {
+        Author author = _mockChirpRepositories.TestAuthors.First();
+
+        bool? isRemoved =_mockChirpRepositories.AuthorRepository.DeleteAuthor(author.AuthorId);
+        
+        _mockChirpRepositories.MockAuthorsDbSet.Verify(m => m.Remove(It.IsAny<Author>()), Times.Once);
+        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+        
+        Assert.True(isRemoved);
+    }
+    
+   
+    
 }
 

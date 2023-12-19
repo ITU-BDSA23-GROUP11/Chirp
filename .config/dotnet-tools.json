@@ -15,7 +15,7 @@
       ]
     },
     "powershell": {
-      "version": "7.3.10",
+      "version": "7.4.0",
       "commands": [
         "pwsh"
       ]

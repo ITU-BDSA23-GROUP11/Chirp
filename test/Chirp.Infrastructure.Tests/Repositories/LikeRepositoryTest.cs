@@ -40,7 +40,7 @@ public class LikeRepositoryTest
     public void GetLikesByCheepIdTest()
     {
         //Arrange
-        Cheep cheep = _mockChirpRepositories.TestCheeps.First();
+        Cheep cheep = _mockChirpRepositories.TestLikes.First().Cheep;
         //Act
         List<LikeDto> testList = _mockChirpRepositories.LikeRepository.GetLikesByCheepId(cheep.CheepId);
         //Assert
@@ -52,7 +52,7 @@ public class LikeRepositoryTest
     public void GetLikesByAuthorId() 
     {
         //Arrange
-        Author author = _mockChirpRepositories.TestAuthors.First();
+        Author author = _mockChirpRepositories.TestLikes.First().LikedByAuthor;
         //Act
         List<LikeDto> testList = _mockChirpRepositories.LikeRepository.GetLikesByAuthorId(author.AuthorId);
         //Assert
@@ -108,22 +108,19 @@ public class LikeRepositoryTest
         }
         Assert.True(isHigherThanZero);
     }
-    /*
+
     [Fact] //Tests if a like is removed from the database
     public void UnlikeCheepTest() 
     {
         //Arrange
         Like like = _mockChirpRepositories.TestLikes.First();
         //Act
-        _mockChirpRepositories.LikeRepository.UnlikeCheep(like.LikedByAuthorId, like.CheepId);
+        _mockChirpRepositories.LikeRepository.UnlikeCheep(like.LikedByAuthor.AuthorId, like.Cheep.CheepId);
         
         //Assert
         _mockChirpRepositories.MockLikesDbSet.Verify(m => m.Remove(like), Times.Once);
         _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
         
-        bool liked = _mockChirpRepositories.LikeRepository.IsLiked(like.LikedByAuthorId, like.CheepId);
-        Assert.False(liked);
-    
     }
-    */
+    
 }

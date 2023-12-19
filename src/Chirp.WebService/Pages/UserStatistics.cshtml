@@ -1,0 +1,110 @@
+﻿@page "/{author}/stats"
+@using Microsoft.AspNetCore.Authorization
+@using Chirp.Core.Dto
+@using Chirp.WebService.Models
+@model Chirp.WebService.Pages.UserStatisticsModel
+@attribute [AllowAnonymous]
+
+@{
+    ViewData["Title"] = "Chirp!";
+    Layout = "Shared/_Layout";
+    var routeName = HttpContext.GetRouteValue("author");
+}
+
+<main class="flex flex-col gap-4 p-4 overflow-auto bg-gray-100 dark:bg-gray-700">
+    <h1 class="text-3xl text-black font-bold">Stats</h1>
+    
+    <!--Following-->
+    <div class="flex flex-col rounded-2xl shadow-lg">
+        <div class="flex justify-center items-center bg-[#3498db] rounded-t-2xl">
+            <p class="text-xl text-white font-semibold py-[8px]">Following: @(Model.Following.Count)</p>
+        </div>
+        @foreach(string s in Model.Following)
+        {
+            <div class=" py-3 px-5 flex justify-between">
+                <a href="/@(s)">@(s)</a>
+            </div>
+        }
+    </div>
+    
+    <!--Likes-->
+    <div class="flex flex-col rounded-2xl shadow-lg">
+        <div class="flex justify-center items-center bg-[#3498db] rounded-t-2xl">
+            <p class="text-xl text-white font-semibold py-[8px]">Liked Cheeps</p>
+        </div>
+        @foreach (CheepDto c in Model.LikesCheeps)
+        {
+            CheepPartialModel cpm = new CheepPartialModel
+            {
+                AuthorAvatarUrl = c.AuthorAvatarUrl,
+                AuthorName = c.AuthorName,
+                AuthorUsername = c.AuthorUsername,
+                AuthorId = c.AuthorId,
+                CheepId = c.CheepId,
+                Timestamp = c.Timestamp,
+                Text = c.Text,
+                isLikedByUser = true
+            };
+            
+            <partial name="_CheepCardPartial" model=@(cpm)/>
+        }
+    </div>
+    
+</main>
+@*<partial name="Shared/_BodyPartial" model=@Model.Cheeps />
+<partial name="Shared/_FooterPartial" model=@Model.FooterPartialModel />
+
+@* <div> *@
+@*     <h2> @(Model?.Author?.Name ?? routeName)'s Timeline </h2> *@
+@*     <partial name="Shared/_AddCheepForm"/> *@
+@*     @if (Model?.Cheeps.Any() ?? false) *@
+@*     { *@
+@*         <ul id="messagelist" class="cheeps"> *@
+@*             @foreach (var cheep in Model.Cheeps) *@
+@*             { *@
+@*                 <li style="display: flex"> *@
+@*                     <img src="@cheep.AuthorAvatarUrl" alt="@cheep.AuthorName" style="height: 64px; aspect-ratio: 1/1" /> *@
+@*                     <p> *@
+@*                         <strong> *@
+@*                             <a href="/@cheep.AuthorUsername">@cheep.AuthorName</a> *@
+@*                         </strong> *@
+@*                         @cheep.Text *@
+@*                         <small>&mdash; @cheep.Timestamp</small> *@
+@*                         <partial name="Shared/_DeleteCheepForm" model=@cheep/> *@
+@*                         @{ *@
+@*                             if (Model.Follows.Any(s => s == cheep.AuthorUsername)) *@
+@*                             { *@
+@*                                 //Follows already -> unfollow *@
+@*                                 <partial name="Shared/_UnfollowAuthorForm" model="@cheep"/> *@
+@*                             } *@
+@*                             else *@
+@*                             { *@
+@*                                 <partial name="Shared/_FollowAuthorForm" model="@cheep"/> *@
+@*                             } *@
+@*                             if (Model.CheepIsLiked(cheep.CheepId)) *@
+@*                             { *@
+@*                                 <partial name="Shared/_UnlikeCheepForm" model="@cheep"/> *@
+@*                             } *@
+@*                             else *@
+@*                             { *@
+@*                                 <partial name="Shared/_LikeCheepForm" model="@cheep"/> *@
+@*                             } *@
+@*                         } *@
+@*                     </p> *@
+@* *@
+@*                 </li> *@
+@*             } *@
+@*         </ul> *@
+@*     } *@
+@*     else *@
+@*     { *@
+@*         <em>There are no cheeps so far.</em> *@
+@*     } *@
+@*     <!--Pagination--> *@
+@*         <div> *@
+@*             @for (int i = 1; i <= Model?.AmountOfPages; i++) *@
+@*             { *@
+@*                 <a href="@routeName?page=@i">@i</a> *@
+@*             } *@
+@*         </div> *@
+@* </div> *@

@@ -3,6 +3,7 @@
 *.zip
 .idea/**/*
 data/*.db*
+docs/2023_itubdsa_group_11_report.pdf
 
 ### Csharp ###
 # User-specific files

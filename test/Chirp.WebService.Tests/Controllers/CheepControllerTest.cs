@@ -17,7 +17,8 @@ public class CheepControllerTest
     
     public CheepControllerTest()
     {
-        _mockController = new Mock<CheepController>(_mockChirpRepositories.AuthorRepository, _mockChirpRepositories.CheepRepository, _mockChirpRepositories.LikeRepository);
+        _mockController = new Mock<CheepController>(_mockChirpRepositories.AuthorRepository,
+            _mockChirpRepositories.CheepRepository, _mockChirpRepositories.LikeRepository, _mockChirpRepositories.CommentRepository);
         _mockController.CallBase = true;
             
         string name = new Faker().Name.FullName();
@@ -32,6 +33,38 @@ public class CheepControllerTest
         _mockController.As<IController>().Setup(bc => bc.GetPathUrl).Returns(() => new Faker().Internet.UrlWithPath());
 
         _cheepController = _mockController.Object;
+    }
+
+    [Fact]
+    public void TestFollowReturnsRedirect()
+    {
+        Author author = _mockChirpRepositories.TestAuthors.First();
+
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                {"CheepAuthorId", author.AuthorId.ToString()}
+            }
+        );
+        IActionResult actionResult = _cheepController.Follow(collection);
+        
+        Assert.True(actionResult is RedirectResult);
+    }
+
+    [Fact]
+    public void TestUnfollowReturnsRedirect()
+    {
+        Author author = _mockChirpRepositories.TestAuthors.First().Follows.First();
+
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                {"CheepAuthorId", author.AuthorId.ToString()}
+            }
+        );
+
+        IActionResult actionResult = _cheepController.Unfollow(collection);
+        Assert.True(actionResult is RedirectResult);
     }
     
     [Fact]

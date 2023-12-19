@@ -84,23 +84,40 @@ namespace Chirp.Infrastructure.Migrations
                     b.ToTable("Cheeps");
                 });
 
-            modelBuilder.Entity("Chirp.Infrastructure.Models.Like", b =>
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Comment", b =>
                 {
-                    b.Property<Guid>("LikeId")
-                        .ValueGeneratedOnAdd()
+                    b.Property<Guid>("CommentId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("AuthorId")
+                    b.Property<Guid>("AuthorId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CheepId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("nvarchar(160)");
 
-                    b.HasKey("LikeId");
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("CommentId");
 
                     b.HasIndex("AuthorId");
 
                     b.HasIndex("CheepId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Like", b =>
+                {
+                    b.Property<Guid>("LikedByAuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CheepId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("LikedByAuthorId", "CheepId");
 
                     b.ToTable("Likes");
                 });
@@ -130,34 +147,15 @@ namespace Chirp.Infrastructure.Migrations
 
                     b.Navigation("Author");
                 });
-
-            modelBuilder.Entity("Chirp.Infrastructure.Models.Like", b =>
-                {
-                    b.HasOne("Chirp.Infrastructure.Models.Author", "LikedByAuthor")
-                        .WithMany("Likes")
-                        .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.HasOne("Chirp.Infrastructure.Models.Cheep", "Cheep")
-                        .WithMany("Likes")
-                        .HasForeignKey("CheepId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Cheep");
-
-                    b.Navigation("LikedByAuthor");
-                });
-
+            
             modelBuilder.Entity("Chirp.Infrastructure.Models.Author", b =>
                 {
                     b.Navigation("Cheeps");
-
-                    b.Navigation("Likes");
                 });
 
             modelBuilder.Entity("Chirp.Infrastructure.Models.Cheep", b =>
                 {
-                    b.Navigation("Likes");
+                    b.Navigation("Comments");
                 });
 #pragma warning restore 612, 618
         }
