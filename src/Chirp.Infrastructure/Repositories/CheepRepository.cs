@@ -199,12 +199,14 @@ public class CheepRepository : ICheepRepository
         Cheep? cheepToDelete = _chirpDbContext.Cheeps
             .Include(c => c.Author)
             .Include(c => c.Likes)
+            .Include(c => c.Comments)
             .SingleOrDefault(c => c.CheepId == cheepId);
 
         if (cheepToDelete == null) return false;
         
-        //If the Cheep has any likes, remove likes before the Cheep
+        //If the cheep has likes or comments, remove them before the cheep
         _chirpDbContext.Likes.RemoveRange(cheepToDelete.Likes);
+        _chirpDbContext.Comments.RemoveRange(cheepToDelete.Comments);
         
         _chirpDbContext.Cheeps.Remove(cheepToDelete);
         _chirpDbContext.SaveChanges();
