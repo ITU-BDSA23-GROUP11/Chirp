@@ -2,6 +2,7 @@ using Bogus;
 using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
+using Microsoft.Build.Framework;
 using Moq;
 
 namespace Chirp.Infrastructure.Tests.Repositories;
@@ -29,6 +30,19 @@ public class CheepRepositoryTests
         Assert.Equal(author.Name, addedCheep?.AuthorName);
         Assert.Equal(cheep.Text, addedCheep?.Text);
         Assert.True(addedCheep?.Timestamp.ToFileTimeUtc() > DateTime.UtcNow.Add(TimeSpan.FromSeconds(-1)).ToFileTimeUtc());
+    }
+
+    [Fact]
+    public void DeleteCheepTest()
+    {
+        Cheep cheep = _mockChirpRepositories.TestCheeps.First();
+        Guid cheepId = cheep.CheepId;
+        Guid authorId = cheep.Author.AuthorId;
+
+        _mockChirpRepositories.CheepRepository.DeleteCheep(cheepId, authorId);
+        
+        _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Remove(It.IsAny<Cheep>()), Times.Once);
+        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
     }
     
     [Fact]
@@ -123,5 +137,36 @@ public class CheepRepositoryTests
             .CheepRepository
             .GetCheepsForPage(0);
         Assert.Empty(cheeps);
+    }
+
+    [Fact]
+    public void TestGetCheepsFromIds()
+    {
+        //Arrange
+        List<Cheep> cheeps = _mockChirpRepositories.TestCheeps;
+        HashSet<Guid> cheepIds = new HashSet<Guid>();
+        for (var i = 0; i < 10; i++)
+        {
+            cheepIds.Add(cheeps[i].CheepId);
+        }
+        //Act
+        List<CheepDto> cheepsFromId = _mockChirpRepositories.CheepRepository.GetCheepsFromIds(cheepIds);
+        
+        //Assert
+        int expectedAmount = 10;
+        Assert.Equal(expectedAmount, cheepsFromId.Count);
+    }
+
+    [Fact]
+    public void TestGetAuthorCheepsForPageAsOwner()
+    {
+        //Arrange
+        Guid authorId = _mockChirpRepositories.TestCheeps.First().Author.AuthorId;
+
+        //Act
+        List<CheepDto> actualList =
+            _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPageAsOwner(authorId, 1);
+        //Assert
+        Assert.NotEmpty(actualList);
     }
 }

@@ -41,17 +41,8 @@ public class LikeRepository : ILikeRepository
     //Removes a like from DbContext
     public void UnlikeCheep(Guid authorId, Guid cheepId) 
     {
-        Author? author = _chirpDbContext
-            .Authors
-            .Include(a => a.Likes)
-            .ThenInclude(like => like.Cheep)
-            .SingleOrDefault(a => a.AuthorId == authorId);
-        Cheep? cheep = _chirpDbContext.Cheeps.Include(c => c.Likes).SingleOrDefault(c => c.CheepId == cheepId);
-        if (author is null) return;
-        if (cheep is null) return;
-
-        Like? like = author.Likes.FirstOrDefault(l => l.Cheep.CheepId == cheepId);
-        if (like is null) return; // Not liked
+        Like? like = _chirpDbContext.Likes.SingleOrDefault(c => c.Cheep.CheepId == cheepId && c.LikedByAuthor.AuthorId == authorId);
+        if (like is null) return;//Not liked
 
         _chirpDbContext.Likes.Remove(like);
         _chirpDbContext.SaveChanges();

@@ -40,7 +40,19 @@ public class CheepRepository : ICheepRepository
             AuthorUsername = newCheep.Author.Username,
             AuthorAvatarUrl = newCheep.Author.AvatarUrl,
             Text = newCheep.Text,
-            Timestamp = newCheep.Timestamp
+            Timestamp = newCheep.Timestamp,
+            CommentDtos = newCheep.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
+            {
+                AuthorId = com.CommentAuthor.AuthorId,
+                CheepId = com.Cheep.CheepId,
+                CheepAuthorId = com.Cheep.Author.AuthorId,
+                AuthorName = com.CommentAuthor.Name,
+                AuthorUsername = com.CommentAuthor.Username,
+                AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                CommentId = com.CommentId,
+                Text = com.Text,
+                Timestamp = com.Timestamp
+            }).ToList()
         };
     }
     
@@ -49,13 +61,13 @@ public class CheepRepository : ICheepRepository
         return _chirpDbContext.Cheeps.Count();
     }
     
-    public int GetAuthorCheepCount(string authorUsername, bool withFollows = false)
+    public int GetAuthorCheepCount(string authorUsername, Guid? authUser = null)
     {
         int cheepCount = _chirpDbContext.Cheeps.Count(c => c.Author.Username == authorUsername);
         
-        if (withFollows)
+        if (authUser is not null)
         {
-            List<string> follows = _authorRepository.GetFollowsForAuthor(authorUsername);
+            List<string> follows = _authorRepository.GetFollowsForAuthor((Guid)authUser);
             cheepCount += _chirpDbContext
                 .Cheeps
                 .Include(c => c.Author)
@@ -83,9 +95,55 @@ public class CheepRepository : ICheepRepository
                         AuthorUsername = c.Author.Username,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
-                        Timestamp = c.Timestamp
+                        Timestamp = c.Timestamp,
+                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
+                        {
+                            AuthorId = com.CommentAuthor.AuthorId,
+                            CheepId = com.Cheep.CheepId,
+                            CheepAuthorId = com.Cheep.Author.AuthorId,
+                            AuthorName = com.CommentAuthor.Name,
+                            AuthorUsername = com.CommentAuthor.Username,
+                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                            CommentId = com.CommentId,
+                            Text = com.Text,
+                            Timestamp = com.Timestamp
+                        }).ToList()
                     }
                 )
+                .ToList();
+        });
+    }
+
+    public List<CheepDto> GetCheepsFromIds(HashSet<Guid> cheepIds)
+    {
+        return FetchWithErrorHandling(() =>
+        {
+            return _chirpDbContext.Cheeps
+                .Include(c => c.Author)
+                .Where(c => cheepIds.Contains(c.CheepId))
+                .Select<Cheep, CheepDto>(c =>
+                    new CheepDto
+                    {
+                        CheepId = c.CheepId,
+                        AuthorId = c.Author.AuthorId,
+                        AuthorName = c.Author.Name,
+                        AuthorUsername = c.Author.Username,
+                        AuthorAvatarUrl = c.Author.AvatarUrl,
+                        Text = c.Text,
+                        Timestamp = c.Timestamp,
+                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
+                        {
+                            AuthorId = com.CommentAuthor.AuthorId,
+                            CheepId = com.Cheep.CheepId,
+                            CheepAuthorId = com.Cheep.Author.AuthorId,
+                            AuthorName = com.CommentAuthor.Name,
+                            AuthorUsername = com.CommentAuthor.Username,
+                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                            CommentId = com.CommentId,
+                            Text = com.Text,
+                            Timestamp = com.Timestamp
+                        }).ToList()
+                    })
                 .ToList();
         });
     }
@@ -109,7 +167,19 @@ public class CheepRepository : ICheepRepository
                         AuthorUsername = c.Author.Username,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
-                        Timestamp = c.Timestamp
+                        Timestamp = c.Timestamp,
+                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
+                        {
+                            AuthorId = com.CommentAuthor.AuthorId,
+                            CheepId = com.Cheep.CheepId,
+                            CheepAuthorId = com.Cheep.Author.AuthorId,
+                            AuthorName = com.CommentAuthor.Name,
+                            AuthorUsername = com.CommentAuthor.Username,
+                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                            CommentId = com.CommentId,
+                            Text = com.Text,
+                            Timestamp = com.Timestamp
+                        }).ToList()
                     }
                 )
                 .ToList();
@@ -126,7 +196,7 @@ public class CheepRepository : ICheepRepository
                 .Where(c => authorFollows.Contains(c.Author.Username) || c.Author.AuthorId.ToString().Equals(authorId.ToString()))
                 .Include(c => c.Author)
                 .OrderByDescending(c => authorFollows.Contains(c.Author.Username))
-                .ThenBy(c => c.Timestamp)
+                .ThenByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
                 .Select<Cheep, CheepDto>(c =>
@@ -137,7 +207,19 @@ public class CheepRepository : ICheepRepository
                         AuthorUsername = c.Author.Username,
                         AuthorAvatarUrl = c.Author.AvatarUrl,
                         Text = c.Text,
-                        Timestamp = c.Timestamp
+                        Timestamp = c.Timestamp,
+                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
+                        {
+                            AuthorId = com.CommentAuthor.AuthorId,
+                            CheepId = com.Cheep.CheepId,
+                            CheepAuthorId = com.Cheep.Author.AuthorId,
+                            AuthorName = com.CommentAuthor.Name,
+                            AuthorUsername = com.CommentAuthor.Username,
+                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                            CommentId = com.CommentId,
+                            Text = com.Text,
+                            Timestamp = com.Timestamp
+                        }).ToList()
                     }
                 )
                 .ToList();
@@ -160,9 +242,15 @@ public class CheepRepository : ICheepRepository
     {
         Cheep? cheepToDelete = _chirpDbContext.Cheeps
             .Include(c => c.Author)
+            .Include(c => c.Likes)
+            .Include(c => c.Comments)
             .SingleOrDefault(c => c.CheepId == cheepId);
 
         if (cheepToDelete == null) return false;
+        
+        //If the cheep has likes or comments, remove them before the cheep
+        _chirpDbContext.Likes.RemoveRange(cheepToDelete.Likes);
+        _chirpDbContext.Comments.RemoveRange(cheepToDelete.Comments);
         
         _chirpDbContext.Cheeps.Remove(cheepToDelete);
         _chirpDbContext.SaveChanges();
