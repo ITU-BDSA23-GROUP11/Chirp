@@ -17,7 +17,6 @@ numbersections: true
 ## Architecture of deployed application
 ![Cloud Architecture](docs/diagrams/CloudArchitecture.jpg "Cloud Architecture")
 
-
 ## User activities
 
 ## Sequence of functionality/calls trough _Chirp!_

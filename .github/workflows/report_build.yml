@@ -1,7 +1,9 @@
 name: Build Project Report
 
 on:
-  push
+  push:
+    branches:
+      - main
 
 jobs:
   changes:

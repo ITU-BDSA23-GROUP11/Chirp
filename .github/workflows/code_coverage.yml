@@ -4,9 +4,9 @@ permissions:
   pull-requests: write
 
 on:
-  workflow_run:
-    workflows: [Build Project Report]
-    types: [completed]
+  pull_request:
+    branches:
+      - main
 
 jobs:
   BuildAndTestWithCoverage:
