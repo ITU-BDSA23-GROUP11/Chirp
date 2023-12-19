@@ -4,6 +4,7 @@ using Chirp.Infrastructure.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Chirp.Infrastructure.Migrations
 {
     [DbContext(typeof(ChirpDbContext))]
-    partial class ChirpDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231218094930_AddCommentsUpdated")]
+    partial class AddCommentsUpdated
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,9 +90,13 @@ namespace Chirp.Infrastructure.Migrations
             modelBuilder.Entity("Chirp.Infrastructure.Models.Comment", b =>
                 {
                     b.Property<Guid>("CommentId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("AuthorId")
+                    b.Property<Guid?>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CheepId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Text")
@@ -147,10 +154,29 @@ namespace Chirp.Infrastructure.Migrations
 
                     b.Navigation("Author");
                 });
-            
+
+            modelBuilder.Entity("Chirp.Infrastructure.Models.Comment", b =>
+                {
+                    b.HasOne("Chirp.Infrastructure.Models.Author", "CommentAuthor")
+                        .WithMany("Comments")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("Chirp.Infrastructure.Models.Cheep", "Cheep")
+                        .WithMany("Comments")
+                        .HasForeignKey("CheepId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.Navigation("Cheep");
+
+                    b.Navigation("CommentAuthor");
+                });
+
             modelBuilder.Entity("Chirp.Infrastructure.Models.Author", b =>
                 {
                     b.Navigation("Cheeps");
+
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("Chirp.Infrastructure.Models.Cheep", b =>
