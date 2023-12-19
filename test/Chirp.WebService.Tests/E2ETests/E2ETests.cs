@@ -19,7 +19,7 @@ public class E2ETests : IClassFixture<MockWebApplicationFactoryWithAuth>
         await page.GotoAsync(_fixture.BaseUrl);
         
         //XPath for author name
-        var authorXPath = "//*[@id='messagelist']/li[1]/p[1]/strong/a";
+        var authorXPath = "//*[@id='messagelist']/div[1]/div[1]/div/a";
     
         var authorButton = await page.QuerySelectorAsync(authorXPath);
     
@@ -30,13 +30,13 @@ public class E2ETests : IClassFixture<MockWebApplicationFactoryWithAuth>
         //Act
         await authorButton.ClickAsync();//Simulate click
         
-        var headerElement = await page.WaitForSelectorAsync("//*[@id='userTimeline']");
+        var firstCheepAuthor = await page.WaitForSelectorAsync("//*[@id='messagelist']/div[1]/div[1]/div/a");
     
-        if (headerElement == null) Assert.Fail();
+        if (firstCheepAuthor == null) Assert.Fail();
         
-        var headerElementValue = await headerElement.InnerTextAsync();
+        var firstCheepAuthorValue = await firstCheepAuthor.InnerTextAsync();
     
-        Assert.Contains(authorName, headerElementValue);
+        Assert.Contains(authorName, firstCheepAuthorValue);
     }
     
     [Fact]
