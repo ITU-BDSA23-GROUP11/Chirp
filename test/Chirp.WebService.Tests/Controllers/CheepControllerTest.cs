@@ -34,6 +34,38 @@ public class CheepControllerTest
 
         _cheepController = _mockController.Object;
     }
+
+    [Fact]
+    public void TestFollowReturnsRedirect()
+    {
+        Author author = _mockChirpRepositories.TestAuthors.First();
+
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                {"CheepAuthorId", author.AuthorId.ToString()}
+            }
+        );
+        IActionResult actionResult = _cheepController.Follow(collection);
+        
+        Assert.True(actionResult is RedirectResult);
+    }
+
+    [Fact]
+    public void TestUnfollowReturnsRedirect()
+    {
+        Author author = _mockChirpRepositories.TestAuthors.First().Follows.First();
+
+        IFormCollection collection = new FormCollection(
+            new Dictionary<string, StringValues>
+            {
+                {"CheepAuthorId", author.AuthorId.ToString()}
+            }
+        );
+
+        IActionResult actionResult = _cheepController.Unfollow(collection);
+        Assert.True(actionResult is RedirectResult);
+    }
     
     [Fact]
     public void TestCreateReturnsRedirect()
