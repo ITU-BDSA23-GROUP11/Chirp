@@ -152,7 +152,7 @@
                         <input type="hidden" name="cheepId" value="@Model.CheepId"/>
                         <input name="__RequestVerificationToken" type="hidden"/>
                         @Html.AntiForgeryToken()
-                        <button type="submit" class="rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-red-500 text-white hover:bg-accent hover:text-accent-foreground px-3 py-2 flex items-center gap-2">
+                        <button type="submit" id="cheepDeleteButton" class="rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-red-500 text-white hover:bg-accent hover:text-accent-foreground px-3 py-2 flex items-center gap-2">
                             Delete Cheep
                         </button>
                     </form>
