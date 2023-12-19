@@ -15,8 +15,7 @@ numbersections: true
 ## Architecture — In the small
 
 ## Architecture of deployed application
-
-[//]: # (![Cloud Architecture]&#40;docs/diagrams/CloudArchitecture.jpg "Cloud Architecture"&#41;)
+![Cloud Architecture](docs/diagrams/CloudArchitecture.jpg "Cloud Architecture")
 
 
 ## User activities
@@ -26,8 +25,7 @@ numbersections: true
 # Process
 
 ## Build, test, release, and deployment
-
-[//]: # (![Workflows]&#40;docs/diagrams/Workflows.jpg "Workflows"&#41;)
+![Workflows](docs/diagrams/Workflows.jpg "Workflows")
 
 ## Team work
 

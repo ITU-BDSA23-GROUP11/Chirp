@@ -1,7 +1,9 @@
 name: Build Project Report
 
 on:
-  push
+  pull_request:
+    branches:
+      - main
 
 jobs:
   changes:
@@ -48,5 +50,7 @@ jobs:
 
       - name: Generate report pdf
         run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf
+        
+      - run: ls -la docs
         
       - uses: stefanzweifel/git-auto-commit-action@v5
