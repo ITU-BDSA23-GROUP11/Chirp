@@ -9,6 +9,7 @@ Chirp project for 3rd Semester
   - [How to set up tests](#how-to-set-up-tests)
 - [How to run **_Chirp_**](#how-to-run-chirp)
 - [How to run tests](#how-to-run-tests)
+- [How to build report from markdown to pdf](#how-to-build-report-from-markdown-to-pdf)
 
 ---
 
@@ -47,7 +48,10 @@ Run the following to pull the docker image
 Replacing `<YOUR_DB_PASSWORD>` with a strong password (requires 1 upper case, 1 lower case, 1 number, and no special characters), run
 
 ```shell
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YOUR_DB_PASSWORD>" -p 1433:1433 --name azure-sql-server -d mcr.microsoft.com/azure-sql-edge
+docker run -e "ACCEPT_EULA=Y" \
+   -e "MSSQL_SA_PASSWORD=<YOUR_DB_PASSWORD>" \
+   -p 1433:1433 --name azure-sql-server \
+   -d mcr.microsoft.com/azure-sql-edge
 ```
 
 #### 3. Init secrets
@@ -61,7 +65,8 @@ dotnet user-secrets init --project ./src/Chirp.WebService
 Add the DB secret by running the following command, replacing `<YOUR_DB_PASSWORD>` with the strong password you generated earlier
 
 ```shell
-dotnet user-secrets set "DB:Password" "<YOUR_DB_PASSWORD>" --project ./src/Chirp.WebService
+dotnet user-secrets set "DB:Password" "<YOUR_DB_PASSWORD>" \
+   --project ./src/Chirp.WebService
 ```
 
 ## How to set up tests
@@ -74,8 +79,10 @@ dotnet tool install PowerShell --version 7.4.0
 
 After running the tests the first time, and failing, the cause will be due to playwright not be installed. This can can be solved by running the following command:
 ```shell
-dotnet pwsh test/Chirp.WebService.Tests/bin/Debug/net7.0/playwright.ps1 install
-```
+dotnet pwsh \
+   test/Chirp.WebService.Tests/bin/Debug/net7.0/playwright.ps1 \
+   install
+ ```
 
 Everything should now be set up in order to enable tests to run.
 
@@ -106,3 +113,13 @@ To run tests, given the it is set up (see [How to set up tests](#how-to-set-up-t
 ```shell
 dotnet test --verbosity normal
 ```
+
+---
+
+# How to build report from markdown to pdf
+In order to build the report from the `report.md` file to a `.pdf` file, follow these steps:
+1. Go to [the workflow on Github](https://github.com/ITU-BDSA23-GROUP11/Chirp/actions/workflows/report_build.yml)
+2. Press the `Run workflow` button/dropdown
+3. Select the branch where you made edits in `report.md` (never select main, as the workflow will fail due to branch protection)
+
+A commit will then be added to your branch, containing the built report.

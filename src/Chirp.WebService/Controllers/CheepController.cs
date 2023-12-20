@@ -21,7 +21,7 @@ namespace Chirp.WebService.Controllers
                 String? cheepId = collection["cheepId"];
                 if (String.IsNullOrEmpty(cheepId))
                 {
-                    return BadRequest("Invalid input");
+                    return RedirectWithError("Invalid input");
                 }
                 Guid cId = Guid.Parse(cheepId);
                 LikeRepository.LikeCheep(user.Id, cId);
@@ -41,7 +41,7 @@ namespace Chirp.WebService.Controllers
                 String? cheepId = collection["cheepId"];
                 if (String.IsNullOrEmpty(cheepId))
                 {
-                    return BadRequest("Invalid input");
+                    return RedirectWithError("Invalid input");
                 }
                 Guid cId = Guid.Parse(cheepId);
                 LikeRepository.UnlikeCheep(user.Id, cId);
@@ -63,12 +63,12 @@ namespace Chirp.WebService.Controllers
 
                 if (String.IsNullOrEmpty(cheepText))
                 {
-                    return BadRequest("Invalid input");
+                    return RedirectWithError("Invalid input");
                 }
 
                 if (cheepText.Length > 160)
                 {
-                    return BadRequest("Invalid input - too long");
+                    return RedirectWithError("Invalid input - cheep is too long (max 160 characters)");
                 }
 
                 CheepRepository.AddCheep(new AddCheepDto
@@ -93,10 +93,10 @@ namespace Chirp.WebService.Controllers
                 
                 if (String.IsNullOrEmpty(cheepId))
                 {
-                    return BadRequest("Invalid Cheep Id");
+                    return RedirectWithError("Invalid Cheep Id");
                 }
                 
-                if (!CheepRepository.DeleteCheep(Guid.Parse(cheepId), user.Id)) return NotFound("ERROR: Cheep was not found");
+                if (!CheepRepository.DeleteCheep(Guid.Parse(cheepId), user.Id)) return RedirectWithError("Cheep was not found");
                 
                 return Redirect(GetPathUrl());
             });
