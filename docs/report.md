@@ -12,6 +12,11 @@ numbersections: true
 
 ## Domain model
 
+### ER Diagram
+
+The ER diagram is an illustration of the entities and their relations in the dataset. The author entity can make
+cheeps and add comments and likes while they're weak entities depending on a cheeps existence.
+
 ## Architecture — In the small
 
 In the development of our _Chirp!_ application, we used the Onion Architecture pattern. This architecture is composed
