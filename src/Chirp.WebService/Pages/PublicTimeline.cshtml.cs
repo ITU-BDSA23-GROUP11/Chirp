@@ -39,57 +39,36 @@ public class PublicTimelineModel: PageModel
         
         var cheepPartialModels = new List<CheepPartialModel>();
 
+        List<string>? follows = null;
+        List<LikeDto>? likes = null;
+        
+        //If the user is not null -> update the list of follows and likes
         var user = User.GetUser();
-        if (user is null)
+        if (user is not null)
         {
-            foreach (CheepDto cheepDto in cheepDtos)
-            {
-                cheepPartialModels.Add(new CheepPartialModel
-                {
-                    CheepId = cheepDto.CheepId,
-                    AuthorId = cheepDto.AuthorId,
-                    AuthorAvatarUrl = cheepDto.AuthorAvatarUrl,
-                    AuthorName = cheepDto.AuthorName ?? cheepDto.AuthorUsername,
-                    AuthorUsername = cheepDto.AuthorUsername,
-                    Timestamp = cheepDto.Timestamp,
-                    Text = cheepDto.Text,
-                    LikesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
-                    IsLikedByUser = null,
-                    IsFollowedByUser = null,
-                    CheepComments = cheepDto.CommentDtos.Select(c => new CommentPartialModel
-                    {
-                        AuthorAvatarUrl = c.AuthorAvatarUrl,
-                        AuthorId = c.AuthorId,
-                        CheepAuthorId = c.CheepAuthorId,
-                        CommentId = c.CommentId,
-                        AuthorUsername = c.AuthorUsername,
-                        AuthorName = c.AuthorName,
-                        Timestamp = c.Timestamp,
-                        Text = c.Text,
-                        CheepId = c.CheepId
-                    }).ToList()
-                });
-            }
+            follows = await _authorRepository.GetFollowsForAuthor(user.GetUserNonNull().Id);
+            likes = await _likeRepository.GetLikesByAuthorId(user.GetUserNonNull().Id);
         }
-        else
+        
+        //Generate a cheep model for each CheepDto on page
+        foreach (CheepDto cheepDto in cheepDtos)
         {
-            var follows = await _authorRepository.GetFollowsForAuthor(user.GetUserNonNull().Id);
-            var likes = await _likeRepository.GetLikesByAuthorId(user.GetUserNonNull().Id);
-            foreach (CheepDto cheepDto in cheepDtos)
+            cheepPartialModels.Add(new CheepPartialModel
             {
-                cheepPartialModels.Add(new CheepPartialModel
-                {
-                    CheepId = cheepDto.CheepId,
-                    AuthorId = cheepDto.AuthorId,
-                    AuthorAvatarUrl = cheepDto.AuthorAvatarUrl,
-                    AuthorName = cheepDto.AuthorName ?? cheepDto.AuthorUsername,
-                    AuthorUsername = cheepDto.AuthorUsername,
-                    Timestamp = cheepDto.Timestamp,
-                    Text = cheepDto.Text,
-                    IsLikedByUser = likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString())),
-                    LikesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
-                    IsFollowedByUser = !follows.Contains(cheepDto.AuthorUsername),
-                    CheepComments = cheepDto.CommentDtos.Select(c => new CommentPartialModel
+                CheepId = cheepDto.CheepId,
+                AuthorId = cheepDto.AuthorId,
+                AuthorAvatarUrl = cheepDto.AuthorAvatarUrl,
+                AuthorName = cheepDto.AuthorName ?? cheepDto.AuthorUsername,
+                AuthorUsername = cheepDto.AuthorUsername,
+                Timestamp = cheepDto.Timestamp,
+                Text = cheepDto.Text,
+                LikesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
+                IsLikedByUser = (likes is null
+                    ? null
+                    : likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString()))),
+                IsFollowedByUser = (follows is null ? null : !follows.Contains(cheepDto.AuthorUsername)),
+                CheepComments = cheepDto.CommentDtos.Select(c =>
+                    new CommentPartialModel
                     {
                         AuthorAvatarUrl = c.AuthorAvatarUrl,
                         AuthorId = c.AuthorId,
@@ -101,8 +80,7 @@ public class PublicTimelineModel: PageModel
                         Text = c.Text,
                         CheepId = c.CheepId
                     }).ToList()
-                });
-            }
+            });
         }
 
         Cheeps = cheepPartialModels;
