@@ -49,4 +49,19 @@ jobs:
       - name: Generate report pdf
         run: pandoc docs/report.md -o docs/2023_itubdsa_group_11_report.pdf --highlight-style=tango
         
-      - uses: stefanzweifel/git-auto-commit-action@v5
+      - uses: EndBug/add-and-commit@v9
+        with:
+          # The arguments for the `git add` command
+          add: '.'
+
+          # Determines the way the action fills missing author name and email.
+          default_author: github_actions
+
+          # Arguments for the git fetch command. If set to false, the action won't fetch the repo.
+          fetch: false
+
+          # The message for the commit.
+          message: 'Built report pdf'
+
+          # Whether to push the commit and, if any, its tags to the repo.
+          push: true
