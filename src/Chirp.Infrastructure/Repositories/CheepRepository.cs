@@ -63,12 +63,14 @@ public class CheepRepository : ICheepRepository
     
     public Task<List<CheepDto>> GetCheepsForPage(int pageNumber)
     {
-        return FetchWithErrorHandlingAsync( () =>
+        return FetchWithErrorHandlingAsync(() =>
         {
             return _chirpDbContext
                 .Cheeps
                 .Include(c => c.Author)
                 .Include(c => c.Likes)
+                .Include(c => c.Comments)
+                .ThenInclude(c => c.CommentAuthor)
                 .OrderByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
@@ -84,6 +86,8 @@ public class CheepRepository : ICheepRepository
             return _chirpDbContext.Cheeps
                 .Include(c => c.Author)
                 .Include(c => c.Likes)
+                .Include(c => c.Comments)
+                .ThenInclude(c => c.CommentAuthor)
                 .Where(c => cheepIds.Contains(c.CheepId))
                 .Select<Cheep, CheepDto>(c => MapCheepToDto(c))
                 .ToListAsync();
@@ -99,6 +103,8 @@ public class CheepRepository : ICheepRepository
                 .Where(c => c.Author.Username == authorUsername)
                 .Include(c => c.Author)
                 .Include(c => c.Likes)
+                .Include(c => c.Comments)
+                .ThenInclude(c => c.CommentAuthor)
                 .OrderByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
@@ -116,6 +122,8 @@ public class CheepRepository : ICheepRepository
                 .Cheeps
                 .Where(c => authorFollows.Contains(c.Author.Username) || c.Author.AuthorId.ToString().Equals(authorId.ToString()))
                 .Include(c => c.Author)
+                .Include(c => c.Comments)
+                .ThenInclude(c => c.CommentAuthor)
                 .OrderByDescending(c => authorFollows.Contains(c.Author.Username))
                 .ThenByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
