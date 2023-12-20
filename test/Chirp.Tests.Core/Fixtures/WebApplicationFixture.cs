@@ -3,38 +3,28 @@ namespace Chirp.Tests.Core.Fixtures;
 
 public class WebApplicationFixture : IDisposable
 {
-    public struct ClientAndFactory
-    {
-        public MockWebApplicationFactory Factory;
-        public HttpClient Client;
-    }
-    
-    public readonly List<MockWebApplicationFactory> Factories = new ();
-    public readonly List<HttpClient> Clients = new ();
+    private readonly List<MockWebApplicationFactory> _factories = new ();
+    private readonly List<HttpClient> _clients = new ();
 
-    public ClientAndFactory GetClient()
+    public HttpClient GetClient()
     {
         var newFactory = new MockWebApplicationFactory();
-        Factories.Add(newFactory);
+        _factories.Add(newFactory);
         
         var newClient = newFactory.CreateClient();
-        Clients.Add(newClient);
+        _clients.Add(newClient);
 
-        return new ClientAndFactory
-        {
-            Factory = newFactory,
-            Client = newClient
-        };
+        return newClient;
     }
 
     public void Dispose()
     {
-        foreach (HttpClient httpClient in Clients)
+        foreach (HttpClient httpClient in _clients)
         {
             httpClient.Dispose();
         }
         
-        foreach (MockWebApplicationFactory mockWebApplicationFactory in Factories)
+        foreach (MockWebApplicationFactory mockWebApplicationFactory in _factories)
         {
             mockWebApplicationFactory.Dispose();
         }

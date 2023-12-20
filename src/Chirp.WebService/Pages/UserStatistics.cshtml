@@ -1,6 +1,5 @@
 ﻿@page "/{author}/stats"
 @using Microsoft.AspNetCore.Authorization
-@using Chirp.Core.Dto
 @using Chirp.WebService.Models
 @model Chirp.WebService.Pages.UserStatisticsModel
 @attribute [AllowAnonymous]
@@ -33,21 +32,9 @@
         <div class="flex justify-center items-center bg-[#3498db] rounded-t-2xl">
             <p class="text-xl text-white font-semibold py-[8px]">Liked Cheeps</p>
         </div>
-        @foreach (CheepDto c in Model.LikesCheeps)
+        @foreach (CheepPartialModel c in Model.LikedCheeps)
         {
-            CheepPartialModel cpm = new CheepPartialModel
-            {
-                AuthorAvatarUrl = c.AuthorAvatarUrl,
-                AuthorName = c.AuthorName,
-                AuthorUsername = c.AuthorUsername,
-                AuthorId = c.AuthorId,
-                CheepId = c.CheepId,
-                Timestamp = c.Timestamp,
-                Text = c.Text,
-                IsLikedByUser = true
-            };
-            
-            <partial name="_CheepCardPartial" model=@(cpm)/>
+            <partial name="_CheepCardPartial" model=@(c)/>
         }
     </div>
 </main>

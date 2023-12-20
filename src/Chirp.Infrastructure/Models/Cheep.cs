@@ -21,12 +21,10 @@ public class Cheep
     
     [
         Required,
-        MaxLength(160, ErrorMessage = "Cheeps must contain less than 160 characters") //Defined minimum length is not required
+        MaxLength(160, ErrorMessage = "Cheeps must contain less than 160 characters")
     ]
     public string Text { get; set; } = "";
-    public List<Like> Likes { get; set; } = new ();
-    
+    public ICollection<Like> Likes { get; } = new List<Like>();
     public DateTime Timestamp { get; set; } = DateTime.UtcNow;
-
-    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    public ICollection<Comment> Comments { get; } = new List<Comment>();
 }

@@ -12,7 +12,7 @@
 }
 
 <!--Only display the WriteCheepPartial on the users timeline, not on others-->
-@if(user?.Name == routeName.ToString())
+@if(routeName is not null && user?.Name == routeName.ToString())
 {
     <partial name="Shared/_WriteCheepPartial"/>
 }

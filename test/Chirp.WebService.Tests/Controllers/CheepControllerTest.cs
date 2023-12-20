@@ -18,7 +18,9 @@ public class CheepControllerTest
     public CheepControllerTest()
     {
         _mockController = new Mock<CheepController>(_mockChirpRepositories.AuthorRepository,
-            _mockChirpRepositories.CheepRepository, _mockChirpRepositories.LikeRepository, _mockChirpRepositories.CommentRepository);
+            _mockChirpRepositories.CheepRepository,
+            _mockChirpRepositories.LikeRepository,
+            _mockChirpRepositories.CommentRepository);
         _mockController.CallBase = true;
             
         string name = new Faker().Name.FullName();
@@ -83,7 +85,6 @@ public class CheepControllerTest
 
         //Act
         IActionResult actionResult = await _cheepController.Create(collection);
-
         
         //Assert
         Assert.True(actionResult is RedirectResult);

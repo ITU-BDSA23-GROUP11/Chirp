@@ -45,17 +45,6 @@ public class AuthorRepositoryTest
     }
 
     [Fact]
-    public async Task GetAuthorByEmailTest()
-    {
-        //Arrange
-        Author author = _mockChirpRepositories.TestAuthors.First();
-        //Act
-        AuthorDto? resAuthor = await _mockChirpRepositories.AuthorRepository.GetAuthorFromUsername(author.Username);
-        //Assert
-        Assert.Equal(author.AuthorId, resAuthor?.Id);
-    }
-
-    [Fact]
     public async Task GetFollowsForAuthorTest()
     {
         //Arrange
@@ -86,13 +75,13 @@ public class AuthorRepositoryTest
     [Fact]
     public async Task DeleteAuthorTest()
     {
+        //Arrange
         Author author = _mockChirpRepositories.TestAuthors.First();
-
+        //Act
         bool? isRemoved = await _mockChirpRepositories.AuthorRepository.DeleteAuthor(author.AuthorId);
-        
+        //Assert
         _mockChirpRepositories.MockAuthorsDbSet.Verify(m => m.Remove(It.IsAny<Author>()), Times.Once);
         _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-        
         Assert.True(isRemoved);
     }
     

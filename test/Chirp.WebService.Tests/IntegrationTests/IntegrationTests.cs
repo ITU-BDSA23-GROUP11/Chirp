@@ -11,7 +11,7 @@ public sealed class IntegrationTests : IClassFixture<WebApplicationFixture>
     
     public IntegrationTests(WebApplicationFixture webApplicationFixture)
     {
-        _httpClient = webApplicationFixture.GetClient().Client;
+        _httpClient = webApplicationFixture.GetClient();
     }
     
     [Fact]  
@@ -36,7 +36,7 @@ public sealed class IntegrationTests : IClassFixture<WebApplicationFixture>
         HtmlDocument doc = new HtmlDocument();
         doc.LoadHtml(htmlContent);
         
-        int amountOfListItems = doc.DocumentNode.SelectNodes("//div[contains(@class, \"cheeps\")]").Count();
+        int amountOfListItems = doc.DocumentNode.SelectNodes("//div[contains(@class, 'cheeps')]").Count();
         
         Assert.Equal(32, amountOfListItems);
     }

@@ -80,63 +80,13 @@ public class UserTimelineModel : PageModel
                 //Generate a cheep model for each CheepDto on page
                 foreach (CheepDto cheepDto in cheepDtos)
                 {
-                    cheepPartialModels.Add(new CheepPartialModel
-                    {
-                        CheepId = cheepDto.CheepId,
-                        AuthorId = cheepDto.AuthorId,
-                        AuthorAvatarUrl = cheepDto.AuthorAvatarUrl,
-                        AuthorName = cheepDto.AuthorName ?? cheepDto.AuthorUsername,
-                        AuthorUsername = cheepDto.AuthorUsername,
-                        Timestamp = cheepDto.Timestamp,
-                        Text = cheepDto.Text,
-                        LikesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
-                        IsLikedByUser = (likes is null
-                            ? null
-                            : likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString()))),
-                        IsFollowedByUser = (follows is null ? null : !follows.Contains(cheepDto.AuthorUsername)),
-                        CheepComments = cheepDto.CommentDtos.Select(c =>
-                            new CommentPartialModel
-                            {
-                                AuthorAvatarUrl = c.AuthorAvatarUrl,
-                                AuthorId = c.AuthorId,
-                                CheepAuthorId = c.CheepAuthorId,
-                                CommentId = c.CommentId,
-                                AuthorUsername = c.AuthorUsername,
-                                AuthorName = c.AuthorName,
-                                Timestamp = c.Timestamp,
-                                Text = c.Text,
-                                CheepId = c.CheepId
-                            }).ToList()
-                    });
+                    cheepPartialModels.Add(CheepPartialModel.BuildCheepPartialModel(cheepDto, likes, follows));
                 }
 
         Cheeps = cheepPartialModels;
 
-        FooterPartialModel = new FooterPartialModel
-        {
-            FirstLink = pageNumber > 2 ? $"/{author}?page=1" : null,
-            
-            PreviousLink = pageNumber > 1 ? $"/{author}?page={pageNumber-1}" : null,
-            PreviousPage = pageNumber > 1 ? pageNumber-1 : null,
-            
-            CurrentPage = pageNumber,
-            
-            NextLink = pageNumber < amountOfPages ? $"/{author}?page={pageNumber+1}" : null,
-            NextPage = pageNumber < amountOfPages ? pageNumber+1 : null,
-            
-            LastLink = pageNumber < amountOfPages-1 ? $"/{author}?page={amountOfPages}" : null,
-            LastPage = pageNumber < amountOfPages-1 ? amountOfPages : null,
-        };
+        FooterPartialModel = FooterPartialModel.BuildFooterPartialModel(pageNumber, amountOfPages, author);
         
         return Page();
-
-    }
-    
-    public async Task<bool> CheepIsLiked(Guid cheepId)
-    {
-        var authorId = User.GetUser()?.Id ?? Guid.Empty;
-        if (authorId.ToString().Equals(Guid.Empty.ToString())) return false;
-        return await _likeRepository.IsLiked(authorId, cheepId);   
-  
     }
 }

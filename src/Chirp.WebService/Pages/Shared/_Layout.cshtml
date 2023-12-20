@@ -9,6 +9,8 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="/css/output.css" type="text/css"/>
     <link rel="icon" type="image/png" href="/favicon/favicon.ico">
+    
+    @* Might require download library for https link *@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.css" rel="stylesheet" />
 </head>
 <body class="flex flex-col h-screen">
@@ -31,7 +33,9 @@
         </div>
     }
     <partial name="_HeaderPartial"/>
-    @RenderBody()
+    @RenderBody()      
+    
+    @* Might require download library for https link *@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.0/flowbite.min.js"></script>
 </body>
 </html>

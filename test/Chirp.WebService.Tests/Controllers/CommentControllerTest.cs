@@ -13,15 +13,14 @@ public class CommentControllerTest
 {
     private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepositories();
     private readonly CommentController _commentController;
-    private readonly Mock<CommentController> _mockController;
 
     public CommentControllerTest()
     {
-        _mockController = new Mock<CommentController>(_mockChirpRepositories.AuthorRepository,
+        Mock<CommentController> mockController = new(_mockChirpRepositories.AuthorRepository,
             _mockChirpRepositories.CheepRepository,
             _mockChirpRepositories.LikeRepository,
             _mockChirpRepositories.CommentRepository);
-        _mockController.CallBase = true;
+        mockController.CallBase = true;
         
         string name = new Faker().Name.FullName();
         var user = new ClaimsUser
@@ -31,12 +30,10 @@ public class CommentControllerTest
             Username = new Faker().Internet.UserName(name),
             AvatarUrl = new Faker().Internet.Avatar()
         };
-        _mockController.As<IController>().Setup(bc => bc.GetUser).Returns(() => user);
-        _mockController.As<IController>().Setup(bc => bc.GetPathUrl).Returns(() => new Faker().Internet.UrlWithPath());
+        mockController.As<IController>().Setup(bc => bc.GetUser).Returns(() => user);
+        mockController.As<IController>().Setup(bc => bc.GetPathUrl).Returns(() => new Faker().Internet.UrlWithPath());
 
-        _commentController = _mockController.Object;
-        
-
+        _commentController = mockController.Object;
     }
 
     [Fact]
@@ -108,6 +105,7 @@ public class CommentControllerTest
         //Act
         IActionResult actionResult = await _commentController.Delete(collection);
         
+        //Assert
         Assert.False(actionResult is RedirectResult);
 
     }

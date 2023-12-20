@@ -5,7 +5,7 @@
     var user = User.GetUser();
 }
 
-@if (user != null && !(user?.Username.Equals(Model.AuthorUsername) ?? false))
+@if (user is not null && !user.GetUserNonNull().Username.Equals(Model.AuthorUsername))
 {
     <form asp-controller="Cheep" asp-action="Unfollow" style="display:inline;">
         <input type="hidden" name="CheepAuthorId" value="@Model.AuthorId"/>

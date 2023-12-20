@@ -27,7 +27,6 @@ public class CommentRepository : ICommentRepository
         Comment comment = new Comment
         {
             CommentId = Guid.NewGuid(),
-            Timestamp = DateTime.UtcNow,
             Text = commentDto.Text,
             Cheep = _chirpDbContext.Cheeps.Single(c => c.CheepId == commentDto.CheepId),
             CommentAuthor = _chirpDbContext.Authors.Single(a => a.AuthorId == commentDto.AuthorId)
@@ -39,21 +38,12 @@ public class CommentRepository : ICommentRepository
         return true;
     }
     
-    //Delete a comment from a Cheep
-    //TODO: Implement fetch with error handling?
     public async Task<bool> DeleteComment(Guid commentId)
     {
-        try
-        {
-            var comment = await _chirpDbContext.Comments.FirstAsync(c => c.CommentId == commentId);
-            _chirpDbContext.Remove(comment);
-            await _chirpDbContext.SaveChangesAsync();
-            return true;
-        }
-        catch
-        {
-            //If the comment has already been deleted -> return false
-            return false;
-        }
+        var comment = await _chirpDbContext.Comments.FirstOrDefaultAsync(c => c.CommentId == commentId);
+        if (comment is null) return false;
+        _chirpDbContext.Remove(comment);
+        await _chirpDbContext.SaveChangesAsync();
+        return true;
     }
 }

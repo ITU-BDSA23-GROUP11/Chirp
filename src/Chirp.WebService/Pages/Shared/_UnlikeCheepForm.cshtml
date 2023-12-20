@@ -1,6 +1,6 @@
 @model Chirp.Core.Dto.CheepDto
 
-@if (User.Identity != null && User.Identity.IsAuthenticated)
+@if (User.Identity is { IsAuthenticated: true })
 {
     <form asp-controller="Cheep" asp-action="Unlike" style="display:inline;">
         <input type="hidden" name="cheepId" value="@Model.CheepId"/>

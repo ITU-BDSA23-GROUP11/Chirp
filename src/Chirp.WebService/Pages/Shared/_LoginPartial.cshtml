@@ -3,18 +3,20 @@
 
 @* ReSharper disable Mvc.AreaNotResolved *@
 @{
-    var user = User.GetUser();
+    var rawUser = User.GetUser();
 
     var url = HttpUtility.UrlEncode(Context.Request.Scheme + "://" + Context.Request.Host.Value + "/Users/DeleteAccount");
     var deleteAccountUrl = $"https://BDSAGROUP11CHIRP.b2clogin.com/BDSAGROUP11CHIRP.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1A_DELETE_MY_ACCOUNT&client_id=beb64166-c054-4fd6-b6a0-41828e2bae4b&nonce=defaultNonce&redirect_uri={url}&scope=openid&response_type=id_token&prompt=login";
 }
-@if (user is not null)
+@if (rawUser is not null)
 {
+    var user = rawUser.GetUserNonNull();
+    
     <div>
         <p></p>
-        <a href="/@(user?.Username)">my timeline</a> |
+        <a href="/@(user.Username)">my timeline</a> |
         <a href="/">public timeline</a> |
-        <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">logout [@(user?.Name)]</a> |
+        <a asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">logout [@(user.Name)]</a> |
         <a href="@deleteAccountUrl">delete my account</a>
     </div>
 }

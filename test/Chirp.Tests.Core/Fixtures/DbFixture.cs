@@ -4,20 +4,20 @@ namespace Chirp.Tests.Core.Fixtures;
 
 public class DbFixture : IDisposable
 {
-    public readonly SqlEdgeContainer Container;
-    
-    public DbFixture()
+    private readonly SqlEdgeContainer _container;
+
+    protected DbFixture()
     {
-        Container = new SqlEdgeBuilder()
+        _container = new SqlEdgeBuilder()
             .WithImage("mcr.microsoft.com/azure-sql-edge")
             .Build();
-        Container.StartAsync().Wait();
+        _container.StartAsync().Wait();
         
-        Environment.SetEnvironmentVariable("ConnectionStrings__ChirpSqlDb", Container.GetConnectionString());
+        Environment.SetEnvironmentVariable("ConnectionStrings__ChirpSqlDb", _container.GetConnectionString());
     }
     
     public void Dispose()
     {
-        Container.DisposeAsync().AsTask().Wait();
+        _container.DisposeAsync().AsTask().Wait();
     }
 }

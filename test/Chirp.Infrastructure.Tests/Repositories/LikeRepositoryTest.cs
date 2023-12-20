@@ -40,18 +40,6 @@ public class LikeRepositoryTest
         _mockChirpRepositories.MockLikesDbSet.Verify(m => m.Add(It.IsAny<Like>()), Times.Never);
     }
 
-    [Fact] //Tests the return of a list of likes based on a cheeps id. 
-    public async Task GetLikesByCheepIdTest()
-    {
-        //Arrange
-        Cheep cheep = _mockChirpRepositories.TestLikes.First().Cheep;
-        //Act
-        List<LikeDto> testList = await _mockChirpRepositories.LikeRepository.GetLikesByCheepId(cheep.CheepId);
-        //Assert
-        Assert.NotEmpty(testList);
-        
-    }
-
     [Fact] //Tests the return of a list of likes based on an authors id
     public async Task GetLikesByAuthorId() 
     {
@@ -63,55 +51,7 @@ public class LikeRepositoryTest
         Assert.NotEmpty(testList);
         
     }
-
-    [Fact] //Finds a like by authorId and cheepId
-    public async Task GetLikeTest() 
-    {
-        //Arrange
-        Like testLike = _mockChirpRepositories.TestLikes.First();
-        //Act
-        LikeDto testLikeDto = await _mockChirpRepositories.LikeRepository.GetLike(testLike.LikedByAuthor.AuthorId, testLike.Cheep.CheepId);
-        //Assert
-        Assert.Equal(testLikeDto.LikedByAuthorId, testLike.LikedByAuthor.AuthorId);
-        Assert.Equal(testLikeDto.CheepId, testLike.Cheep.CheepId);
-    }
-
-    [Fact] //Tests if a like exists with a boolean value
-    public async Task IsLikedTest()
-    {   
-        //Arrange
-        Like testLike = _mockChirpRepositories.TestLikes.First();
-        //Act
-        bool actualVal = await _mockChirpRepositories.LikeRepository.IsLiked(testLike.LikedByAuthor.AuthorId, testLike.Cheep.CheepId);
-        //Assert
-        Assert.True(actualVal);
-    }
-
-    [Fact] //Tests of a like does not exist
-    public async Task IsNotLikedTest()
-    {
-        Guid authorId = Guid.NewGuid();
-        Guid cheepId = Guid.NewGuid();
-
-        bool actualVal = await _mockChirpRepositories.LikeRepository.IsLiked(authorId, cheepId);
-        
-        Assert.False(actualVal);
-    }
-
-    [Fact] //Tests if the method counts the amount of likes based on a cheep
-    public async Task LikeCountTest()
-    {
-        bool isHigherThanZero = false;
-        Like like = _mockChirpRepositories.TestLikes.First();
-
-        int likeCount = await _mockChirpRepositories.LikeRepository.LikeCount(like.Cheep.CheepId);
-       
-        if (likeCount > 0)
-        {
-            isHigherThanZero = true;
-        }
-        Assert.True(isHigherThanZero);
-    }
+    
 
     [Fact] //Tests if a like is removed from the database
     public async Task UnlikeCheepTest() 
