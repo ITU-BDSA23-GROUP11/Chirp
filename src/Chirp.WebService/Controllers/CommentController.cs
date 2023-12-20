@@ -16,7 +16,7 @@ namespace Chirp.WebService.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Add(IFormCollection collection)
         {
-            return await WithAuthAsync(async user =>
+            return await WithAuthAsync(async _ =>
             {
                 String commentString = collection["CommentText"].ToString();
                 Guid cheepId = Guid.Parse(collection["CheepId"].ToString());

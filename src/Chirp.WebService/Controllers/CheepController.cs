@@ -87,7 +87,7 @@ namespace Chirp.WebService.Controllers
         //public IActionResult Delete(Guid id)
         public async Task<IActionResult> Delete(IFormCollection collection)
         {
-            return await WithAuthAsync(async user =>
+            return await WithAuthAsync(async _ =>
             {
                 string? cheepId = collection["cheepId"];
                 
