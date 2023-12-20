@@ -172,7 +172,7 @@ public class E2ETests : IClassFixture<MockWebApplicationFactoryWithAuth>
         } else //In case there are other comments 
         {
             var commentTextAfterDeletion = await commentLocationAfterDeletion.InnerTextAsync();
-            Assert.Contains(commentText, commentTextAfterDeletion);
+            Assert.DoesNotContain(commentText, commentTextAfterDeletion);
 
         }
         
