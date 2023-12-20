@@ -67,12 +67,8 @@ public class AuthorRepository : IAuthorRepository
 
     public async Task AddFollow(Guid authorId, Guid followId)
     {
-        Task<Author?> userAuthorTask = _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == authorId);
-        Task<Author?> followAuthorTask = _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == followId);
-        
-        await Task.WhenAll(userAuthorTask, followAuthorTask);
-        Author? userAuthor = userAuthorTask.Result;
-        Author? followAuthor = followAuthorTask.Result;
+        Author? userAuthor = await _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == authorId);
+        Author? followAuthor = await _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == followId);
 
         if (userAuthor == null) return;
         if (followAuthor == null) return;
@@ -88,13 +84,8 @@ public class AuthorRepository : IAuthorRepository
 
     public async Task RemoveFollow(Guid authorId, Guid unfollowId)
     {
-        Task<Author?> userAuthorTask = _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == authorId);
-        Task<Author?> unfollowAuthorTask = _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == unfollowId);
-        
-        await Task.WhenAll(userAuthorTask, unfollowAuthorTask);
-        Author? userAuthor = userAuthorTask.Result;
-        Author? unfollowAuthor = unfollowAuthorTask.Result;
-        
+        Author? userAuthor = await _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == authorId);
+        Author? unfollowAuthor = await _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == unfollowId);
         if (userAuthor == null) return;
         if (unfollowAuthor == null) return;
             

@@ -21,18 +21,14 @@ public class LikeRepository : ILikeRepository
     //Creates a like in DbContext
     public async Task LikeCheep(Guid authorId, Guid cheepId) 
     {
-        Task<Author?> authorTask = _chirpDbContext
+        Author? author = await _chirpDbContext
             .Authors
             .Include(a => a.Likes)
             .ThenInclude(like => like.Cheep)
             .SingleOrDefaultAsync(a => a.AuthorId == authorId);
         
-        Task<Cheep?> cheepTask = _chirpDbContext.Cheeps.Include(c => c.Likes).SingleOrDefaultAsync(c => c.CheepId == cheepId);
+        Cheep? cheep = await _chirpDbContext.Cheeps.Include(c => c.Likes).SingleOrDefaultAsync(c => c.CheepId == cheepId);
 
-        await Task.WhenAll(authorTask, cheepTask);
-        var author = authorTask.Result;
-        var cheep = cheepTask.Result;
-        
         if (author is null) return;
         if (cheep is null) return;
         if (author.Likes.Any(l => l.Cheep.CheepId.ToString() == cheepId.ToString())) return; // Already liked
