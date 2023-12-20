@@ -19,6 +19,17 @@ numbersections: true
 
 ## User activities
 
+We have created the following diagrams to illustrate typical user activities/journeys through Chirp.
+We strove to create a user-flow that is smooth and functional. Therefore the register/login process is handled with OAuth and Github. This removes the need for a complicated registration (assuming the user has a Github account). 
+
+This can be seen in the diagrams after the user press the "Login" button. This starts the OAuth process. If the user has already been logged in to Chirp before, a Login press will simply handle the login and automatically redirect to the timeline without any further action from the user. 
+
+To ease the understanding of the diagrams, the following picture explains symbols and color definitions:
+
+-- INDSÆT BILLEDE AF DEFINITIONER --
+
+-- INDSÆT DIAGRAMMER AF USER ACTIVITIES --
+
 ## Sequence of functionality/calls trough _Chirp!_
 
 # Process
