@@ -30,7 +30,6 @@ public class MockWebApplicationFactoryWithAuth : DbFixture, IAsyncLifetime, IDis
         .ConfigureWebHostDefaults(webBuilder => {
             webBuilder.UseStartup<Startup>();
             webBuilder.UseUrls(BaseUrl);
-            // webBuilder.UseEnvironment("Development");
         })
         .ConfigureServices(services => {
             services

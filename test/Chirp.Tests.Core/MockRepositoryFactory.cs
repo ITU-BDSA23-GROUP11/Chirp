@@ -24,7 +24,6 @@ public struct MockChirpRepositories
     public Mock<DbSet<Cheep>> MockCheepsDbSet;
     public Mock<DbSet<Like>> MockLikesDbSet;
     public Mock<DbSet<Comment>> MockCommentsDbSet;
-
 }
 
 public static class MockRepositoryFactory

@@ -2,7 +2,6 @@ using Bogus;
 using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Graph;
 using MockQueryable.Moq;
 using Moq;
 
@@ -61,7 +60,7 @@ public class DataGenerator
         return cheepsFaker;
     }
 
-    public static List<Author> GenerateFollows(List<Author> authors)
+    private static List<Author> GenerateFollows(List<Author> authors)
     {
         var faker = new Faker();
         var rand = new Random();
@@ -78,8 +77,8 @@ public class DataGenerator
 
         return authors;
     }
-    
-    public static Faker<Like> GenerateLikesFaker(List<Author> authors, List<Cheep> cheeps, bool generateIds = true)
+
+    private static Faker<Like> GenerateLikesFaker(List<Author> authors, List<Cheep> cheeps, bool generateIds = true)
     {
         var likesFaker = new Faker<Like>()
             .RuleFor(l => l.LikedByAuthor, f => f.PickRandom(authors))
@@ -92,7 +91,7 @@ public class DataGenerator
         return likesFaker;
     }
 
-    public static Faker<Comment> GenerateCommentsFaker(List<Author> authors, List<Cheep> cheeps, bool generateIds = true)
+    private static Faker<Comment> GenerateCommentsFaker(List<Author> authors, List<Cheep> cheeps, bool generateIds = true)
     {
         var commentsFaker = new Faker<Comment>()
             .RuleFor(c => c.CommentAuthor, f => f.PickRandom(authors))
