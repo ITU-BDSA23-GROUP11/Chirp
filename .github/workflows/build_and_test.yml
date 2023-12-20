@@ -1,8 +1,9 @@
 name: .NET Build and Test
 
 on:
-  workflow_run:
-    workflows: [Build Project Report]
+  pull_request:
+    branches:
+      - main
 
 jobs:
   BuildAndTest:

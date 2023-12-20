@@ -1,9 +1,7 @@
 name: Build Project Report
 
 on:
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch
 
 jobs:
   changes:
@@ -62,7 +60,7 @@ jobs:
           default_author: github_actions
 
           # Arguments for the git fetch command. If set to false, the action won't fetch the repo.
-          fetch: false
+          fetch: true
 
           # The message for the commit.
           message: 'Built report pdf'
