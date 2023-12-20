@@ -176,22 +176,25 @@
                 }
         </div>
         <!--Comment section -->
-        <div>
-            <form asp-controller="Comment" asp-action="Add" style="display:inline;" class="flex">
-                <input type="hidden" name="AuthorId" value="@user?.Id"/>
-                <input type="hidden" name="CheepId" value="@Model.CheepId"/>
-                <input name="__RequestVerificationToken" type="hidden"/>
-                <div class="flex items-center w-full gap-2">
-                    <div class="my-4 flex-grow w-full">
-                        <input class="border rounded-lg px-4 py-2" style="width:100%" type="text" placeholder="Write a comment..." name="CommentText"/>
+        @if (user is not null)
+        {
+            <div>
+                <form asp-controller="Comment" asp-action="Add" style="display:inline;" class="flex">
+                    <input type="hidden" name="AuthorId" value="@user?.Id"/>
+                    <input type="hidden" name="CheepId" value="@Model.CheepId"/>
+                    <input name="__RequestVerificationToken" type="hidden"/>
+                    <div class="flex items-center w-full gap-2">
+                        <div class="my-4 flex-grow w-full">
+                            <input class="border rounded-lg px-4 py-2" style="width:100%" type="text" placeholder="Write a comment..." name="CommentText"/>
+                        </div>
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 flex items-center gap-2">
+                            Post comment
+                        </button>
                     </div>
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground h-10 px-4 py-2 flex items-center gap-2">
-                        Post comment
-                    </button>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
+        }
     </div>    
     
     <div class="flex items-center gap-4 w-full">
