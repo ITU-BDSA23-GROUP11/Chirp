@@ -14,9 +14,9 @@
 <!-- Only display the input box if the user is signed in-->
 @if (user is not null)
 {
-    <div class="flex flex-col gap-4 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 border text-card-foreground">
+    <div class="flex flex-col gap-4 p-4 rounded-lg shadow-lg bg-white border text-card-foreground">
         <div class="gap-2 flex flex-col">
-            <h3 class="text-lg font-bold text-gray-900 dark:text-gray-100">What's on your mind @username?</h3>
+            <h3 class="text-lg font-bold text-gray-900">What's on your mind @username?</h3>
             <div>
                 <form asp-controller="Cheep" asp-action="Create" style="display:inline;" class="flex">
                     <input type="hidden" name="AuthorId" value="@user?.Id"/>
