@@ -52,4 +52,13 @@ public abstract class BaseController : Controller, IController
             return BadRequest("Unknown Error Occurred");
         }
     }
+
+    public ActionResult RedirectWithError(string errorMessage)
+    {
+        var pathUrl = GetPathUrl();
+        if (pathUrl.Contains("errorMessage=")) return Redirect(pathUrl);
+        
+        var queryDelimiter = pathUrl.Contains('?') ? "&" : "?";
+        return Redirect(GetPathUrl() + $"{queryDelimiter}errorMessage={errorMessage}");
+    }
 }
