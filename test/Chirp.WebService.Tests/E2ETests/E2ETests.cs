@@ -1,4 +1,6 @@
 using Chirp.Tests.Core.Factories;
+using Xunit.Abstractions;
+using Xunit.Sdk;
 
 namespace Chirp.WebService.Tests.E2ETests;
 
@@ -119,7 +121,16 @@ public class E2ETests : IClassFixture<MockWebApplicationFactoryWithAuth>
         var firstPostCommentPlaceholder = await page
             .QuerySelectorAsync("//*[@id='messagelist']/div[1]/div[2]/div[2]/form/div/div/input");
         
-        firstPostCommentPlaceholder.FillAsync(commentText);
+        if (firstPostCommentPlaceholder != null)
+        {
+            await firstPostCommentPlaceholder.FillAsync(commentText);
+        }
+        else
+        {
+            // Handle the case where the element is not found
+            ITestOutputHelper iTestOutputHelper = new TestOutputHelper();
+            iTestOutputHelper.WriteLine("Element not found!");
+        }
         await postCommentButton.ClickAsync();
 
         var commentLocation = await page.QuerySelectorAsync("//*[@id='messagelist']/div[1]/div[3]/div/div/div");
@@ -148,7 +159,17 @@ public class E2ETests : IClassFixture<MockWebApplicationFactoryWithAuth>
         var firstPostCommentPlaceholder = await page
             .QuerySelectorAsync("//*[@id='messagelist']/div[1]/div[2]/div[2]/form/div/div/input");
         
-        firstPostCommentPlaceholder.FillAsync(commentText);
+        if (firstPostCommentPlaceholder != null)
+        {
+            await firstPostCommentPlaceholder.FillAsync(commentText);
+        }
+        else
+        {
+            // Handle the case where the element is not found
+            ITestOutputHelper iTestOutputHelper = new TestOutputHelper();
+            iTestOutputHelper.WriteLine("Element not found!");
+        }
+        
         await postCommentButton.ClickAsync();
         
         var commentLocation = await page.QuerySelectorAsync("//*[@id='messagelist']/div[1]/div[3]/div/div/div");
