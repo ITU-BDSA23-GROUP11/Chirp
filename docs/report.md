@@ -14,18 +14,17 @@ numbersections: true
 
 ### ER Diagram
 
-<p style="text-align: center">
-<img src="https://github.com/ITU-BDSA23-GROUP11/Chirp/blob/3fa239c860bc0d4d5cd18abcf0119f927e08b831/docs/diagrams/ER_Diagram.jpg" alt="ER Diagram">
-</p>
 
-The ER diagram is an illustration of the entities and their relations in the dataset. The author entity can make
+![ER Diagram](docs/diagrams/ER_Diagram.jpg "ER Diagram")
+
+\newpage The ER diagram is an illustration of the entities and their relations in the dataset. The author entity can make
 cheeps and add comments and likes while they're weak entities depending on a cheeps existence.
 
 ## Architecture — In the small
 
 ![Onion Architecture](docs/diagrams/Onion_architecture.jpg "Onion Architecture")
 
-In the development of our _Chirp!_ application, we used the Onion Architecture pattern. This architecture is composed
+\newpage In the development of our _Chirp!_ application, we used the Onion Architecture pattern. This architecture is composed
 of four integral layers: Domain, Infrastructure, Service and Web.
 
 **Domain Layer:** Positioned at the core of the architecture, the Domain layer serves as a foundation of
@@ -56,7 +55,7 @@ increases extendability and sustainability for future development.
 ## Sequence of functionality/calls trough _Chirp!_
 ![Functionality Sequence](docs/diagrams/Functionality_Sequence.jpg "Functionality Sequence")
 
-The sequence diagram illustrates the functionality of the _Chirp!_ application. The diagram contains 5 boundary objects;
+\newpage The sequence diagram illustrates the functionality of the _Chirp!_ application. The diagram contains 5 boundary objects;
 PublicTimeline, OAuth Login, UserTimeline, AboutMe and the database. These boundaries will be interacted with depending
 on the HTTP requests from the user. This particular sequence represents an
 unauthorized user that starts with a request to get the feed through a HTTP GET request, potentially for the first time.
