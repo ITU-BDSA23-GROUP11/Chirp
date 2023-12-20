@@ -109,15 +109,24 @@ public class ChirpDbContextTests : IClassFixture<ChirpDbContextFixture>
             Cheep = cheep
         };
 
+        Comment comment = new Comment
+        {
+            CommentAuthor = author,
+            Cheep = cheep,
+            Text = new Faker().Random.Words()
+        };
+
         EntityEntry<Author> addedAuthor = context.Authors.Add(author);
         EntityEntry<Cheep> addedCheep = context.Cheeps.Add(cheep);
         EntityEntry<Like> addedLike = context.Likes.Add(like);
+        EntityEntry<Comment> addedComment = context.Comments.Add(comment);
         
         Assert.Equal(author.Name, addedAuthor.Entity.Name);
         Assert.Equal(author.Name, addedCheep.Entity.Author.Name);
         Assert.Equal(cheep.Author, author);
         Assert.Equal(cheep.Text, addedCheep.Entity.Text);
         Assert.Equal(like.LikedByAuthor.AuthorId, addedLike.Entity.LikedByAuthor.AuthorId);
-        
+        Assert.Equal(comment.CommentAuthor.AuthorId, addedComment.Entity.CommentAuthor.AuthorId);
+        Assert.Equal(comment.Cheep.CheepId, addedComment.Entity.Cheep.CheepId);
     }
 }

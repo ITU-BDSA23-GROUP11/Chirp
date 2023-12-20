@@ -75,13 +75,13 @@ public class AuthorRepositoryTest
     [Fact]
     public async Task DeleteAuthorTest()
     {
+        //Arrange
         Author author = _mockChirpRepositories.TestAuthors.First();
-
+        //Act
         bool? isRemoved = await _mockChirpRepositories.AuthorRepository.DeleteAuthor(author.AuthorId);
-        
+        //Assert
         _mockChirpRepositories.MockAuthorsDbSet.Verify(m => m.Remove(It.IsAny<Author>()), Times.Once);
         _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
-        
         Assert.True(isRemoved);
     }
     

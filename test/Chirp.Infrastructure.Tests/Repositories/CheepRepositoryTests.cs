@@ -2,7 +2,6 @@ using Bogus;
 using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
-using Microsoft.Build.Framework;
 using Moq;
 
 namespace Chirp.Infrastructure.Tests.Repositories;
@@ -14,6 +13,7 @@ public class CheepRepositoryTests
     [Fact]
     public async Task TestAddCheep()
     {
+        //Arrange
         Author author = _mockChirpRepositories.TestAuthors.First();
 
         AddCheepDto cheep = new AddCheepDto
@@ -21,9 +21,9 @@ public class CheepRepositoryTests
             AuthorId = author.AuthorId,
             Text = new Faker().Random.Words()
         };
-        
+        //Act
         CheepDto? addedCheep = await _mockChirpRepositories.CheepRepository.AddCheep(cheep);
-        
+        //Assert
         _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Add(It.IsAny<Cheep>()), Times.Once);
         _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         Assert.Equal(Guid.Empty, addedCheep?.CheepId);
@@ -35,11 +35,12 @@ public class CheepRepositoryTests
     [Fact]
     public async Task DeleteCheepTest()
     {
+        //Arrange
         Cheep cheep = _mockChirpRepositories.TestCheeps.First();
         Guid cheepId = cheep.CheepId;
-
+        //Act
         await _mockChirpRepositories.CheepRepository.DeleteCheep(cheepId);
-        
+        //Assert
         _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Remove(It.IsAny<Cheep>()), Times.Once);
         _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -161,7 +162,6 @@ public class CheepRepositoryTests
     {
         //Arrange
         Guid authorId = _mockChirpRepositories.TestCheeps.First().Author.AuthorId;
-
         //Act
         List<CheepDto> actualList = await _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPageAsOwner(authorId, 1);
         //Assert

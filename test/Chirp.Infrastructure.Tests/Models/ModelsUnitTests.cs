@@ -84,7 +84,6 @@ public class ModelsUnitTests
             Cheep = cheep,
             CommentAuthor = author,
             CommentId = Guid.NewGuid(),
-            Timestamp = DateTime.UtcNow,
             Text = commentText
         };
         
