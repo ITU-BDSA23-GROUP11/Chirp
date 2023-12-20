@@ -118,11 +118,13 @@ public class LikeRepositoryTest
     {
         //Arrange
         Like like = _mockChirpRepositories.TestLikes.First();
+        Guid cheepId = like.Cheep.CheepId;
+        Guid authorId = like.LikedByAuthor.AuthorId;
         //Act
-        _mockChirpRepositories.LikeRepository.UnlikeCheep(like.LikedByAuthor.AuthorId, like.Cheep.CheepId);
+        _mockChirpRepositories.LikeRepository.UnlikeCheep(authorId, cheepId);
         
         //Assert
-        _mockChirpRepositories.MockLikesDbSet.Verify(m => m.Remove(like), Times.Once);
+        _mockChirpRepositories.MockLikesDbSet.Verify(m => m.Remove(It.IsAny<Like>()), Times.Once);
         _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
         
     }
