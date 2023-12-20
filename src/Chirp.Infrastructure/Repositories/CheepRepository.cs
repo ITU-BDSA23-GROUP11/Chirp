@@ -67,7 +67,7 @@ public class CheepRepository : ICheepRepository
         
         if (authUser is not null)
         {
-            List<string> follows = _authorRepository.GetFollowsForAuthor((Guid)authUser);
+            List<string> follows = await _authorRepository.GetFollowsForAuthor((Guid)authUser);
             cheepCount += await _chirpDbContext
                 .Cheeps
                 .Include(c => c.Author)
@@ -190,7 +190,7 @@ public class CheepRepository : ICheepRepository
     {
         return await FetchWithErrorHandlingAsync(async () =>
         {
-            List<string> authorFollows = _authorRepository.GetFollowsForAuthor(authorId);
+            List<string> authorFollows = await _authorRepository.GetFollowsForAuthor(authorId);
             return await _chirpDbContext
                 .Cheeps
                 .Where(c => authorFollows.Contains(c.Author.Username) || c.Author.AuthorId.ToString().Equals(authorId.ToString()))

@@ -33,9 +33,9 @@ public class UserStatisticsModel : PageModel
     
     public async Task<IActionResult> OnGet(string author)
     {
-        Following = _authorRepository.GetFollowsForAuthor(author);
+        Following = await _authorRepository.GetFollowsForAuthor(author);
 
-        AuthorDto? authorDto = _authorRepository.GetAuthorFromUsername(author);
+        AuthorDto? authorDto = await _authorRepository.GetAuthorFromUsername(author);
 
         Likes = _likeRepository.GetLikesByAuthorId(authorDto.Id);
 
@@ -92,39 +92,8 @@ public class UserStatisticsModel : PageModel
         
         // Build models
         var cheepPartialModels = new List<CheepPartialModel>();
-        User.GetUser().RunIfNotNull(user =>
-        {
-            var follows = _authorRepository.GetFollowsForAuthor(user.Id);
-            var likes = _likeRepository.GetLikesByAuthorId(user.Id);
-            foreach (CheepDto cheepDto in cheepDtos)
-            {
-                cheepPartialModels.Add(new CheepPartialModel
-                {
-                    CheepId = cheepDto.CheepId,
-                    AuthorId = cheepDto.AuthorId,
-                    AuthorAvatarUrl = cheepDto.AuthorAvatarUrl,
-                    AuthorName = cheepDto.AuthorName ?? cheepDto.AuthorUsername,
-                    AuthorUsername = cheepDto.AuthorUsername,
-                    Timestamp = cheepDto.Timestamp,
-                    Text = cheepDto.Text,
-                    isLikedByUser = likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString())),
-                    likesAmount = _likeRepository.LikeCount(cheepDto.CheepId),
-                    isFollowedByUser = !follows.Contains(cheepDto.AuthorUsername),
-                    CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
-                    {
-                        AuthorAvatarUrl = c.AuthorAvatarUrl,
-                        AuthorId = c.AuthorId,
-                        CheepAuthorId = c.CheepAuthorId,
-                        CommentId = c.CommentId,
-                        AuthorUsername = c.AuthorUsername,
-                        AuthorName = c.AuthorName,
-                        Timestamp = c.Timestamp,
-                        Text = c.Text,
-                        CheepId = c.CheepId
-                    }).ToList()
-                });
-            }
-        }, () =>
+
+        if (user is null)
         {
             foreach (CheepDto cheepDto in cheepDtos)
             {
@@ -154,7 +123,40 @@ public class UserStatisticsModel : PageModel
                     }).ToList()
                 });
             }
-        });
+        }
+        else
+        {
+            var follows = await _authorRepository.GetFollowsForAuthor(user.GetUserNonNull().Id);
+            var likes = _likeRepository.GetLikesByAuthorId(user.GetUserNonNull().Id);
+            foreach (CheepDto cheepDto in cheepDtos)
+            {
+                cheepPartialModels.Add(new CheepPartialModel
+                {
+                    CheepId = cheepDto.CheepId,
+                    AuthorId = cheepDto.AuthorId,
+                    AuthorAvatarUrl = cheepDto.AuthorAvatarUrl,
+                    AuthorName = cheepDto.AuthorName ?? cheepDto.AuthorUsername,
+                    AuthorUsername = cheepDto.AuthorUsername,
+                    Timestamp = cheepDto.Timestamp,
+                    Text = cheepDto.Text,
+                    isLikedByUser = likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString())),
+                    likesAmount = _likeRepository.LikeCount(cheepDto.CheepId),
+                    isFollowedByUser = !follows.Contains(cheepDto.AuthorUsername),
+                    CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
+                    {
+                        AuthorAvatarUrl = c.AuthorAvatarUrl,
+                        AuthorId = c.AuthorId,
+                        CheepAuthorId = c.CheepAuthorId,
+                        CommentId = c.CommentId,
+                        AuthorUsername = c.AuthorUsername,
+                        AuthorName = c.AuthorName,
+                        Timestamp = c.Timestamp,
+                        Text = c.Text,
+                        CheepId = c.CheepId
+                    }).ToList()
+                });
+            }
+        }
 
         Cheeps = cheepPartialModels;
 

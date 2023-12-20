@@ -14,9 +14,9 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Like")]
         [ValidateAntiForgeryToken]
-        public IActionResult Like(IFormCollection collection)
+        public async Task<IActionResult> Like(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 String? cheepId = collection["cheepId"];
                 if (String.IsNullOrEmpty(cheepId))
@@ -34,9 +34,9 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Unlike")]
         [ValidateAntiForgeryToken]
-        public IActionResult Unlike(IFormCollection collection)
+        public async Task<IActionResult> Unlike(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 String? cheepId = collection["cheepId"];
                 if (String.IsNullOrEmpty(cheepId))
@@ -106,14 +106,14 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Follow")]
         [ValidateAntiForgeryToken]
-        public IActionResult Follow(IFormCollection collection)
+        public async Task<IActionResult> Follow(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 //The new account to follow
                 Guid authorToBeFollowed = Guid.Parse(collection["CheepAuthorId"].ToString());
                 
-                AuthorRepository.AddFollow(user.Id, authorToBeFollowed);
+                await AuthorRepository.AddFollow(user.Id, authorToBeFollowed);
                 
                 return Redirect(GetPathUrl());//Redirect to same page
             });
@@ -123,12 +123,12 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Unfollow")]
         [ValidateAntiForgeryToken]
-        public IActionResult Unfollow(IFormCollection collection)
+        public async Task<IActionResult> Unfollow(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 Guid authorToBeUnfollowed = Guid.Parse(collection["CheepAuthorId"].ToString());//The new account to follow
-                AuthorRepository.RemoveFollow(user.Id, authorToBeUnfollowed);
+                await AuthorRepository.RemoveFollow(user.Id, authorToBeUnfollowed);
                 return Redirect(GetPathUrl());//Redirect to same page
             });
         }

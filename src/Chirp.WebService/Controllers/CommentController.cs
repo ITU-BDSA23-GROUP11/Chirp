@@ -14,9 +14,9 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Comment/Add")]
         [ValidateAntiForgeryToken]
-        public IActionResult Add(IFormCollection collection)
+        public async Task<IActionResult> Add(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 String commentString = collection["CommentText"].ToString();
                 Guid cheepId = Guid.Parse(collection["CheepId"].ToString());
@@ -39,9 +39,9 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Comment/Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(IFormCollection collection)
+        public async Task<IActionResult> Delete(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 Guid commentId = Guid.Parse(collection["CommentId"].ToString());
                 CommentRepository.DeleteComment(commentId);

@@ -33,7 +33,7 @@ public abstract class BaseController : Controller, IController
         try
         {
             var user = GetUser().ThrowIfNull();
-            AuthorRepository.AddAuthor(new AuthorDto
+            await AuthorRepository.AddAuthor(new AuthorDto
             {
                 Id = user.Id,
                 Name = user.Name,
@@ -42,31 +42,6 @@ public abstract class BaseController : Controller, IController
             });
 
             return await protectedFunction(user);
-        }
-        catch (ArgumentException)
-        {
-            return Unauthorized();
-        }
-        catch
-        {
-            return BadRequest("Unknown Error Occurred");
-        }
-    }
-
-    protected ActionResult WithAuth(Func<ClaimsUser, ActionResult> protectedFunction)
-    {
-        try
-        {
-            var user = GetUser().ThrowIfNull();
-            AuthorRepository.AddAuthor(new AuthorDto
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Username = user.Username,
-                AvatarUrl = user.AvatarUrl
-            });
-
-            return protectedFunction(user);
         }
         catch (ArgumentException)
         {

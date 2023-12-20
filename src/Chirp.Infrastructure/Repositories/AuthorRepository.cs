@@ -15,9 +15,9 @@ public class AuthorRepository : IAuthorRepository
         _chirpDbContext = chirpDbContext;
     }
 
-    public void AddAuthor(AuthorDto authorDto)
+    public async Task AddAuthor(AuthorDto authorDto)
     {
-        var authorWithIdExists = _chirpDbContext.Authors.Any(a => a.AuthorId == authorDto.Id);
+        var authorWithIdExists = await _chirpDbContext.Authors.AnyAsync(a => a.AuthorId == authorDto.Id);
         
         if (!authorWithIdExists)
         {
@@ -28,26 +28,26 @@ public class AuthorRepository : IAuthorRepository
                 Username = authorDto.Username,
                 AvatarUrl = authorDto.AvatarUrl
             });
-            _chirpDbContext.SaveChanges();
+            await _chirpDbContext.SaveChangesAsync();
         }
     }
     
-    public List<string> GetFollowsForAuthor(Guid authorId)
+    public async Task<List<string>> GetFollowsForAuthor(Guid authorId)
     {
-        Author? author = _chirpDbContext.Authors
+        Author? author = await _chirpDbContext.Authors
             .Include(a => a.Follows)
-            .FirstOrDefault(a => a.AuthorId == authorId);
+            .FirstOrDefaultAsync(a => a.AuthorId == authorId);
         
         if (author == null) return new List<string>();
 
         return GetFollows(author);
     }
     
-    public List<string> GetFollowsForAuthor(string authorUsername)
+    public async Task<List<string>> GetFollowsForAuthor(string authorUsername)
     {
-        Author? author = _chirpDbContext.Authors
+        Author? author = await _chirpDbContext.Authors
             .Include(a => a.Follows)
-            .FirstOrDefault(a => a.Username == authorUsername);
+            .FirstOrDefaultAsync(a => a.Username == authorUsername);
         
         if (author == null) return new List<string>();
 
@@ -65,14 +65,16 @@ public class AuthorRepository : IAuthorRepository
         return followsUsernames;
     }
 
-    public void AddFollow(Guid authorId, Guid followId)
+    public async Task AddFollow(Guid authorId, Guid followId)
     {
-        Author? userAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.AuthorId == authorId);
+        Task<Author?> userAuthorTask = _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == authorId);
+        Task<Author?> followAuthorTask = _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == followId);
+        
+        await Task.WhenAll(userAuthorTask, followAuthorTask);
+        Author? userAuthor = userAuthorTask.Result;
+        Author? followAuthor = followAuthorTask.Result;
 
         if (userAuthor == null) return;
-
-        Author? followAuthor = _chirpDbContext.Authors.FirstOrDefault(a => a.AuthorId == followId);
-
         if (followAuthor == null) return;
 
         _chirpDbContext.Authors.UpdateRange(userAuthor, followAuthor);
@@ -81,17 +83,19 @@ public class AuthorRepository : IAuthorRepository
 
         followAuthor.FollowedBy.Add(userAuthor);
 
-        _chirpDbContext.SaveChanges();
+        await _chirpDbContext.SaveChangesAsync();
     }
 
-    public void RemoveFollow(Guid authorId, Guid unfollowId)
+    public async Task RemoveFollow(Guid authorId, Guid unfollowId)
     {
-        Author? userAuthor = _chirpDbContext.Authors.Include(a => a.Follows).FirstOrDefault(a => a.AuthorId == authorId);
-
+        Task<Author?> userAuthorTask = _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == authorId);
+        Task<Author?> unfollowAuthorTask = _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == unfollowId);
+        
+        await Task.WhenAll(userAuthorTask, unfollowAuthorTask);
+        Author? userAuthor = userAuthorTask.Result;
+        Author? unfollowAuthor = unfollowAuthorTask.Result;
+        
         if (userAuthor == null) return;
-
-        Author? unfollowAuthor = _chirpDbContext.Authors.Include(a => a.FollowedBy).FirstOrDefault(a => a.AuthorId == unfollowId);
-
         if (unfollowAuthor == null) return;
             
         _chirpDbContext.Authors.UpdateRange(userAuthor, unfollowAuthor);
@@ -100,12 +104,12 @@ public class AuthorRepository : IAuthorRepository
 
         unfollowAuthor.FollowedBy.Remove(userAuthor);
 
-        _chirpDbContext.SaveChanges();
+        await _chirpDbContext.SaveChangesAsync();
     }
 
-    public AuthorDto? GetAuthorFromUsername(string authorUsername)
+    public async Task<AuthorDto?> GetAuthorFromUsername(string authorUsername)
     {
-        Author? author = _chirpDbContext.Authors.FirstOrDefault(a => a.Username == authorUsername);
+        Author? author = await _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.Username == authorUsername);
         
         if (author == null) return null;
         
@@ -118,23 +122,37 @@ public class AuthorRepository : IAuthorRepository
         };
     }
 
-    public bool DeleteAuthor(Guid authorId) =>
-        WithErrorHandlingDefaultValue(false, () =>
+    public async Task<bool> DeleteAuthor(Guid authorId)
+    {
+        return await WithErrorHandlingDefaultValueAsync(false, async () =>
         {
-            Author? author = _chirpDbContext.Authors.Include(a => a.Likes).Include(a => a.Comments).FirstOrDefault(a => a.AuthorId == authorId);
+            Author? author = await _chirpDbContext.Authors.Include(a => a.Likes).Include(a => a.Comments).FirstOrDefaultAsync(a => a.AuthorId == authorId);
             if (author is null) throw new NullReferenceException("Author not found");
-            
+
             // Delete user likes
             _chirpDbContext.Likes.RemoveRange(author.Likes);
             // Delete user comments
             _chirpDbContext.Comments.RemoveRange(author.Comments);
             // Delete user
             _chirpDbContext.Authors.Remove(author);
-            
-            _chirpDbContext.SaveChanges();
+
+            await _chirpDbContext.SaveChangesAsync();
             return true;
         });
+    }
 
+    private async Task<T> WithErrorHandlingDefaultValueAsync<T>(T defaultValue, Func<Task<T>> function) where T : struct
+    {
+        try
+        {
+            return await function();
+        }
+        catch
+        {
+            return defaultValue;
+        }
+    }
+    
     private T WithErrorHandlingDefaultValue<T>(T defaultValue, Func<T> function) where T : struct
     {
         try
