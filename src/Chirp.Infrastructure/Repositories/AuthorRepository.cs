@@ -121,11 +121,13 @@ public class AuthorRepository : IAuthorRepository
     public bool DeleteAuthor(Guid authorId) =>
         WithErrorHandlingDefaultValue(false, () =>
         {
-            Author? author = _chirpDbContext.Authors.Include(a => a.Likes).FirstOrDefault(a => a.AuthorId == authorId);
+            Author? author = _chirpDbContext.Authors.Include(a => a.Likes).Include(a => a.Comments).FirstOrDefault(a => a.AuthorId == authorId);
             if (author is null) throw new NullReferenceException("Author not found");
             
             // Delete user likes
             _chirpDbContext.Likes.RemoveRange(author.Likes);
+            // Delete user comments
+            _chirpDbContext.Comments.RemoveRange(author.Comments);
             // Delete user
             _chirpDbContext.Authors.Remove(author);
             
