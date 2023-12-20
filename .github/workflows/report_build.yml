@@ -1,7 +1,9 @@
 name: Build Project Report
 
 on:
-  workflow_dispatch
+  pull_request:
+    branches:
+      - main
 
 jobs:
   changes:
