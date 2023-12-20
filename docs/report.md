@@ -17,6 +17,8 @@ numbersections: true
 ## Architecture of deployed application
 ![Cloud Architecture](docs/diagrams/CloudArchitecture.jpg "Cloud Architecture")
 
+This diagram shows the cloud architecture of how the clients and different Azure services communicate, in order to serve the said clients.
+
 ## User activities
 
 ## Sequence of functionality/calls trough _Chirp!_
@@ -25,6 +27,24 @@ numbersections: true
 
 ## Build, test, release, and deployment
 ![Workflows](docs/diagrams/Workflows.jpg "Workflows")
+
+This diagram shows the usual flow starting from a pull request (PR) to the deployed application.
+As shown, we manage to build, test, release, and deploy our application through the use of Github Workflows/Actions.
+
+### Test and Coverage
+Starting from when a PR is created with the default branch (`main`) as its base, the workflows `Build and Test` and `Code coverage` are run every time the PR is changed (fx with a new commit).
+These workflows, although similar, differentiate by the `Code coverage` workflow also providing a sticky comment on the PR with the code coverage from the tests.
+They both set up, restore, build and run tests.
+Together, they act as required checks, for which the PR merging is blocked if any of the tests fail, or if the code coverage is too low (under 60%).
+
+### Deployment
+Once a PR has been merged to the main branch, a deployment is initiated through the `Build and deploy` workflow.
+The workflow starts by setting up .NET, build the project, publishes the application, creates an artifact, and then deploys it to Azure App Services.
+
+### Publishing
+When a new release is created, the `Publish app` workflow runs.
+Running as a matrix with common runtime identifiers (RID), it sets up .NET, publishes the application, and appends the published application as a `.zip` asset for the release.
+In our case, it creates 3 `.zip` files (one for each RID), specific for the commit at which the workflow was run at.
 
 ## Team work
 
