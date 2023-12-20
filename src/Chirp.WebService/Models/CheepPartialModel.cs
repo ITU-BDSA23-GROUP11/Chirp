@@ -1,6 +1,3 @@
-using Chirp.Core.Dto;
-using Chirp.Infrastructure.Models;
-
 namespace Chirp.WebService.Models;
 
 public struct CheepPartialModel
@@ -12,8 +9,8 @@ public struct CheepPartialModel
     public string AuthorUsername;
     public DateTime Timestamp;
     public string Text;
-    public int likesAmount;
-    public bool? isFollowedByUser;
-    public bool? isLikedByUser;
+    public int LikesAmount;
+    public bool? IsFollowedByUser;
+    public bool? IsLikedByUser;
     public List<CommentPartialModel> CheepComments;
 }

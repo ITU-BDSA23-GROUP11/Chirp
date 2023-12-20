@@ -80,10 +80,10 @@ public class UserTimelineModel : PageModel
                     AuthorUsername = cheepDto.AuthorUsername,
                     Timestamp = cheepDto.Timestamp,
                     Text = cheepDto.Text,
-                    likesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
-                    isLikedByUser = null,
-                    isFollowedByUser = null,
-                    CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
+                    LikesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
+                    IsLikedByUser = null,
+                    IsFollowedByUser = null,
+                    CheepComments = cheepDto.CommentDtos.Select(c => new CommentPartialModel
                     {
                         AuthorAvatarUrl = c.AuthorAvatarUrl,
                         AuthorId = c.AuthorId,
@@ -113,10 +113,10 @@ public class UserTimelineModel : PageModel
                     AuthorUsername = cheepDto.AuthorUsername,
                     Timestamp = cheepDto.Timestamp,
                     Text = cheepDto.Text,
-                    isLikedByUser = likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString())),
-                    likesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
-                    isFollowedByUser = !follows.Contains(cheepDto.AuthorUsername),
-                    CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
+                    IsLikedByUser = likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString())),
+                    LikesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
+                    IsFollowedByUser = !follows.Contains(cheepDto.AuthorUsername),
+                    CheepComments = cheepDto.CommentDtos.Select(c => new CommentPartialModel
                     {
                         AuthorAvatarUrl = c.AuthorAvatarUrl,
                         AuthorId = c.AuthorId,
