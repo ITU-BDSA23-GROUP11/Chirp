@@ -42,17 +42,22 @@ public class CheepRepository : ICheepRepository
     
     public async Task<int> GetAuthorCheepCount(string authorUsername, Guid? authUser = null)
     {
-        int cheepCount = await _chirpDbContext.Cheeps.CountAsync(c => c.Author.Username == authorUsername);
-        
+        var author = await _chirpDbContext.Authors
+            .Include(a => a.Cheeps)
+            .Include(a => a.Follows)
+            .ThenInclude(f => f.Cheeps)
+            .FirstAsync(a => a.Username == authorUsername);
+
+        int cheepCount = author.Cheeps.Count;
+
         if (authUser is not null)
         {
-            List<string> follows = await _authorRepository.GetFollowsForAuthor((Guid)authUser);
-            cheepCount += await _chirpDbContext
-                .Cheeps
-                .Include(c => c.Author)
-                .CountAsync(c => follows.Contains(c.Author.Username));
+            foreach (Author authorFollow in author.Follows)
+            {
+                cheepCount += authorFollow.Cheeps.Count;
+            }
         }
-        
+
         return cheepCount;
     }
     

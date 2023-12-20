@@ -47,7 +47,7 @@ public class AuthorRepository : IAuthorRepository
     {
         List<string> followsUsernames = new List<string>();
         
-        author.Follows.ForEach(
+        author.Follows.ToList().ForEach(
             a => followsUsernames.Add(a.Username)
         );
 
@@ -75,6 +75,7 @@ public class AuthorRepository : IAuthorRepository
     {
         Author? userAuthor = await _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == authorId);
         Author? unfollowAuthor = await _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.AuthorId == unfollowId);
+        
         if (userAuthor == null) return;
         if (unfollowAuthor == null) return;
             
@@ -87,9 +88,9 @@ public class AuthorRepository : IAuthorRepository
         await _chirpDbContext.SaveChangesAsync();
     }
 
-    public async Task<bool> DeleteAuthor(Guid authorId)
+    public Task<bool> DeleteAuthor(Guid authorId)
     {
-        return await WithErrorHandlingDefaultValueAsync(false, async () =>
+        return WithErrorHandlingDefaultValueAsync(false, async () =>
         {
             Author? author = await _chirpDbContext.Authors.Include(a => a.Likes).Include(a => a.Comments).FirstOrDefaultAsync(a => a.AuthorId == authorId);
             if (author is null) throw new NullReferenceException("Author not found");

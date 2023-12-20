@@ -37,5 +37,5 @@ public class Comment
     ]
     public string Text { get; set; } = "";
     
-    public DateTime Timestamp { get; set; } = DateTime.UtcNow;
+    public DateTime Timestamp { get; } = DateTime.UtcNow;
 }
