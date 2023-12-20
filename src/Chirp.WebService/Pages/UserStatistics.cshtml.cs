@@ -31,7 +31,7 @@ public class UserStatisticsModel : PageModel
         _likeRepository = likeRepository;
     }
     
-    public ActionResult OnGet(string author)
+    public async Task<IActionResult> OnGet(string author)
     {
         Following = _authorRepository.GetFollowsForAuthor(author);
 
@@ -47,13 +47,21 @@ public class UserStatisticsModel : PageModel
         }
 
         //From the likes -> find liked cheeps
-        LikesCheeps = _cheepRepository.GetCheepsFromIds(likeIds);
+        LikesCheeps = await _cheepRepository.GetCheepsFromIds(likeIds);
+        
+        // Get user
+        var user = User.GetUser();
         
         // Get amount of pages
-        var amountOfPages = User.GetUser().RunIfNotNull(user =>
+        int amountOfPages;
+        if (user is not null)
         {
-            return (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(author, user.Id) / 32);
-        }, (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(author) / 32));
+            amountOfPages = (int)Math.Ceiling((double)await _cheepRepository.GetAuthorCheepCount(author, user.GetUserNonNull().Id) / 32);
+        }
+        else
+        {
+            amountOfPages = (int)Math.Ceiling((double)await _cheepRepository.GetAuthorCheepCount(author) / 32);
+        }
         
         // Get page number
         int pageNumber = 1;
@@ -64,21 +72,23 @@ public class UserStatisticsModel : PageModel
         }
 
         // Get cheep dtos
-        var cheepDtos = new List<CheepDto>();
-        User.GetUser().RunIfNotNull(user =>
+        List<CheepDto> cheepDtos;
+        
+        if (user is null)
         {
-            if (user.Username.Equals(author))
+            cheepDtos = await _cheepRepository.GetAuthorCheepsForPage(author, pageNumber);
+        }
+        else
+        {
+            if (user.GetUserNonNull().Username.Equals(author))
             {
-                cheepDtos = _cheepRepository.GetAuthorCheepsForPageAsOwner(user.Id, pageNumber);
+                cheepDtos = await _cheepRepository.GetAuthorCheepsForPageAsOwner(user.GetUserNonNull().Id, pageNumber);
             }
             else
             {
-                cheepDtos = _cheepRepository.GetAuthorCheepsForPage(author, pageNumber);
+                cheepDtos = await _cheepRepository.GetAuthorCheepsForPage(author, pageNumber);
             }
-        }, () =>
-        {
-            cheepDtos = _cheepRepository.GetAuthorCheepsForPage(author, pageNumber);
-        });
+        }
         
         // Build models
         var cheepPartialModels = new List<CheepPartialModel>();

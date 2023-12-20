@@ -12,7 +12,7 @@ public class CheepRepositoryTests
     private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepositories();
     
     [Fact]
-    public void TestAddCheep()
+    public async Task TestAddCheep()
     {
         Author author = _mockChirpRepositories.TestAuthors.First();
 
@@ -22,10 +22,10 @@ public class CheepRepositoryTests
             Text = new Faker().Random.Words()
         };
         
-        CheepDto? addedCheep = _mockChirpRepositories.CheepRepository.AddCheep(cheep);
+        CheepDto? addedCheep = await _mockChirpRepositories.CheepRepository.AddCheep(cheep);
         
         _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Add(It.IsAny<Cheep>()), Times.Once);
-        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         Assert.Equal(Guid.Empty, addedCheep?.CheepId);
         Assert.Equal(author.Name, addedCheep?.AuthorName);
         Assert.Equal(cheep.Text, addedCheep?.Text);
@@ -33,33 +33,32 @@ public class CheepRepositoryTests
     }
 
     [Fact]
-    public void DeleteCheepTest()
+    public async Task DeleteCheepTest()
     {
         Cheep cheep = _mockChirpRepositories.TestCheeps.First();
         Guid cheepId = cheep.CheepId;
-        Guid authorId = cheep.Author.AuthorId;
 
-        _mockChirpRepositories.CheepRepository.DeleteCheep(cheepId, authorId);
+        await _mockChirpRepositories.CheepRepository.DeleteCheep(cheepId);
         
         _mockChirpRepositories.MockCheepsDbSet.Verify(m => m.Remove(It.IsAny<Cheep>()), Times.Once);
-        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
     
     [Fact]
-    public void TestGetCheepCount()
+    public async Task TestGetCheepCount()
     {
-        int cheepsCount = _mockChirpRepositories.CheepRepository.GetCheepCount();
+        int cheepsCount = await _mockChirpRepositories.CheepRepository.GetCheepCount();
         Assert.Equal(_mockChirpRepositories.TestCheeps.Count, cheepsCount);
     }
     
     [Fact]
-    public void TestGetCheepsForPage()
+    public async Task TestGetCheepsForPage()
     {
         int pages = Convert.ToInt32(Math.Ceiling(Convert.ToDecimal(_mockChirpRepositories.TestCheeps.Count) / 32));
 
         for (int i = 1; i <= pages; i++)
         {
-            List<CheepDto> pageCheeps = _mockChirpRepositories.CheepRepository.GetCheepsForPage(i);
+            List<CheepDto> pageCheeps = await _mockChirpRepositories.CheepRepository.GetCheepsForPage(i);
 
             if (i == pages)
             {
@@ -73,17 +72,17 @@ public class CheepRepositoryTests
     }
     
     [Fact]
-    public void TestGetAuthorCheepCount()
+    public async Task TestGetAuthorCheepCount()
     {
         foreach (Author author in _mockChirpRepositories.TestAuthors)
         {
-            int authorCheepCount = _mockChirpRepositories.CheepRepository.GetAuthorCheepCount(author.Username);
+            int authorCheepCount = await _mockChirpRepositories.CheepRepository.GetAuthorCheepCount(author.Username);
             Assert.Equal(_mockChirpRepositories.TestAuthors.Single(a => a.AuthorId == author.AuthorId).Cheeps.Count, authorCheepCount);
         }
     }
     
     [Fact]
-    public void TestGetAuthorCheepsForPage()
+    public async Task TestGetAuthorCheepsForPage()
     {
         foreach (Author author in _mockChirpRepositories.TestAuthors)
         {
@@ -93,7 +92,7 @@ public class CheepRepositoryTests
             
             for (int i = 1; i <= pages; i++)
             {
-                List<CheepDto> pageAuthorCheeps = _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPage(author.Username, i);
+                List<CheepDto> pageAuthorCheeps = await _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPage(author.Username, i);
 
                 if (i == pages)
                 {
@@ -108,18 +107,18 @@ public class CheepRepositoryTests
     }
 
     [Fact]
-    public void TestCheepsSortedByTimestamp()
+    public async Task TestCheepsSortedByTimestamp()
     {
         //Arrange
         int pages = Convert.ToInt32(
-            Math.Ceiling(Convert.ToDecimal(_mockChirpRepositories.CheepRepository.GetCheepCount() / 32)));
+            Math.Ceiling(Convert.ToDecimal(await _mockChirpRepositories.CheepRepository.GetCheepCount() / 32)));
 
         List<CheepDto> allCheeps = new List<CheepDto>();
 
         //Act
         for (int i = 1; i <= pages; i++)
         {
-            allCheeps.AddRange(_mockChirpRepositories.CheepRepository.GetCheepsForPage(i));
+            allCheeps.AddRange(await _mockChirpRepositories.CheepRepository.GetCheepsForPage(i));
         }
         
         //allCheeps should now hold all cheeps in a sorted order -> newest cheep first
@@ -130,9 +129,9 @@ public class CheepRepositoryTests
     }
 
     [Fact]
-    public void TestFetchWithErrorHandling()
+    public async Task TestFetchWithErrorHandling()
     {
-        var cheeps = MockRepositoryFactory
+        var cheeps = await MockRepositoryFactory
             .GetMockCheepRepositories(true)
             .CheepRepository
             .GetCheepsForPage(0);
@@ -140,7 +139,7 @@ public class CheepRepositoryTests
     }
 
     [Fact]
-    public void TestGetCheepsFromIds()
+    public async Task TestGetCheepsFromIds()
     {
         //Arrange
         List<Cheep> cheeps = _mockChirpRepositories.TestCheeps;
@@ -150,7 +149,7 @@ public class CheepRepositoryTests
             cheepIds.Add(cheeps[i].CheepId);
         }
         //Act
-        List<CheepDto> cheepsFromId = _mockChirpRepositories.CheepRepository.GetCheepsFromIds(cheepIds);
+        List<CheepDto> cheepsFromId = await _mockChirpRepositories.CheepRepository.GetCheepsFromIds(cheepIds);
         
         //Assert
         int expectedAmount = 10;
@@ -158,14 +157,13 @@ public class CheepRepositoryTests
     }
 
     [Fact]
-    public void TestGetAuthorCheepsForPageAsOwner()
+    public async Task TestGetAuthorCheepsForPageAsOwner()
     {
         //Arrange
         Guid authorId = _mockChirpRepositories.TestCheeps.First().Author.AuthorId;
 
         //Act
-        List<CheepDto> actualList =
-            _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPageAsOwner(authorId, 1);
+        List<CheepDto> actualList = await _mockChirpRepositories.CheepRepository.GetAuthorCheepsForPageAsOwner(authorId, 1);
         //Assert
         Assert.NotEmpty(actualList);
     }

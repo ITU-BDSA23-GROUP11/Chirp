@@ -55,9 +55,9 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Create")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 string? cheepText = collection["cheepText"];
 
@@ -71,7 +71,7 @@ namespace Chirp.WebService.Controllers
                     return RedirectWithError("Invalid input - cheep is too long (max 160 characters)");
                 }
 
-                CheepRepository.AddCheep(new AddCheepDto
+                await CheepRepository.AddCheep(new AddCheepDto
                 {
                     AuthorId = user.Id,
                     Text = cheepText
@@ -85,9 +85,9 @@ namespace Chirp.WebService.Controllers
         [Route("Cheep/Delete")]
         [ValidateAntiForgeryToken]
         //public IActionResult Delete(Guid id)
-        public IActionResult Delete(IFormCollection collection)
+        public async Task<IActionResult> Delete(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 string? cheepId = collection["cheepId"];
                 
@@ -96,7 +96,7 @@ namespace Chirp.WebService.Controllers
                     return RedirectWithError("Invalid Cheep Id");
                 }
                 
-                if (!CheepRepository.DeleteCheep(Guid.Parse(cheepId), user.Id)) return RedirectWithError("Cheep was not found");
+                if (!await CheepRepository.DeleteCheep(Guid.Parse(cheepId))) return RedirectWithError("Cheep was not found");
                 
                 return Redirect(GetPathUrl());
             });

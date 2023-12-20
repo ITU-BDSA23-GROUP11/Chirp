@@ -27,6 +27,31 @@ public abstract class BaseController : Controller, IController
         GetUser = () => User.GetUser();
         GetPathUrl = () => Request.GetPathUrl();
     }
+    
+    protected async Task<IActionResult> WithAuthAsync(Func<ClaimsUser, Task<IActionResult>> protectedFunction)
+    {
+        try
+        {
+            var user = GetUser().ThrowIfNull();
+            AuthorRepository.AddAuthor(new AuthorDto
+            {
+                Id = user.Id,
+                Name = user.Name,
+                Username = user.Username,
+                AvatarUrl = user.AvatarUrl
+            });
+
+            return await protectedFunction(user);
+        }
+        catch (ArgumentException)
+        {
+            return Unauthorized();
+        }
+        catch
+        {
+            return BadRequest("Unknown Error Occurred");
+        }
+    }
 
     protected ActionResult WithAuth(Func<ClaimsUser, ActionResult> protectedFunction)
     {

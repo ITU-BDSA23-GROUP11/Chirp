@@ -24,9 +24,10 @@ public class PublicTimelineModel: PageModel
         _likeRepository = likeRepository;
     }
 
-    public ActionResult OnGet()
+    public async Task<IActionResult> OnGet()
     {
-        var amountOfPages = (int)Math.Ceiling((double)_cheepRepository.GetCheepCount() / 32);
+        var cheepCount = await _cheepRepository.GetCheepCount();
+        var amountOfPages = (int)Math.Ceiling((double)cheepCount / 32);
         int pageNumber = 1;
         
         if (Request.Query.ContainsKey("page") && int.TryParse(Request.Query["page"], out int pageParameter))
@@ -35,7 +36,7 @@ public class PublicTimelineModel: PageModel
             pageNumber = (pageParameter > amountOfPages) ? amountOfPages : pageParameter;
         }
         
-        var cheepDtos = _cheepRepository.GetCheepsForPage(pageNumber);
+        var cheepDtos = await _cheepRepository.GetCheepsForPage(pageNumber);
         
         var cheepPartialModels = new List<CheepPartialModel>();
         

@@ -31,4 +31,10 @@ public static class UserExtensions
             Id = Guid.Parse(id.Value)
         };
     }
+
+    public static ClaimsUser GetUserNonNull(this ClaimsUser? claimsUser)
+    {
+        if (claimsUser is null) throw new NullReferenceException("User is null");
+        return (ClaimsUser)claimsUser;
+    }
 }
