@@ -47,7 +47,10 @@ Run the following to pull the docker image
 Replacing `<YOUR_DB_PASSWORD>` with a strong password (requires 1 upper case, 1 lower case, 1 number, and no special characters), run
 
 ```shell
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<YOUR_DB_PASSWORD>" -p 1433:1433 --name azure-sql-server -d mcr.microsoft.com/azure-sql-edge
+docker run -e "ACCEPT_EULA=Y" \
+   -e "MSSQL_SA_PASSWORD=<YOUR_DB_PASSWORD>" \
+   -p 1433:1433 --name azure-sql-server \
+   -d mcr.microsoft.com/azure-sql-edge
 ```
 
 #### 3. Init secrets
@@ -61,7 +64,8 @@ dotnet user-secrets init --project ./src/Chirp.WebService
 Add the DB secret by running the following command, replacing `<YOUR_DB_PASSWORD>` with the strong password you generated earlier
 
 ```shell
-dotnet user-secrets set "DB:Password" "<YOUR_DB_PASSWORD>" --project ./src/Chirp.WebService
+dotnet user-secrets set "DB:Password" "<YOUR_DB_PASSWORD>" \
+   --project ./src/Chirp.WebService
 ```
 
 ## How to set up tests
@@ -74,8 +78,10 @@ dotnet tool install PowerShell --version 7.4.0
 
 After running the tests the first time, and failing, the cause will be due to playwright not be installed. This can can be solved by running the following command:
 ```shell
-dotnet pwsh test/Chirp.WebService.Tests/bin/Debug/net7.0/playwright.ps1 install
-```
+dotnet pwsh \
+   test/Chirp.WebService.Tests/bin/Debug/net7.0/playwright.ps1 \
+   install
+ ```
 
 Everything should now be set up in order to enable tests to run.
 
