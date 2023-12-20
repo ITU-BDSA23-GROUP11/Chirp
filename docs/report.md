@@ -14,7 +14,7 @@ numbersections: true
 
 ### ER Diagram
 
-<img alt="ER Diagram" height="600" src="docs/diagrams/ER_Diagram.jpg" title="ER Diagram" width="528"/>
+![ER Diagram](docs/diagrams/Chirp_ER_Diagram.jpg "ER Diagram")
 
 \newpage The ER diagram is an illustration of the entities and their relations in the dataset. The author entity can make
 cheeps and add comments and likes while they're weak entities depending on a cheeps existence.
