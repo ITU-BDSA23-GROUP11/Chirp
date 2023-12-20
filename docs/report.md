@@ -64,6 +64,7 @@ docker run -e "ACCEPT_EULA=Y" \
    -d mcr.microsoft.com/azure-sql-edge
 ```
 
+
 #### 3. Init secrets
 If not done yet, run the following to create a secrets file
 
