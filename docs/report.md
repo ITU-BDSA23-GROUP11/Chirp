@@ -53,9 +53,9 @@ The sequence diagram illustrates the functionality of the _Chirp!_ application. 
 PublicTimeline, OAuth Login, UserTimeline, AboutMe and the database. These boundaries will be interacted with depending
 on the HTTP requests from the user. This particular sequence represents an
 unauthorized user that starts with a request to get the feed through a HTTP GET request, potentially for the first time.
-After authorization all the features will be available which is represented by HTTP requests from the user following
+After authorization, all the features will be available which is represented by HTTP requests from the user following
 the timeline downwards. The sequence concludes with a final deletion of the user account, whereas all the accounts
-information is removed from the tenant through OAuth, cheeps, likes, comments etc. is deleted from the database and an
+information is removed from the tenant through OAuth. Whereas cheeps, likes, comments etc. is deleted from the database and an
 unauthorized view of _Chirp!_ will be displayed.
 
 # Process
