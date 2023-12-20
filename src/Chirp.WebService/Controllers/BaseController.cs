@@ -32,7 +32,10 @@ public abstract class BaseController : Controller, IController
     {
         try
         {
-            var user = GetUser().ThrowIfNull();
+            var rawuser = GetUser();
+            if (rawuser is null) throw new ArgumentException("User is null in Auth async");
+            var user = rawuser.GetUserNonNull();
+            
             await AuthorRepository.AddAuthor(new AuthorDto
             {
                 Id = user.Id,

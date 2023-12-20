@@ -12,7 +12,7 @@ public class Author
         MaxLength(50, ErrorMessage = "Username must contain less than 50 characters"),
         MinLength(5, ErrorMessage = "Username must contain more than 5 characters")
     ]
-    public string? Name { get; set; }
+    public required string Name { get; set; }
     
     [Required]
     public required string Username { get; set; }

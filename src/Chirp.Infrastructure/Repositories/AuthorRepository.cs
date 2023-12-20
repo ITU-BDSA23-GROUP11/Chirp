@@ -42,17 +42,6 @@ public class AuthorRepository : IAuthorRepository
 
         return GetFollows(author);
     }
-    
-    public async Task<List<string>> GetFollowsForAuthor(string authorUsername)
-    {
-        Author? author = await _chirpDbContext.Authors
-            .Include(a => a.Follows)
-            .FirstOrDefaultAsync(a => a.Username == authorUsername);
-        
-        if (author == null) return new List<string>();
-
-        return GetFollows(author);
-    }
 
     private List<string> GetFollows(Author author)
     {
@@ -96,21 +85,6 @@ public class AuthorRepository : IAuthorRepository
         unfollowAuthor.FollowedBy.Remove(userAuthor);
 
         await _chirpDbContext.SaveChangesAsync();
-    }
-
-    public async Task<AuthorDto?> GetAuthorFromUsername(string authorUsername)
-    {
-        Author? author = await _chirpDbContext.Authors.FirstOrDefaultAsync(a => a.Username == authorUsername);
-        
-        if (author == null) return null;
-        
-        return new AuthorDto
-        {
-            Id = author.AuthorId,
-            Username = author.Username,
-            Name = author.Name,
-            AvatarUrl = author.AvatarUrl
-        };
     }
 
     public async Task<bool> DeleteAuthor(Guid authorId)

@@ -45,17 +45,6 @@ public class AuthorRepositoryTest
     }
 
     [Fact]
-    public async Task GetAuthorByEmailTest()
-    {
-        //Arrange
-        Author author = _mockChirpRepositories.TestAuthors.First();
-        //Act
-        AuthorDto? resAuthor = await _mockChirpRepositories.AuthorRepository.GetAuthorFromUsername(author.Username);
-        //Assert
-        Assert.Equal(author.AuthorId, resAuthor?.Id);
-    }
-
-    [Fact]
     public async Task GetFollowsForAuthorTest()
     {
         //Arrange

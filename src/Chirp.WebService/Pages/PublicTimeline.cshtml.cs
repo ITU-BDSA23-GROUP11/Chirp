@@ -62,7 +62,7 @@ public class PublicTimelineModel: PageModel
                 AuthorUsername = cheepDto.AuthorUsername,
                 Timestamp = cheepDto.Timestamp,
                 Text = cheepDto.Text,
-                LikesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
+                LikesAmount = cheepDto.LikeCount,
                 IsLikedByUser = (likes is null
                     ? null
                     : likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString()))),

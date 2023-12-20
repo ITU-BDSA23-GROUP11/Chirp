@@ -89,7 +89,7 @@ public class UserTimelineModel : PageModel
                         AuthorUsername = cheepDto.AuthorUsername,
                         Timestamp = cheepDto.Timestamp,
                         Text = cheepDto.Text,
-                        LikesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
+                        LikesAmount = cheepDto.LikeCount,
                         IsLikedByUser = (likes is null
                             ? null
                             : likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString()))),
@@ -132,11 +132,4 @@ public class UserTimelineModel : PageModel
 
     }
     
-    public async Task<bool> CheepIsLiked(Guid cheepId)
-    {
-        var authorId = User.GetUser()?.Id ?? Guid.Empty;
-        if (authorId.ToString().Equals(Guid.Empty.ToString())) return false;
-        return await _likeRepository.IsLiked(authorId, cheepId);   
-  
-    }
 }

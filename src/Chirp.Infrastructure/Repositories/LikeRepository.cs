@@ -51,15 +51,6 @@ public class LikeRepository : ILikeRepository
         await _chirpDbContext.SaveChangesAsync();
     }
     
-    //Counts amount of likes of a cheep
-    public async Task<int> LikeCount(Guid cheepId)
-    {
-        return await _chirpDbContext
-            .Likes
-            .Include(l => l.Cheep)
-            .CountAsync(l => l.Cheep.CheepId == cheepId);
-    }
-    
     //A list of an authors likes
     public async Task<List<LikeDto>> GetLikesByAuthorId(Guid authorId) 
     {
@@ -76,50 +67,6 @@ public class LikeRepository : ILikeRepository
                 }
             ).ToListAsync();
     }
-   
-    //A list of a cheeps likes
-    public async Task<List<LikeDto>> GetLikesByCheepId(Guid cheepId) 
-    {
-        return await _chirpDbContext
-            .Likes
-            .Include(l => l.LikedByAuthor)
-            .Include(l => l.Cheep)
-            .Where(l => l.Cheep.CheepId == cheepId)
-            .Select<Like, LikeDto>(l =>
-                new LikeDto
-                {
-                    CheepId = l.Cheep.CheepId,
-                    LikedByAuthorId = l.LikedByAuthor.AuthorId
-                }
-            ).ToListAsync();
-    }
-    
-    //Finds a specific like based on authorId and cheepId
-    public async Task<LikeDto> GetLike(Guid authorId, Guid cheepId)
-    {
-        return await _chirpDbContext
-            .Likes
-            .Include(l => l.Cheep)
-            .Include(l => l.LikedByAuthor)
-            .Where(l => l.LikedByAuthor.AuthorId == authorId)
-            .Where(l => l.Cheep.CheepId == cheepId)
-            .Select<Like, LikeDto>(l => new LikeDto
-                {
-                    CheepId = l.Cheep.CheepId,
-                    LikedByAuthorId = l.LikedByAuthor.AuthorId
-                }
-            ).FirstAsync();
-    }
-    
-    //Checks if a like exists
-    public async Task<bool> IsLiked(Guid authorId, Guid cheepId)
-    {
-        return await _chirpDbContext
-            .Likes
-            .Include(l => l.Cheep)
-            .Include(l => l.LikedByAuthor)
-            .Where(l => l.LikedByAuthor.AuthorId == authorId)
-            .AnyAsync(l => l.Cheep.CheepId == cheepId);
-    }
+
 
 }

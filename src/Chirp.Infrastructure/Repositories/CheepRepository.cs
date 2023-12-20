@@ -32,33 +32,12 @@ public class CheepRepository : ICheepRepository
         _chirpDbContext.Cheeps.Add(newCheep);
         await _chirpDbContext.SaveChangesAsync();
 
-        return new CheepDto
-        {
-            CheepId = newCheep.CheepId,
-            AuthorId = newCheep.Author.AuthorId,
-            AuthorName = newCheep.Author.Name,
-            AuthorUsername = newCheep.Author.Username,
-            AuthorAvatarUrl = newCheep.Author.AvatarUrl,
-            Text = newCheep.Text,
-            Timestamp = newCheep.Timestamp,
-            CommentDtos = newCheep.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
-            {
-                AuthorId = com.CommentAuthor.AuthorId,
-                CheepId = com.Cheep.CheepId,
-                CheepAuthorId = com.Cheep.Author.AuthorId,
-                AuthorName = com.CommentAuthor.Name,
-                AuthorUsername = com.CommentAuthor.Username,
-                AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
-                CommentId = com.CommentId,
-                Text = com.Text,
-                Timestamp = com.Timestamp
-            }).ToList()
-        };
+        return MapCheepToDto(newCheep);
     }
     
-    public async Task<int> GetCheepCount()
+    public Task<int> GetCheepCount()
     {
-        return await _chirpDbContext.Cheeps.CountAsync();
+        return _chirpDbContext.Cheeps.CountAsync();
     }
     
     public async Task<int> GetAuthorCheepCount(string authorUsername, Guid? authUser = null)
@@ -77,118 +56,55 @@ public class CheepRepository : ICheepRepository
         return cheepCount;
     }
     
-    public async Task<List<CheepDto>> GetCheepsForPage(int pageNumber)
+    public Task<List<CheepDto>> GetCheepsForPage(int pageNumber)
     {
-        return await FetchWithErrorHandlingAsync(async () =>
+        return FetchWithErrorHandlingAsync( () =>
         {
-            return await _chirpDbContext
+            return _chirpDbContext
                 .Cheeps
                 .Include(c => c.Author)
+                .Include(c => c.Likes)
                 .OrderByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
-                .Select<Cheep, CheepDto>(c =>
-                    new CheepDto {
-                        CheepId = c.CheepId,
-                        AuthorId = c.Author.AuthorId,
-                        AuthorName = c.Author.Name,
-                        AuthorUsername = c.Author.Username,
-                        AuthorAvatarUrl = c.Author.AvatarUrl,
-                        Text = c.Text,
-                        Timestamp = c.Timestamp,
-                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
-                        {
-                            AuthorId = com.CommentAuthor.AuthorId,
-                            CheepId = com.Cheep.CheepId,
-                            CheepAuthorId = com.Cheep.Author.AuthorId,
-                            AuthorName = com.CommentAuthor.Name,
-                            AuthorUsername = com.CommentAuthor.Username,
-                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
-                            CommentId = com.CommentId,
-                            Text = com.Text,
-                            Timestamp = com.Timestamp
-                        }).ToList()
-                    }
-                )
+                .Select<Cheep, CheepDto>(c => MapCheepToDto(c))
                 .ToListAsync();
         });
     }
 
-    public async Task<List<CheepDto>> GetCheepsFromIds(HashSet<Guid> cheepIds)
+    public Task<List<CheepDto>> GetCheepsFromIds(HashSet<Guid> cheepIds)
     {
-        return await FetchWithErrorHandlingAsync(async () =>
+        return FetchWithErrorHandlingAsync( () =>
         {
-            return await _chirpDbContext.Cheeps
+            return _chirpDbContext.Cheeps
                 .Include(c => c.Author)
+                .Include(c => c.Likes)
                 .Where(c => cheepIds.Contains(c.CheepId))
-                .Select<Cheep, CheepDto>(c =>
-                    new CheepDto
-                    {
-                        CheepId = c.CheepId,
-                        AuthorId = c.Author.AuthorId,
-                        AuthorName = c.Author.Name,
-                        AuthorUsername = c.Author.Username,
-                        AuthorAvatarUrl = c.Author.AvatarUrl,
-                        Text = c.Text,
-                        Timestamp = c.Timestamp,
-                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
-                        {
-                            AuthorId = com.CommentAuthor.AuthorId,
-                            CheepId = com.Cheep.CheepId,
-                            CheepAuthorId = com.Cheep.Author.AuthorId,
-                            AuthorName = com.CommentAuthor.Name,
-                            AuthorUsername = com.CommentAuthor.Username,
-                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
-                            CommentId = com.CommentId,
-                            Text = com.Text,
-                            Timestamp = com.Timestamp
-                        }).ToList()
-                    })
+                .Select<Cheep, CheepDto>(c => MapCheepToDto(c))
                 .ToListAsync();
         });
     }
 
-    public async Task<List<CheepDto>> GetAuthorCheepsForPage(string authorUsername, int pageNumber)
+    public Task<List<CheepDto>> GetAuthorCheepsForPage(string authorUsername, int pageNumber)
     {
-        return await FetchWithErrorHandlingAsync(async () =>
+        return FetchWithErrorHandlingAsync(() =>
         { 
-            return await _chirpDbContext
+            return _chirpDbContext
                 .Cheeps
                 .Where(c => c.Author.Username == authorUsername)
                 .Include(c => c.Author)
+                .Include(c => c.Likes)
                 .OrderByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
-                .Select<Cheep, CheepDto>(c =>
-                    new CheepDto {
-                        CheepId = c.CheepId,
-                        AuthorId = c.Author.AuthorId,
-                        AuthorName = c.Author.Name,
-                        AuthorUsername = c.Author.Username,
-                        AuthorAvatarUrl = c.Author.AvatarUrl,
-                        Text = c.Text,
-                        Timestamp = c.Timestamp,
-                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
-                        {
-                            AuthorId = com.CommentAuthor.AuthorId,
-                            CheepId = com.Cheep.CheepId,
-                            CheepAuthorId = com.Cheep.Author.AuthorId,
-                            AuthorName = com.CommentAuthor.Name,
-                            AuthorUsername = com.CommentAuthor.Username,
-                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
-                            CommentId = com.CommentId,
-                            Text = com.Text,
-                            Timestamp = com.Timestamp
-                        }).ToList()
-                    }
-                )
+                .Select<Cheep, CheepDto>(c => MapCheepToDto(c))
                 .ToListAsync();
         });
     }
 
-    public async Task<List<CheepDto>> GetAuthorCheepsForPageAsOwner(Guid authorId, int pageNumber)
+    public Task<List<CheepDto>> GetAuthorCheepsForPageAsOwner(Guid authorId, int pageNumber)
     {
-        return await FetchWithErrorHandlingAsync(async () =>
+        return FetchWithErrorHandlingAsync(async () =>
         {
             List<string> authorFollows = await _authorRepository.GetFollowsForAuthor(authorId);
             return await _chirpDbContext
@@ -199,29 +115,7 @@ public class CheepRepository : ICheepRepository
                 .ThenByDescending(c => c.Timestamp)
                 .Skip(int.Max(pageNumber - 1, 0) * 32)
                 .Take(32)
-                .Select<Cheep, CheepDto>(c =>
-                    new CheepDto {
-                        CheepId = c.CheepId,
-                        AuthorId = c.Author.AuthorId,
-                        AuthorName = c.Author.Name,
-                        AuthorUsername = c.Author.Username,
-                        AuthorAvatarUrl = c.Author.AvatarUrl,
-                        Text = c.Text,
-                        Timestamp = c.Timestamp,
-                        CommentDtos = c.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com => new CommentDto
-                        {
-                            AuthorId = com.CommentAuthor.AuthorId,
-                            CheepId = com.Cheep.CheepId,
-                            CheepAuthorId = com.Cheep.Author.AuthorId,
-                            AuthorName = com.CommentAuthor.Name,
-                            AuthorUsername = com.CommentAuthor.Username,
-                            AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
-                            CommentId = com.CommentId,
-                            Text = com.Text,
-                            Timestamp = com.Timestamp
-                        }).ToList()
-                    }
-                )
+                .Select<Cheep, CheepDto>(c => MapCheepToDto(c))
                 .ToListAsync();
         });
     }
@@ -257,4 +151,29 @@ public class CheepRepository : ICheepRepository
         
         return true; 
     }
+
+    private static CheepDto MapCheepToDto(Cheep cheep) =>
+        new () {
+            CheepId = cheep.CheepId,
+            AuthorId = cheep.Author.AuthorId,
+            AuthorName = cheep.Author.Name,
+            AuthorUsername = cheep.Author.Username,
+            AuthorAvatarUrl = cheep.Author.AvatarUrl,
+            Text = cheep.Text,
+            Timestamp = cheep.Timestamp,
+            LikeCount = cheep.Likes.Count,
+            CommentDtos = cheep.Comments.OrderByDescending(com => com.Timestamp).Select<Comment, CommentDto>(com =>
+                new CommentDto
+                {
+                    AuthorId = com.CommentAuthor.AuthorId,
+                    CheepId = com.Cheep.CheepId,
+                    CheepAuthorId = com.Cheep.Author.AuthorId,
+                    AuthorName = com.CommentAuthor.Name,
+                    AuthorUsername = com.CommentAuthor.Username,
+                    AuthorAvatarUrl = com.CommentAuthor.AvatarUrl,
+                    CommentId = com.CommentId,
+                    Text = com.Text,
+                    Timestamp = com.Timestamp
+                }).ToList()
+        };
 }
