@@ -142,6 +142,10 @@ dotnet test --verbosity normal
 # Ethics
 
 ## License
+We have licensed our application under the MIT License. This license provides access free-of-charge to any user using our product.
+The license is permissive and is provided "as is", which ensures no liability in terms of unwanted program behaviour, damage or claim. 
+
+The license is compliant with Tailwind, as Tailwind is also licensed under MIT (See src/Chirp.WebService/wwwroot/css/output.css for license specification at start of file).
 
 ## LLMs, ChatGPT, CoPilot, and others
 We have utilised AI tools in the development of Chirp, however only when we felt appropriate or necessary. 
