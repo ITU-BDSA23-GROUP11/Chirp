@@ -9,6 +9,7 @@ Chirp project for 3rd Semester
   - [How to set up tests](#how-to-set-up-tests)
 - [How to run **_Chirp_**](#how-to-run-chirp)
 - [How to run tests](#how-to-run-tests)
+- [How to build report from markdown to pdf](#how-to-build-report-from-markdown-to-pdf)
 
 ---
 
@@ -112,3 +113,13 @@ To run tests, given the it is set up (see [How to set up tests](#how-to-set-up-t
 ```shell
 dotnet test --verbosity normal
 ```
+
+---
+
+# How to build report from markdown to pdf
+In order to build the report from the `report.md` file to a `.pdf` file, follow these steps:
+1. Go to [the workflow on Github](https://github.com/ITU-BDSA23-GROUP11/Chirp/actions/workflows/report_build.yml)
+2. Press the `Run workflow` button/dropdown
+3. Select the branch where you made edits in `report.md` (never select main, as the workflow will fail due to branch protection)
+
+A commit will then be added to your branch, containing the built report.
