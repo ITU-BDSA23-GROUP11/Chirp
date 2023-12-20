@@ -13,11 +13,14 @@ numbersections: true
 ## Domain model
 
 ### ER Diagram
+![ER Diagram](docs/diagrams/ER_Diagram.jpg "ER Diagram")
 
 The ER diagram is an illustration of the entities and their relations in the dataset. The author entity can make
 cheeps and add comments and likes while they're weak entities depending on a cheeps existence.
 
 ## Architecture — In the small
+
+![Onion Architecture](docs/diagrams/Onion_architecture.jpg "Onion Architecture")
 
 In the development of our _Chirp!_ application, we used the Onion Architecture pattern. This architecture is composed
 of four integral layers: Domain, Infrastructure, Service and Web.
@@ -48,6 +51,7 @@ increases extendability and sustainability for future development.
 ## User activities
 
 ## Sequence of functionality/calls trough _Chirp!_
+![Functionality Sequence](docs/diagrams/Functionality_Sequence.jpg "Functionality Sequence")
 
 The sequence diagram illustrates the functionality of the _Chirp!_ application. The diagram contains 5 boundary objects;
 PublicTimeline, OAuth Login, UserTimeline, AboutMe and the database. These boundaries will be interacted with depending
