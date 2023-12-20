@@ -11,7 +11,7 @@ public class CommentRepositoryTest
     private readonly MockChirpRepositories _mockChirpRepositories = MockRepositoryFactory.GetMockCheepRepositories();
 
     [Fact]
-    public void TestAddComment()
+    public async Task TestAddComment()
     {
         Author author = _mockChirpRepositories.TestAuthors.First();
         
@@ -24,10 +24,10 @@ public class CommentRepositoryTest
             Text = new Faker().Random.Words()
         };
 
-        bool? isAdded = _mockChirpRepositories.CommentRepository.AddComment(comment);
+        bool? isAdded = await _mockChirpRepositories.CommentRepository.AddComment(comment);
         
         _mockChirpRepositories.MockCommentsDbSet.Verify(m => m.Add(It.IsAny<Comment>()), Times.Once);
-        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges(), Times.Once);
+        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
         
         Assert.True(isAdded);
         Assert.Equal(author.AuthorId, comment.AuthorId);
@@ -36,16 +36,16 @@ public class CommentRepositoryTest
     }
 
     [Fact]
-    public void TestDeleteComment()
+    public async Task TestDeleteComment()
     {
         Comment comment = _mockChirpRepositories.TestComment.First();
 
         Guid commentIdToDelete = comment.CommentId;
         
-        bool? isDeleted = _mockChirpRepositories.CommentRepository.DeleteComment(commentIdToDelete);
+        bool? isDeleted = await _mockChirpRepositories.CommentRepository.DeleteComment(commentIdToDelete);
         
         _mockChirpRepositories.MockChirpDbContext.Verify(m => m.Remove(It.IsAny<Comment>()), Times.Once);
-        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChanges());
+        _mockChirpRepositories.MockChirpDbContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()));
         
         Assert.True(isDeleted);
     }

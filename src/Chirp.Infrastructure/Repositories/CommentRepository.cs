@@ -2,6 +2,7 @@
 using Chirp.Core.Repositories;
 using Chirp.Infrastructure.Contexts;
 using Chirp.Infrastructure.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Chirp.Infrastructure.Repositories;
 
@@ -15,10 +16,10 @@ public class CommentRepository : ICommentRepository
     }
     
     //Add a comment to a Cheep
-    public bool AddComment(AddCommentDto commentDto)
+    public async Task<bool> AddComment(AddCommentDto commentDto)
     {
-        Cheep? cheep = _chirpDbContext.Cheeps
-            .SingleOrDefault(c => c.CheepId == commentDto.CheepId);
+        Cheep? cheep = await _chirpDbContext.Cheeps
+            .SingleOrDefaultAsync(c => c.CheepId == commentDto.CheepId);
 
         if (cheep == null) return false;
         
@@ -33,23 +34,23 @@ public class CommentRepository : ICommentRepository
         };
 
         _chirpDbContext.Comments.Add(comment);
-        _chirpDbContext.SaveChanges();
+        await _chirpDbContext.SaveChangesAsync();
         
         return true;
     }
     
     //Delete a comment from a Cheep
     //TODO: Implement fetch with error handling?
-    public bool DeleteComment(Guid commentId)
+    public async Task<bool> DeleteComment(Guid commentId)
     {
         try
         {
-            var comment = _chirpDbContext.Comments.First(c => c.CommentId == commentId);
+            var comment = await _chirpDbContext.Comments.FirstAsync(c => c.CommentId == commentId);
             _chirpDbContext.Remove(comment);
-            _chirpDbContext.SaveChanges();
+            await _chirpDbContext.SaveChangesAsync();
             return true;
         }
-        catch (Exception ex)
+        catch
         {
             //If the comment has already been deleted -> return false
             return false;
