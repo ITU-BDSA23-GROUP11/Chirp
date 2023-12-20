@@ -127,13 +127,11 @@ public class E2ETests : IClassFixture<MockWebApplicationFactoryWithAuth>
         }
         else
         {
-            // Handle the case where the element is not found
-            ITestOutputHelper iTestOutputHelper = new TestOutputHelper();
-            iTestOutputHelper.WriteLine("Element not found!");
+            Assert.Fail();
         }
         await postCommentButton.ClickAsync();
 
-        var commentLocation = await page.QuerySelectorAsync("//*[@id='messagelist']/div[1]/div[3]/div/div/div");
+        var commentLocation = await page.QuerySelectorAsync("//*[@id='messagelist']/div[1]/div[3]/div/div/div[1]");
         
         if (commentLocation == null) Assert.Fail();
 
@@ -165,14 +163,12 @@ public class E2ETests : IClassFixture<MockWebApplicationFactoryWithAuth>
         }
         else
         {
-            // Handle the case where the element is not found
-            ITestOutputHelper iTestOutputHelper = new TestOutputHelper();
-            iTestOutputHelper.WriteLine("Element not found!");
+            Assert.Fail();
         }
         
         await postCommentButton.ClickAsync();
         
-        var commentLocation = await page.QuerySelectorAsync("//*[@id='messagelist']/div[1]/div[3]/div/div/div");
+        var commentLocation = await page.QuerySelectorAsync("//*[@id='messagelist']/div[1]/div[3]/div/div/div[1]");
         
         if (commentLocation == null) Assert.Fail();
         
