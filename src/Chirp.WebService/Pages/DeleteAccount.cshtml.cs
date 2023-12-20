@@ -14,16 +14,17 @@ public class DeleteAccountModel: PageModel
         _authorRepository = authorRepository;
     }
     
-    public ActionResult OnGet()
+    public async Task<IActionResult> OnGet()
     {
-        User.GetUser().RunIfNotNull(user =>
+        var user = User.GetUser();
+        if (user is not null)
         {
             // Delete user
-            _authorRepository.DeleteAuthor(user.Id);
+            await _authorRepository.DeleteAuthor(user.GetUserNonNull().Id);
             
             // Sign user out
             Response.Cookies.Delete(".AspNetCore.Cookies");
-        });
+        }
         
         return Redirect("/");
     }

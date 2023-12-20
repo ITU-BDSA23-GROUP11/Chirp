@@ -10,7 +10,6 @@
 @{
     ViewData["Title"] = "Chirp!";
     Layout = "Shared/_Layout";
-    var routeName = HttpContext.GetRouteValue("author");
 }
 
 <main class="flex flex-col gap-4 p-4 overflow-auto bg-gray-100">
@@ -45,7 +44,7 @@
                 CheepId = c.CheepId,
                 Timestamp = c.Timestamp,
                 Text = c.Text,
-                isLikedByUser = true
+                IsLikedByUser = true
             };
             
             <partial name="_CheepCardPartial" model=@(cpm)/>

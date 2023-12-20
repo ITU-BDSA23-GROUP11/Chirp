@@ -4,18 +4,15 @@ namespace Chirp.Core.Repositories;
 
 public interface IAuthorRepository
 {
-    public void AddAuthor(AuthorDto authorDto);
+    public Task AddAuthor(AuthorDto authorDto);
     
     /// <returns>The usernames of the users following the author with id authorId</returns>
-    public List<string> GetFollowsForAuthor(Guid authorId);
+    public Task<List<string>> GetFollowsForAuthor(Guid authorId);
     /// <returns>The usernames of the users following the author with id authorId</returns>
-    public List<string> GetFollowsForAuthor(string authorUsername);
+    public Task<List<string>> GetFollowsForAuthor(string authorUsername);
+    public Task<AuthorDto?> GetAuthorFromUsername(string authorUsername);
+    public Task AddFollow(Guid authorId, Guid followId);
+    public Task RemoveFollow(Guid authorId, Guid unfollowAuthorId);
 
-    public AuthorDto? GetAuthorFromUsername(string authorUsername);
-    
-    public void AddFollow(Guid authorId, Guid followId);
-
-    public void RemoveFollow(Guid authorId, Guid unfollowAuthorId);
-
-    public bool DeleteAuthor(Guid authorId);
+    public Task<bool> DeleteAuthor(Guid authorId);
 }

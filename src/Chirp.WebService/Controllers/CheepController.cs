@@ -14,9 +14,9 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Like")]
         [ValidateAntiForgeryToken]
-        public IActionResult Like(IFormCollection collection)
+        public async Task<IActionResult> Like(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 String? cheepId = collection["cheepId"];
                 if (String.IsNullOrEmpty(cheepId))
@@ -24,7 +24,7 @@ namespace Chirp.WebService.Controllers
                     return RedirectWithError("Invalid input");
                 }
                 Guid cId = Guid.Parse(cheepId);
-                LikeRepository.LikeCheep(user.Id, cId);
+                await LikeRepository.LikeCheep(user.Id, cId);
                 
                 return Redirect(GetPathUrl());
             });
@@ -34,9 +34,9 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Unlike")]
         [ValidateAntiForgeryToken]
-        public IActionResult Unlike(IFormCollection collection)
+        public async Task<IActionResult> Unlike(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 String? cheepId = collection["cheepId"];
                 if (String.IsNullOrEmpty(cheepId))
@@ -44,7 +44,7 @@ namespace Chirp.WebService.Controllers
                     return RedirectWithError("Invalid input");
                 }
                 Guid cId = Guid.Parse(cheepId);
-                LikeRepository.UnlikeCheep(user.Id, cId);
+                await LikeRepository.UnlikeCheep(user.Id, cId);
                 
                 return Redirect(GetPathUrl());
             });
@@ -55,9 +55,9 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Create")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 string? cheepText = collection["cheepText"];
 
@@ -71,7 +71,7 @@ namespace Chirp.WebService.Controllers
                     return RedirectWithError("Invalid input - cheep is too long (max 160 characters)");
                 }
 
-                CheepRepository.AddCheep(new AddCheepDto
+                await CheepRepository.AddCheep(new AddCheepDto
                 {
                     AuthorId = user.Id,
                     Text = cheepText
@@ -85,9 +85,9 @@ namespace Chirp.WebService.Controllers
         [Route("Cheep/Delete")]
         [ValidateAntiForgeryToken]
         //public IActionResult Delete(Guid id)
-        public IActionResult Delete(IFormCollection collection)
+        public async Task<IActionResult> Delete(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async _ =>
             {
                 string? cheepId = collection["cheepId"];
                 
@@ -96,7 +96,7 @@ namespace Chirp.WebService.Controllers
                     return RedirectWithError("Invalid Cheep Id");
                 }
                 
-                if (!CheepRepository.DeleteCheep(Guid.Parse(cheepId), user.Id)) return RedirectWithError("Cheep was not found");
+                if (!await CheepRepository.DeleteCheep(Guid.Parse(cheepId))) return RedirectWithError("Cheep was not found");
                 
                 return Redirect(GetPathUrl());
             });
@@ -106,14 +106,14 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Follow")]
         [ValidateAntiForgeryToken]
-        public IActionResult Follow(IFormCollection collection)
+        public async Task<IActionResult> Follow(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 //The new account to follow
                 Guid authorToBeFollowed = Guid.Parse(collection["CheepAuthorId"].ToString());
                 
-                AuthorRepository.AddFollow(user.Id, authorToBeFollowed);
+                await AuthorRepository.AddFollow(user.Id, authorToBeFollowed);
                 
                 return Redirect(GetPathUrl());//Redirect to same page
             });
@@ -123,12 +123,12 @@ namespace Chirp.WebService.Controllers
         [HttpPost]
         [Route("Cheep/Unfollow")]
         [ValidateAntiForgeryToken]
-        public IActionResult Unfollow(IFormCollection collection)
+        public async Task<IActionResult> Unfollow(IFormCollection collection)
         {
-            return WithAuth(user =>
+            return await WithAuthAsync(async user =>
             {
                 Guid authorToBeUnfollowed = Guid.Parse(collection["CheepAuthorId"].ToString());//The new account to follow
-                AuthorRepository.RemoveFollow(user.Id, authorToBeUnfollowed);
+                await AuthorRepository.RemoveFollow(user.Id, authorToBeUnfollowed);
                 return Redirect(GetPathUrl());//Redirect to same page
             });
         }

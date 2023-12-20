@@ -27,13 +27,13 @@ public abstract class BaseController : Controller, IController
         GetUser = () => User.GetUser();
         GetPathUrl = () => Request.GetPathUrl();
     }
-
-    protected ActionResult WithAuth(Func<ClaimsUser, ActionResult> protectedFunction)
+    
+    protected async Task<IActionResult> WithAuthAsync(Func<ClaimsUser, Task<IActionResult>> protectedFunction)
     {
         try
         {
             var user = GetUser().ThrowIfNull();
-            AuthorRepository.AddAuthor(new AuthorDto
+            await AuthorRepository.AddAuthor(new AuthorDto
             {
                 Id = user.Id,
                 Name = user.Name,
@@ -41,7 +41,7 @@ public abstract class BaseController : Controller, IController
                 AvatarUrl = user.AvatarUrl
             });
 
-            return protectedFunction(user);
+            return await protectedFunction(user);
         }
         catch (ArgumentException)
         {

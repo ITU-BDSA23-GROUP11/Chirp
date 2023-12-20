@@ -36,7 +36,7 @@ public class CheepControllerTest
     }
 
     [Fact]
-    public void TestFollowReturnsRedirect()
+    public async Task TestFollowReturnsRedirect()
     {
         Author author = _mockChirpRepositories.TestAuthors.First();
 
@@ -46,13 +46,13 @@ public class CheepControllerTest
                 {"CheepAuthorId", author.AuthorId.ToString()}
             }
         );
-        IActionResult actionResult = _cheepController.Follow(collection);
+        IActionResult actionResult = await _cheepController.Follow(collection);
         
         Assert.True(actionResult is RedirectResult);
     }
 
     [Fact]
-    public void TestUnfollowReturnsRedirect()
+    public async Task TestUnfollowReturnsRedirect()
     {
         Author author = _mockChirpRepositories.TestAuthors.First().Follows.First();
 
@@ -63,12 +63,12 @@ public class CheepControllerTest
             }
         );
 
-        IActionResult actionResult = _cheepController.Unfollow(collection);
+        IActionResult actionResult = await _cheepController.Unfollow(collection);
         Assert.True(actionResult is RedirectResult);
     }
     
     [Fact]
-    public void TestCreateReturnsRedirect()
+    public async Task TestCreateReturnsRedirect()
     {
         //Arrange
         string newCheepText = new Faker().Random.Words(); //Generate unique/random cheep content
@@ -82,7 +82,7 @@ public class CheepControllerTest
         );
 
         //Act
-        ActionResult actionResult = _cheepController.Create(collection);
+        IActionResult actionResult = await _cheepController.Create(collection);
 
         
         //Assert
@@ -90,7 +90,7 @@ public class CheepControllerTest
     }
 
     [Fact]
-    public void TestCreateReturnsUnauthorized()
+    public async Task TestCreateReturnsUnauthorized()
     {
         //Arrange
         //Simulate a non-authenticated user
@@ -106,14 +106,14 @@ public class CheepControllerTest
         );
         
         //Act
-        ActionResult actionResult = _cheepController.Create(collection);
+        IActionResult actionResult = await _cheepController.Create(collection);
         
         //Assert
         Assert.True(actionResult is UnauthorizedResult);
     }
 
     [Fact]
-    public void TestCreateEmptyCheepReturnsBad()
+    public async Task TestCreateEmptyCheepReturnsBad()
     {
         //Arrange
         IFormCollection collection = new FormCollection(
@@ -124,7 +124,7 @@ public class CheepControllerTest
         );
         
         //Act
-        ActionResult actionResult = _cheepController.Create(collection);
+        IActionResult actionResult = await _cheepController.Create(collection);
         
         //Assert
         Assert.True(actionResult is RedirectResult);
@@ -133,7 +133,7 @@ public class CheepControllerTest
     }
 
     [Fact]
-    public void TestCreateTooLongCheepReturnsBad()
+    public async Task TestCreateTooLongCheepReturnsBad()
     {
         //Arrange
         string newCheep = new Faker().Random.String(161, 200);
@@ -146,7 +146,7 @@ public class CheepControllerTest
         );
         
         //Act
-        ActionResult actionResult = _cheepController.Create(collection);
+        IActionResult actionResult = await _cheepController.Create(collection);
         
         //Assert
         Assert.True(actionResult is RedirectResult);
@@ -155,7 +155,7 @@ public class CheepControllerTest
     }
 
     [Fact] //Tests if a cheep is not able to be liked
-    public void LikeCheepReturnsBadTest()
+    public async Task LikeCheepReturnsBadTest()
     {
         //Arrange
         string cheepId = new Faker().Random.String(0);
@@ -167,14 +167,14 @@ public class CheepControllerTest
             }
         );
         //Assert
-        IActionResult actionResult = _cheepController.Like(collection);
+        IActionResult actionResult = await _cheepController.Like(collection);
         Assert.True(actionResult is RedirectResult);
         var redirectUrl = ((RedirectResult)actionResult).Url;
         Assert.Contains("errorMessage=Invalid input", redirectUrl);
     }
     
     [Fact]
-    public void LikeCheepReturnsRedirectTest()
+    public async Task LikeCheepReturnsRedirectTest()
     {
         //Arrange
         Cheep cheep = _mockChirpRepositories.TestCheeps.First();
@@ -188,13 +188,13 @@ public class CheepControllerTest
         );
 
         //Act
-        IActionResult actionResult = _cheepController.Like(collection);
+        IActionResult actionResult = await _cheepController.Like(collection);
         //Assert
         Assert.True(actionResult is RedirectResult);
     }
 
     [Fact] //Like is successfully removed
-    public void UnlikeCheepReturnsRedirectTest()
+    public async Task UnlikeCheepReturnsRedirectTest()
     {
         Like like = _mockChirpRepositories.TestLikes.First();
         string cheepId = like.Cheep.CheepId.ToString();
@@ -206,12 +206,12 @@ public class CheepControllerTest
             }
         );
 
-        IActionResult actionResult = _cheepController.Unlike(collection);
+        IActionResult actionResult = await _cheepController.Unlike(collection);
         Assert.True(actionResult is RedirectResult);
     }
 
     [Fact]
-    public void DeleteCheepReturnsRedirectTest()
+    public async Task DeleteCheepReturnsRedirectTest()
     {
         Cheep cheep = _mockChirpRepositories.TestCheeps.First();
         string cheepId = cheep.CheepId.ToString();
@@ -222,7 +222,7 @@ public class CheepControllerTest
                 { "cheepId", cheepId}
             }
         );
-        IActionResult actionResult = _cheepController.Delete(collection);
+        IActionResult actionResult = await _cheepController.Delete(collection);
         Assert.True(actionResult is RedirectResult);
     }
 

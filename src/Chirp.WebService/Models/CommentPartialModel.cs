@@ -1,7 +1,4 @@
-﻿using Chirp.Core.Dto;
-using Chirp.Infrastructure.Models;
-
-namespace Chirp.WebService.Models;
+﻿namespace Chirp.WebService.Models;
 
 public struct CommentPartialModel
 {

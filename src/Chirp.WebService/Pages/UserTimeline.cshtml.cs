@@ -23,13 +23,19 @@ public class UserTimelineModel : PageModel
         _likeRepository = likeRepository;
     }
     
-    public ActionResult OnGet(string author)
+    public async Task<IActionResult> OnGet(string author)
     {
+        var user = User.GetUser();
         // Get amount of pages
-        var amountOfPages = User.GetUser().RunIfNotNull(user =>
+        int amountOfPages;
+        if (user is not null)
         {
-            return (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(author, user.Id) / 32);
-        }, (int)Math.Ceiling((double)_cheepRepository.GetAuthorCheepCount(author) / 32));
+            amountOfPages = (int)Math.Ceiling((double)await _cheepRepository.GetAuthorCheepCount(author, user.GetUserNonNull().Id) / 32);
+        }
+        else
+        {
+            amountOfPages = (int)Math.Ceiling((double)await _cheepRepository.GetAuthorCheepCount(author) / 32);
+        }
         
         // Get page number
         int pageNumber = 1;
@@ -40,28 +46,29 @@ public class UserTimelineModel : PageModel
         }
 
         // Get cheep dtos
-        var cheepDtos = new List<CheepDto>();
-        User.GetUser().RunIfNotNull(user =>
+        List<CheepDto> cheepDtos;
+        
+        if (user is null)
         {
-            if (user.Username.Equals(author))
+            cheepDtos = await _cheepRepository.GetAuthorCheepsForPage(author, pageNumber);
+        }
+        else
+        {
+            if (user.GetUserNonNull().Username.Equals(author))
             {
-                cheepDtos = _cheepRepository.GetAuthorCheepsForPageAsOwner(user.Id, pageNumber);
+                cheepDtos = await _cheepRepository.GetAuthorCheepsForPageAsOwner(user.GetUserNonNull().Id, pageNumber);
             }
             else
             {
-                cheepDtos = _cheepRepository.GetAuthorCheepsForPage(author, pageNumber);
+                cheepDtos = await _cheepRepository.GetAuthorCheepsForPage(author, pageNumber);
             }
-        }, () =>
-        {
-            cheepDtos = _cheepRepository.GetAuthorCheepsForPage(author, pageNumber);
-        });
+        }
         
         // Build models
         var cheepPartialModels = new List<CheepPartialModel>();
-        User.GetUser().RunIfNotNull(user =>
+
+        if (user is null)
         {
-            var follows = _authorRepository.GetFollowsForAuthor(user.Id);
-            var likes = _likeRepository.GetLikesByAuthorId(user.Id);
             foreach (CheepDto cheepDto in cheepDtos)
             {
                 cheepPartialModels.Add(new CheepPartialModel
@@ -73,10 +80,10 @@ public class UserTimelineModel : PageModel
                     AuthorUsername = cheepDto.AuthorUsername,
                     Timestamp = cheepDto.Timestamp,
                     Text = cheepDto.Text,
-                    isLikedByUser = likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString())),
-                    likesAmount = _likeRepository.LikeCount(cheepDto.CheepId),
-                    isFollowedByUser = !follows.Contains(cheepDto.AuthorUsername),
-                    CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
+                    LikesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
+                    IsLikedByUser = null,
+                    IsFollowedByUser = null,
+                    CheepComments = cheepDto.CommentDtos.Select(c => new CommentPartialModel
                     {
                         AuthorAvatarUrl = c.AuthorAvatarUrl,
                         AuthorId = c.AuthorId,
@@ -90,8 +97,11 @@ public class UserTimelineModel : PageModel
                     }).ToList()
                 });
             }
-        }, () =>
+        }
+        else
         {
+            var follows = await _authorRepository.GetFollowsForAuthor(user.GetUserNonNull().Id);
+            var likes = await _likeRepository.GetLikesByAuthorId(user.GetUserNonNull().Id);
             foreach (CheepDto cheepDto in cheepDtos)
             {
                 cheepPartialModels.Add(new CheepPartialModel
@@ -103,10 +113,10 @@ public class UserTimelineModel : PageModel
                     AuthorUsername = cheepDto.AuthorUsername,
                     Timestamp = cheepDto.Timestamp,
                     Text = cheepDto.Text,
-                    likesAmount = _likeRepository.LikeCount(cheepDto.CheepId),
-                    isLikedByUser = null,
-                    isFollowedByUser = null,
-                    CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
+                    IsLikedByUser = likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString())),
+                    LikesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
+                    IsFollowedByUser = !follows.Contains(cheepDto.AuthorUsername),
+                    CheepComments = cheepDto.CommentDtos.Select(c => new CommentPartialModel
                     {
                         AuthorAvatarUrl = c.AuthorAvatarUrl,
                         AuthorId = c.AuthorId,
@@ -120,7 +130,7 @@ public class UserTimelineModel : PageModel
                     }).ToList()
                 });
             }
-        });
+        }
 
         Cheeps = cheepPartialModels;
 
@@ -144,11 +154,11 @@ public class UserTimelineModel : PageModel
 
     }
     
-    public bool CheepIsLiked(Guid cheepId)
+    public async Task<bool> CheepIsLiked(Guid cheepId)
     {
         var authorId = User.GetUser()?.Id ?? Guid.Empty;
         if (authorId.ToString().Equals(Guid.Empty.ToString())) return false;
-        return _likeRepository.IsLiked(authorId, cheepId);   
+        return await _likeRepository.IsLiked(authorId, cheepId);   
   
     }
 }

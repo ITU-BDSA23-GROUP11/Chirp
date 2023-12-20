@@ -40,7 +40,7 @@ public class CommentControllerTest
     }
 
     [Fact]
-    public void TestAddComment()
+    public async Task TestAddComment()
     {
         //Arrange
         Author author = _mockChirpRepositories.TestAuthors.First();
@@ -59,7 +59,7 @@ public class CommentControllerTest
         );
 
         // Act
-        var result = _commentController.Add(collection);
+        var result = await _commentController.Add(collection);
 
         // Assert
         Assert.IsType<RedirectResult>(result);
@@ -69,7 +69,7 @@ public class CommentControllerTest
     }
 
     [Fact]
-    public void TestDeleteComment()
+    public async Task TestDeleteComment()
     {
         //Arrange
         Comment comment = _mockChirpRepositories.TestComment.First();
@@ -83,7 +83,7 @@ public class CommentControllerTest
         );
         
         // Act
-        var result = _commentController.Delete(collection);
+        var result = await _commentController.Delete(collection);
 
         // Assert
         Assert.IsType<RedirectResult>(result);
@@ -93,7 +93,7 @@ public class CommentControllerTest
     }
 
    [Fact] 
-    public void TestDeleteCommentFail()
+    public async Task TestDeleteCommentFail()
     {
         //Arrange
         string fakeCommentId = "not_an_id";
@@ -106,7 +106,7 @@ public class CommentControllerTest
         );
         
         //Act
-        IActionResult actionResult = _commentController.Delete(collection);
+        IActionResult actionResult = await _commentController.Delete(collection);
         
         Assert.False(actionResult is RedirectResult);
 
