@@ -1,3 +1,4 @@
+using Bogus;
 using Chirp.Core.Dto;
 using Chirp.Infrastructure.Models;
 using Chirp.Tests.Core;
@@ -13,8 +14,11 @@ public class LikeRepositoryTest
     public void LikeCheepTest() 
     {
         //Arrange
-        Author author = _mockChirpRepositories.TestAuthors.First();
         Cheep cheep = _mockChirpRepositories.TestCheeps.First();
+        cheep.Likes.Clear();
+
+        Author author = _mockChirpRepositories.TestAuthors.First();
+        author.Likes.Clear();
         
         //Act
         _mockChirpRepositories.LikeRepository.LikeCheep(author.AuthorId, cheep.CheepId);
