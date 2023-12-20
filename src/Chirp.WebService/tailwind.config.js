@@ -10,7 +10,7 @@ module.exports = {
       './Views/**/*.cshtml'
     ]
   },
-  darkMode: false, // or 'media' or 'class'
+  darkMode: 'media', // or 'media' or 'class'
   theme: {
     extend: {},
   },
@@ -18,6 +18,5 @@ module.exports = {
     extend: {},
   },
   plugins: [
-      require('flowbite/plugin')
   ],
 }
