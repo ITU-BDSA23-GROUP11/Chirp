@@ -34,7 +34,7 @@ public class Program
                 ConfigureServices(context.Configuration, services);
             });
 
-    public static void ConfigureServices(IConfiguration configuration, IServiceCollection services)
+    private static void ConfigureServices(IConfiguration configuration, IServiceCollection services)
     {
         services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
             .AddMicrosoftIdentityWebApp(configuration.GetSection("AzureADB2C"));    
@@ -71,8 +71,6 @@ public class Program
         
         services.AddDbContext<ChirpDbContext>(options =>
             options.UseSqlServer(sqlConnectionString.ConnectionString));
-      
-        
     }
 }
 
@@ -96,8 +94,7 @@ public class Startup
         app.UseRouting();
         app.UseAuthentication();
         app.UseAuthorization();
-
-
+        
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapRazorPages();

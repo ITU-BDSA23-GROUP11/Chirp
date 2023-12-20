@@ -19,10 +19,7 @@ public class DeleteAccountModel: PageModel
         var user = User.GetUser();
         if (user is not null)
         {
-            // Delete user
             await _authorRepository.DeleteAuthor(user.GetUserNonNull().Id);
-            
-            // Sign user out
             Response.Cookies.Delete(".AspNetCore.Cookies");
         }
         
