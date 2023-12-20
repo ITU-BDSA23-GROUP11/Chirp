@@ -127,7 +127,9 @@ public class CheepControllerTest
         ActionResult actionResult = _cheepController.Create(collection);
         
         //Assert
-        Assert.True(actionResult is BadRequestObjectResult);
+        Assert.True(actionResult is RedirectResult);
+        var redirectUrl = ((RedirectResult)actionResult).Url;
+        Assert.Contains("errorMessage=Invalid input", redirectUrl);
     }
 
     [Fact]
@@ -147,7 +149,9 @@ public class CheepControllerTest
         ActionResult actionResult = _cheepController.Create(collection);
         
         //Assert
-        Assert.True(actionResult is BadRequestObjectResult);
+        Assert.True(actionResult is RedirectResult);
+        var redirectUrl = ((RedirectResult)actionResult).Url;
+        Assert.Contains("errorMessage=Invalid input - cheep is too long (max 160 characters)", redirectUrl);
     }
 
     [Fact] //Tests if a cheep is not able to be liked
@@ -164,8 +168,9 @@ public class CheepControllerTest
         );
         //Assert
         IActionResult actionResult = _cheepController.Like(collection);
-        Assert.True(actionResult is BadRequestObjectResult);
-
+        Assert.True(actionResult is RedirectResult);
+        var redirectUrl = ((RedirectResult)actionResult).Url;
+        Assert.Contains("errorMessage=Invalid input", redirectUrl);
     }
     
     [Fact]
