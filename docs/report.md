@@ -50,8 +50,9 @@ Here are the steps to set up the sql server with docker:
 
 Run the following to pull the docker image
 
-`docker pull mcr.microsoft.com/azure-sql-edge`
-
+```shell
+docker pull mcr.microsoft.com/azure-sql-edge
+```
 
 #### 2. Run the image in a container
 Replacing `<YOUR_DB_PASSWORD>` with a strong password (requires 1 upper case, 1 lower case, 1 number, and no special characters), run
