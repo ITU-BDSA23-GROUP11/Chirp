@@ -48,7 +48,20 @@ increases extendability and sustainability for future development.
 ## Architecture of deployed application
 ![Cloud Architecture](docs/diagrams/CloudArchitecture.jpg "Cloud Architecture")
 
+This diagram shows the cloud architecture of how the clients and different Azure services communicate, in order to serve the said clients.
+
 ## User activities
+
+We have created the following diagrams to illustrate typical user activities/journeys through Chirp.
+We strove to create a user-flow that is smooth and functional. Therefore the register/login process is handled with OAuth and Github. This removes the need for a complicated registration (assuming the user has a Github account). 
+
+This can be seen in the diagrams after the user press the "Login" button. This starts the OAuth process. If the user has already been logged in to Chirp before, a Login press will simply handle the login and automatically redirect to the timeline without any further action from the user. 
+
+To ease the understanding of the diagrams, the following picture explains symbols and color definitions:
+
+-- INDSÆT BILLEDE AF DEFINITIONER --
+
+-- INDSÆT DIAGRAMMER AF USER ACTIVITIES --
 
 ## Sequence of functionality/calls trough _Chirp!_
 ![Functionality Sequence](docs/diagrams/Functionality_Sequence.jpg "Functionality Sequence")
@@ -66,6 +79,24 @@ unauthorized view of _Chirp!_ will be displayed.
 
 ## Build, test, release, and deployment
 ![Workflows](docs/diagrams/Workflows.jpg "Workflows")
+
+This diagram shows the usual flow starting from a pull request (PR) to the deployed application.
+As shown, we manage to build, test, release, and deploy our application through the use of Github Workflows/Actions.
+
+### Test and Coverage
+Starting from when a PR is created with the default branch (`main`) as its base, the workflows `Build and Test` and `Code coverage` are run every time the PR is changed (fx with a new commit).
+These workflows, although similar, differentiate by the `Code coverage` workflow also providing a sticky comment on the PR with the code coverage from the tests.
+They both set up, restore, build and run tests.
+Together, they act as required checks, for which the PR merging is blocked if any of the tests fail, or if the code coverage is too low (under 60%).
+
+### Deployment
+Once a PR has been merged to the main branch, a deployment is initiated through the `Build and deploy` workflow.
+The workflow starts by setting up .NET, build the project, publishes the application, creates an artifact, and then deploys it to Azure App Services.
+
+### Publishing
+When a new release is created, the `Publish app` workflow runs.
+Running as a matrix with common runtime identifiers (RID), it sets up .NET, publishes the application, and appends the published application as a `.zip` asset for the release.
+In our case, it creates 3 `.zip` files (one for each RID), specific for the commit at which the workflow was run at.
 
 ## Team work
 
@@ -184,5 +215,16 @@ Whilst unit tests cover the functional aspects of our controllers and extension 
 # Ethics
 
 ## License
+We have licensed our application under the MIT License. This license provides access free-of-charge to any user using our product.
+The license is permissive and is provided "as is", which ensures no liability in terms of unwanted program behaviour, damage or claim. 
+
+The license is compliant with Tailwind, as Tailwind is also licensed under MIT (See src/Chirp.WebService/wwwroot/css/output.css for license specification at start of file).
 
 ## LLMs, ChatGPT, CoPilot, and others
+We have utilised AI tools in the development of Chirp, however only when we felt appropriate or necessary. 
+Primarily we have used ChatGPT as a tool to troubleshoot code logic, if we have not been able to assess the faults ourselves.
+
+We are using the Tailwind CSS Framework to quickly develop UI components for Chirp. Though we are able to write HTML and CSS ourselves, we have used the Vercel V0 tool to speed up development process, as it can generate HTML with Tailwind styling applied. 
+Though this has been used extensively in the UI implementation, we found it appropriate as this course is not a UI-focused course, and we therefore did not wish to prioritize UI over more critical development issues.
+
+V0 is currently in a closed beta, and can therefore not be publicly accessed.
