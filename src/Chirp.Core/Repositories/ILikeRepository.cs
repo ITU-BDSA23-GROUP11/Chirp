@@ -4,11 +4,11 @@ namespace Chirp.Core.Repositories;
 
 public interface ILikeRepository
 {
-    public void LikeCheep(Guid authorId, Guid cheepId);
-    public void UnlikeCheep(Guid authorId, Guid cheepId);
-    public int LikeCount(Guid cheepId);
-    public bool IsLiked(Guid authorId, Guid cheepId);
-    public LikeDto GetLike(Guid authorId, Guid cheepId);
-    public List<LikeDto> GetLikesByAuthorId(Guid authorId);
-    public List<LikeDto> GetLikesByCheepId(Guid cheepId);
+    public Task LikeCheep(Guid authorId, Guid cheepId);
+    public Task UnlikeCheep(Guid authorId, Guid cheepId);
+    public Task<int> LikeCount(Guid cheepId);
+    public Task<bool> IsLiked(Guid authorId, Guid cheepId);
+    public Task<LikeDto> GetLike(Guid authorId, Guid cheepId);
+    public Task<List<LikeDto>> GetLikesByAuthorId(Guid authorId);
+    public Task<List<LikeDto>> GetLikesByCheepId(Guid cheepId);
 }

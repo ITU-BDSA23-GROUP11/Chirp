@@ -24,7 +24,7 @@ namespace Chirp.WebService.Controllers
                     return RedirectWithError("Invalid input");
                 }
                 Guid cId = Guid.Parse(cheepId);
-                LikeRepository.LikeCheep(user.Id, cId);
+                await LikeRepository.LikeCheep(user.Id, cId);
                 
                 return Redirect(GetPathUrl());
             });
@@ -44,7 +44,7 @@ namespace Chirp.WebService.Controllers
                     return RedirectWithError("Invalid input");
                 }
                 Guid cId = Guid.Parse(cheepId);
-                LikeRepository.UnlikeCheep(user.Id, cId);
+                await LikeRepository.UnlikeCheep(user.Id, cId);
                 
                 return Redirect(GetPathUrl());
             });

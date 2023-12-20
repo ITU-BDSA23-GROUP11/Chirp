@@ -54,7 +54,7 @@ public class PublicTimelineModel: PageModel
                     AuthorUsername = cheepDto.AuthorUsername,
                     Timestamp = cheepDto.Timestamp,
                     Text = cheepDto.Text,
-                    likesAmount = _likeRepository.LikeCount(cheepDto.CheepId),
+                    likesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
                     isLikedByUser = null,
                     isFollowedByUser = null,
                     CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
@@ -75,7 +75,7 @@ public class PublicTimelineModel: PageModel
         else
         {
             var follows = await _authorRepository.GetFollowsForAuthor(user.GetUserNonNull().Id);
-            var likes = _likeRepository.GetLikesByAuthorId(user.GetUserNonNull().Id);
+            var likes = await _likeRepository.GetLikesByAuthorId(user.GetUserNonNull().Id);
             foreach (CheepDto cheepDto in cheepDtos)
             {
                 cheepPartialModels.Add(new CheepPartialModel
@@ -88,7 +88,7 @@ public class PublicTimelineModel: PageModel
                     Timestamp = cheepDto.Timestamp,
                     Text = cheepDto.Text,
                     isLikedByUser = likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString())),
-                    likesAmount = _likeRepository.LikeCount(cheepDto.CheepId),
+                    likesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
                     isFollowedByUser = !follows.Contains(cheepDto.AuthorUsername),
                     CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
                     {

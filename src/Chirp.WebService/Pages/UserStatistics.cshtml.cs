@@ -37,7 +37,7 @@ public class UserStatisticsModel : PageModel
 
         AuthorDto? authorDto = await _authorRepository.GetAuthorFromUsername(author);
 
-        Likes = _likeRepository.GetLikesByAuthorId(authorDto.Id);
+        Likes = await _likeRepository.GetLikesByAuthorId(authorDto.Id);
 
         HashSet<Guid> likeIds = new HashSet<Guid>();
         
@@ -106,7 +106,7 @@ public class UserStatisticsModel : PageModel
                     AuthorUsername = cheepDto.AuthorUsername,
                     Timestamp = cheepDto.Timestamp,
                     Text = cheepDto.Text,
-                    likesAmount = _likeRepository.LikeCount(cheepDto.CheepId),
+                    likesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
                     isLikedByUser = null,
                     isFollowedByUser = null,
                     CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
@@ -127,7 +127,7 @@ public class UserStatisticsModel : PageModel
         else
         {
             var follows = await _authorRepository.GetFollowsForAuthor(user.GetUserNonNull().Id);
-            var likes = _likeRepository.GetLikesByAuthorId(user.GetUserNonNull().Id);
+            var likes = await _likeRepository.GetLikesByAuthorId(user.GetUserNonNull().Id);
             foreach (CheepDto cheepDto in cheepDtos)
             {
                 cheepPartialModels.Add(new CheepPartialModel
@@ -140,7 +140,7 @@ public class UserStatisticsModel : PageModel
                     Timestamp = cheepDto.Timestamp,
                     Text = cheepDto.Text,
                     isLikedByUser = likes.Any(l => l.CheepId.ToString().Equals(cheepDto.CheepId.ToString())),
-                    likesAmount = _likeRepository.LikeCount(cheepDto.CheepId),
+                    likesAmount = await _likeRepository.LikeCount(cheepDto.CheepId),
                     isFollowedByUser = !follows.Contains(cheepDto.AuthorUsername),
                     CheepComments = cheepDto.CommentDtos.Select<CommentDto, CommentPartialModel>(c => new CommentPartialModel
                     {
