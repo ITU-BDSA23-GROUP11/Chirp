@@ -156,12 +156,12 @@ public class E2ETests : IClassFixture<MockWebApplicationFactoryWithAuth>
         
         if (postCommentButton == null) Assert.Fail();
         
-        var firstPostCommentPlaceholder = await page
+        var firstCheepCommentPlaceholder = await page
             .QuerySelectorAsync("//*[@id='messagelist']/div[1]/div[2]/div[2]/form/div/div/input");
         
-        if (firstPostCommentPlaceholder != null)
+        if (firstCheepCommentPlaceholder != null)
         {
-            await firstPostCommentPlaceholder.FillAsync(commentText);
+            await firstCheepCommentPlaceholder.FillAsync(commentText);
         }
         else
         {
