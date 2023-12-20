@@ -144,3 +144,10 @@ dotnet test --verbosity normal
 ## License
 
 ## LLMs, ChatGPT, CoPilot, and others
+We have utilised AI tools in the development of Chirp, however only when we felt appropriate or necessary. 
+Primarily we have used ChatGPT as a tool to troubleshoot code logic, if we have not been able to assess the faults ourselves.
+
+We are using the Tailwind CSS Framework to quickly develop UI components for Chirp. Though we are able to write HTML and CSS ourselves, we have used the Vercel V0 tool to speed up development process, as it can generate HTML with Tailwind styling applied. 
+Though this has been used extensively in the UI implementation, we found it appropriate as this course is not a UI-focused course, and we therefore did not wish to prioritize UI over more critical development issues.
+
+V0 is currently in a closed beta, and can therefore not be publicly accessed.
