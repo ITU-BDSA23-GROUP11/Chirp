@@ -225,18 +225,6 @@ public class CheepRepository : ICheepRepository
                 .ToListAsync();
         });
     }
-
-    private List<CheepDto> FetchWithErrorHandling(Func<List<CheepDto>> fetchFunction)
-    {
-        try
-        {
-            return fetchFunction();
-        }
-        catch
-        {
-            return new List<CheepDto>();
-        }
-    }
     
     private async Task<List<CheepDto>> FetchWithErrorHandlingAsync(Func<Task<List<CheepDto>>> fetchFunction)
     {
