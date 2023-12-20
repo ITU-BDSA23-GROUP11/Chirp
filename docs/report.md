@@ -15,7 +15,7 @@ numbersections: true
 ### ER Diagram
 
 <p style="text-align: center">
-<img src="https://github.com/ITU-BDSA23-GROUP11/Chirp/blob/3fa239c860bc0d4d5cd18abcf0119f927e08b831/docs/diagrams/ER_Diagram.jpg">
+<img src="https://github.com/ITU-BDSA23-GROUP11/Chirp/blob/3fa239c860bc0d4d5cd18abcf0119f927e08b831/docs/diagrams/ER_Diagram.jpg" alt="ER Diagram">
 </p>
 
 The ER diagram is an illustration of the entities and their relations in the dataset. The author entity can make
