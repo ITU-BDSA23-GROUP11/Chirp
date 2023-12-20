@@ -14,6 +14,29 @@ numbersections: true
 
 ## Architecture — In the small
 
+In the development of our _Chirp!_ application, we used the Onion Architecture pattern. This architecture is composed
+of four integral layers: Domain, Infrastructure, Service and Web.
+
+**Domain Layer:** Positioned at the core of the architecture, the Domain layer serves as a foundation of
+the application. The layer contains essential elements such as Data Transfer Objects (DTOs) and interfaces. This could
+also be the position of primary business logic if the application needed any.
+
+**Infrastructure Layer:** This layer serves as a bridge between core domain logic and the practical implementation.
+The infrastructure layer consist of models that mirrors the DTOs and repositories built upon the interfaces. The layer
+also includes the DbContext for database interactions and Migrations scripts to version control the entities of the
+database. 
+
+**Service Layer:** Tasked to generate the user interface and functionality to improve user experience. The layer contains pages, controllers,
+partial models and the program file. The service layer translate operations and data from the infrastructure layer and
+the domain layer to facilitate user interactions and experience.
+
+**Web Layer:** The outer layer in the architecture represents servers, frameworks and tests to support the application.
+This layer is crucial for deploying the application in a web and development environment.
+
+Our approach of layering the application ensures that _Chirp!_ is built on a solid architectural foundation that
+increases extendability and sustainability for future development.
+
+
 ## Architecture of deployed application
 ![Cloud Architecture](docs/diagrams/CloudArchitecture.jpg "Cloud Architecture")
 
