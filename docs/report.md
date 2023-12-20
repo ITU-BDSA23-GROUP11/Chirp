@@ -13,7 +13,10 @@ numbersections: true
 ## Domain model
 
 ### ER Diagram
-![ER Diagram](docs/diagrams/ER_Diagram.jpg "ER Diagram")
+
+<p style="text-align: center">
+<img src="https://github.com/ITU-BDSA23-GROUP11/Chirp/blob/3fa239c860bc0d4d5cd18abcf0119f927e08b831/docs/diagrams/ER_Diagram.jpg">
+</p>
 
 The ER diagram is an illustration of the entities and their relations in the dataset. The author entity can make
 cheeps and add comments and likes while they're weak entities depending on a cheeps existence.
