@@ -152,16 +152,4 @@ public class AuthorRepository : IAuthorRepository
             return defaultValue;
         }
     }
-    
-    private T WithErrorHandlingDefaultValue<T>(T defaultValue, Func<T> function) where T : struct
-    {
-        try
-        {
-            return function();
-        }
-        catch
-        {
-            return defaultValue;
-        }
-    }
 }
