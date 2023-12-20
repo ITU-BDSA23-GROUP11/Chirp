@@ -92,16 +92,7 @@ However, a certificate can also be added with:
 dotnet dev-certs https
 ```
 
-## How to run test suite locally
-### Clone Github repository
-To make _Chirp!_ work locally, first clone the repository with the following command if you have SSH keys set up for Github:
-```shell
-git clone git@github.com:ITU-BDSA23-GROUP11/Chirp.git
-```
-otherwise, if you don't have SSH keys set up for Github, the following command can be used:
-```shell
-git clone https://github.com/ITU-BDSA23-GROUP11/Chirp.git
-```
+## How to run tests locally
 ### Install .NET
 Thereafter, in order to set up the project, the main dependency you need is `.NET 7.0`.
 It can be downloaded from the from [the _'Download .NET 7.0'_ website](https://dotnet.microsoft.com/en-us/download/dotnet/7.0).
@@ -127,6 +118,20 @@ To run tests, given the it is set up, simply run the following command:
 ```shell
 dotnet test --verbosity normal
 ```
+
+### About the _Chirp_ test suite
+During the project, having a robust test suite, along with great coverage, was one of our focus points.
+Our tests are set up to reflect the structure of our source code, as to keep the structure coherent.
+This was further set into action with the use of a required workflow check, which failed if test coverage was under 60%.
+
+In `Chirp.Tests.Core`, we have included anything our tests might have in common, as to keep our code DRY.
+This includes generated fake instances of our models (using [Bogus](https://github.com/bchavez/Bogus)), mocked repositories (using [Moq](https://github.com/devlooped/moq)), fixtures and application factories.
+
+In `Chirp.Infrastructure.Tests`, we aim to cover DbContexts, Models and Repositories.
+These tests are primarily unit tests, covering the different functional components found in `Chirp.Infrastructure`, mainly based off of [dotCover](https://www.jetbrains.com/dotcover/) reports.
+
+In `Chirp.WebService.Tests` lies a combination of unit, integration and end-to-end (E2E) tests.
+Whilst unit tests cover the functional aspects of our controllers and extension classes, our integration and E2E tests cover user flows an user might have foretaken.
 
 # Ethics
 
