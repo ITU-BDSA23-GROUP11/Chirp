@@ -103,7 +103,7 @@ In our case, it creates 3 `.zip` files (one for each RID), specific for the comm
 ## Team work
 ![Project Board](docs/diagrams/ProjectBoard.png "Project Board")
 
-\newpage The project board helps the team to organise issues with status, adding assignees and clarify acceptance criteria. When an issue is made, it is important that the creator of the issue is clear in the instruction and gives a perspective of why an issue is necessary.
+\newpage The project board helps the team to organise issues with status, adding assignees and clarify acceptance criteria. When an issue is made, it is important that the creator of the issue is clear in the instruction and gives a perspective of why an issue is necessary. Additionally, conversations, questions and updates can be commented at each issue.
 
 ![Teamwork Flow](docs/diagrams/Teamwork.jpg "Teamwork Flow")
 
