@@ -17,8 +17,8 @@ numbersections: true
 ### ER Diagram
 ![ER Diagram](docs/diagrams/ER_Diagram.jpg "ER Diagram")
 
-The ER diagram is an illustration of the entities and their relations in the dataset. The author entity can make
-cheeps and add comments and likes while they're weak entities depending on a cheeps existence.
+The ER diagram is an illustration of the entities and their relations in the dataset. The author entity 
+inherits from User that is a representation of the data from OAuth. An Author can make cheeps and add comments and likes while they're weak entities depending on a cheeps existence.
 
 ## Architecture — In the small
 
@@ -101,6 +101,27 @@ Running as a matrix with common runtime identifiers (RID), it sets up .NET, publ
 In our case, it creates 3 `.zip` files (one for each RID), specific for the commit at which the workflow was run at.
 
 ## Team work
+### Project board
+![Project Board](docs/diagrams/ProjectBoard.png "Project Board")
+
+\newpage The project board helps the team to organise issues with status, adding assignees and clarify acceptance criteria. When an issue is made, it is important that the creator of the issue is clear in the instruction and gives a perspective of why an issue is necessary. Additionally, conversations, questions and updates can be commented at each issue.
+
+### Teamwork flow
+![Teamwork Flow](docs/diagrams/Teamwork.jpg "Teamwork Flow")
+During the project, we followed the flow shown above. It all starts when an issue is created.
+From there, we specialise and decorate the issue, such that it is easy for anyone to pick it up.
+
+Thereafter, the issue assignee branches out from the default branch, and starts his or hers iterative process.
+This process constitutes of commiting changes (following the issue criteria), fix/modify failing tests, and pushing to origin.
+
+Once this has been done enough times that the issue is satisfied, our workflows come into play, catching any errors the user might've missed.
+If such a workflow fails, the issue assignee goes back to the _commit changes_ iterative step.
+
+When the workflows finally pass, a review is initiated by another team member.
+If the reviewer requests changes, the assignee falls back again to the _commit changes_ iterative step.
+
+Once the PR is finally approved, it can be merged, where the issue will automatically be closed.
+
 ## How to make _Chirp!_ work locally
 ### Clone Github repository
 To make _Chirp!_ work locally, first clone the repository with the following command if you have SSH keys set up for Github:
