@@ -21,7 +21,7 @@ This domain model showcases the base models in our application, along with their
 ![ER Diagram](docs/diagrams/ER_Diagram.jpg "ER Diagram")
 
 The ER diagram is an illustration of the entities and their relations in the dataset. The author entity 
-inherits from User that is a representation of the data from OAuth. An Author can make cheeps and add comments and likes while they're weak entities depending on a cheeps existence.
+inherits from User that is a representation of the data from OAuth. An Author can create cheeps, and comment or like them. As such they're weak entities depending on a cheep's existence.
 
 ## Architecture — In the small
 
@@ -32,16 +32,16 @@ of four integral layers: Domain, Infrastructure, Service and Web.
 
 **Domain Layer:** Positioned at the core of the architecture, the Domain layer serves as a foundation of
 the application. The layer contains essential elements such as Data Transfer Objects (DTOs) and interfaces. This could
-also be the position of primary business logic if the application needed any.
+also be the position of primary business logic if the application had any.
 
 **Infrastructure Layer:** This layer serves as a bridge between core domain logic and the practical implementation.
-The infrastructure layer consist of models that mirrors the DTOs and repositories built upon the interfaces. The layer
-also includes the DbContext for database interactions and Migrations scripts to version control the entities of the
+The previously mentioned DTOs represents models in our infrastructure layer that engage with the repositories.
+The layer also includes the DbContext for database interactions and Migrations scripts to version control the entities of the
 database. 
 
-**Service Layer:** Tasked to generate the user interface and functionality to improve user experience. The layer contains pages, controllers,
-partial models and the program file. The service layer translate operations and data from the infrastructure layer and
-the domain layer to facilitate user interactions and experience.
+**Service Layer:** Tasked to generate the user interface and functionality to improve user experience.
+The layer contains pages, controllers, partial models and the program file.
+The service layer translate operations and data from the infrastructure layer and the domain layer to facilitate user interactions and experience.
 
 **Web Layer:** The outer layer in the architecture represents servers, frameworks and tests to support the application.
 This layer is crucial for deploying the application in a web and development environment.
@@ -72,7 +72,7 @@ This diagram provides an explanation for the following user journeys.
 
 ![UserJourney - Follow author](docs/diagrams/UserJourneyFollowAuthor.jpg "User Journey - Follow Author")
 
-\newpage We have created the following diagrams to illustrate typical user activities/journeys through Chirp.
+\newpage We have created the diagrams above to illustrate typical user activities/journeys through Chirp.
 We strove to create a user-flow that is smooth and functional. Therefore the register/login process is handled with OAuth and Github. This removes the need for a complicated registration (assuming the user has a Github account).
 This can be seen in the diagrams after the user press the "Login" button. This starts the OAuth process. If the user has already been logged in to Chirp before, a Login press will simply handle the login and automatically redirect to the timeline without any further action from the user.
 
@@ -97,7 +97,7 @@ This diagram shows the usual flow starting from a pull request (PR) to the deplo
 As shown, we manage to build, test, release, and deploy our application through the use of Github Workflows/Actions.
 
 ### Test and Coverage
-Starting from when a PR is created with the default branch (`main`) as its base, the workflows `Build and Test` and `Code coverage` are run every time the PR is changed (fx with a new commit).
+Starting from when a PR is created with the default branch (`main`) as its base, the workflows `Build and Test` and `Code coverage` are run every time the PR is changed (eg. with a new commit).
 These workflows, although similar, differentiate by the `Code coverage` workflow also providing a sticky comment on the PR with the code coverage from the tests.
 They both set up, restore, build and run tests.
 Together, they act as required checks, for which the PR merging is blocked if any of the tests fail, or if the code coverage is too low (under 60%).
@@ -109,7 +109,7 @@ The workflow starts by setting up .NET, build the project, publishes the applica
 ### Publishing
 When a new release is created, the `Publish app` workflow runs.
 Running as a matrix with common runtime identifiers (RID), it sets up .NET, publishes the application, and appends the published application as a `.zip` asset for the release.
-In our case, it creates 3 `.zip` files (one for each RID), specific for the commit at which the workflow was run at.
+In our case, it creates three `.zip` files (one for each RID), specific for the commit at which the workflow was run at.
 
 ## Team work
 ### Project board
@@ -119,10 +119,11 @@ In our case, it creates 3 `.zip` files (one for each RID), specific for the comm
 
 ### Teamwork flow
 ![Teamwork Flow](docs/diagrams/Teamwork.jpg "Teamwork Flow")
+
 During the project, we followed the flow shown above. It all starts when an issue is created.
 From there, we specialise and decorate the issue, such that it is easy for anyone to pick it up.
 
-Thereafter, the issue assignee branches out from the default branch, and starts his or hers iterative process.
+Thereafter, the issue assignee branches out from the default branch, and starts an iterative process.
 This process constitutes of commiting changes (following the issue criteria), fix/modify failing tests, and pushing to origin.
 
 Once this has been done enough times that the issue is satisfied, our workflows come into play, catching any errors the user might've missed.
@@ -226,7 +227,7 @@ dotnet pwsh \
 Everything should now be set up in order to enable tests to run.
 
 ### Run tests
-To run tests, given the it is set up, simply run the following command:
+To run tests, given it is set up, simply run the following command:
 ```shell
 dotnet test --verbosity normal
 ```
