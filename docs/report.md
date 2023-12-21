@@ -24,7 +24,7 @@ cheeps and add comments and likes while they're weak entities depending on a che
 
 ![Onion Architecture](docs/diagrams/Onion_architecture.jpg "Onion Architecture")
 
-In the development of our _Chirp!_ application, we used the Onion Architecture pattern. This architecture is composed
+\newpage In the development of our _Chirp!_ application, we used the Onion Architecture pattern. This architecture is composed
 of four integral layers: Domain, Infrastructure, Service and Web.
 
 **Domain Layer:** Positioned at the core of the architecture, the Domain layer serves as a foundation of
@@ -54,7 +54,7 @@ This diagram shows the cloud architecture of how the clients and different Azure
 
 ## User activities
 
-We have created the following diagrams to illustrate typical user activities/journeys through Chirp.
+\newpage We have created the following diagrams to illustrate typical user activities/journeys through Chirp.
 We strove to create a user-flow that is smooth and functional. Therefore the register/login process is handled with OAuth and Github. This removes the need for a complicated registration (assuming the user has a Github account). 
 
 This can be seen in the diagrams after the user press the "Login" button. This starts the OAuth process. If the user has already been logged in to Chirp before, a Login press will simply handle the login and automatically redirect to the timeline without any further action from the user. 
@@ -68,7 +68,7 @@ To ease the understanding of the diagrams, the following picture explains symbol
 ## Sequence of functionality/calls trough _Chirp!_
 ![Functionality Sequence](docs/diagrams/Functionality_Sequence.jpg "Functionality Sequence")
 
-The sequence diagram illustrates the functionality of the _Chirp!_ application. The diagram contains 5 boundary objects;
+\newpage The sequence diagram illustrates the functionality of the _Chirp!_ application. The diagram contains 5 boundary objects;
 PublicTimeline, OAuth Login, UserTimeline, AboutMe and the database. These boundaries will be interacted with depending
 on the HTTP requests from the user. This particular sequence represents an
 unauthorized user that starts with a request to get the feed through a HTTP GET request, potentially for the first time.
