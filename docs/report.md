@@ -101,6 +101,8 @@ Running as a matrix with common runtime identifiers (RID), it sets up .NET, publ
 In our case, it creates 3 `.zip` files (one for each RID), specific for the commit at which the workflow was run at.
 
 ## Team work
+![Teamwork Flow](docs/diagrams/Teamwork.jpg "Teamwork Flow")
+
 ## How to make _Chirp!_ work locally
 ### Clone Github repository
 To make _Chirp!_ work locally, first clone the repository with the following command if you have SSH keys set up for Github:
