@@ -17,14 +17,14 @@ numbersections: true
 ### ER Diagram
 ![ER Diagram](docs/diagrams/ER_Diagram.jpg "ER Diagram")
 
-The ER diagram is an illustration of the entities and their relations in the dataset. The author entity can make
-cheeps and add comments and likes while they're weak entities depending on a cheeps existence.
+The ER diagram is an illustration of the entities and their relations in the dataset. The author entity 
+inherits from User that is a representation of the data from OAuth. An Author can make cheeps and add comments and likes while they're weak entities depending on a cheeps existence.
 
 ## Architecture — In the small
 
 ![Onion Architecture](docs/diagrams/Onion_architecture.jpg "Onion Architecture")
 
-In the development of our _Chirp!_ application, we used the Onion Architecture pattern. This architecture is composed
+\newpage In the development of our _Chirp!_ application, we used the Onion Architecture pattern. This architecture is composed
 of four integral layers: Domain, Infrastructure, Service and Web.
 
 **Domain Layer:** Positioned at the core of the architecture, the Domain layer serves as a foundation of
@@ -55,6 +55,7 @@ This diagram shows the cloud architecture of how the clients and different Azure
 ## User activities
 ### Diagram explanation
 
+<<<<<<< HEAD
 ![UserJourney - diagram explanation](docs/diagrams/UserJourneyExplanation.jpg "User Journey - Diagram Explanation")
 
 This diagram provides an explanation for the following user journeys.
@@ -70,6 +71,9 @@ This diagram provides an explanation for the following user journeys.
 ![UserJourney - Follow author](docs/diagrams/UserJourneyFollowAuthor.jpg "User Journey - Follow Author")
 
 \newpage We have created the above diagrams to illustrate typical user activities/journeys through Chirp.
+=======
+\newpage We have created the following diagrams to illustrate typical user activities/journeys through Chirp.
+>>>>>>> main
 We strove to create a user-flow that is smooth and functional. Therefore the register/login process is handled with OAuth and Github. This removes the need for a complicated registration (assuming the user has a Github account). 
 
 This can be seen in the diagrams after the user press the "Login" button. This starts the OAuth process. If the user has already been logged in to Chirp before, a Login press will simply handle the login and automatically redirect to the timeline without any further action from the user.
@@ -77,7 +81,7 @@ This can be seen in the diagrams after the user press the "Login" button. This s
 ## Sequence of functionality/calls trough _Chirp!_
 ![Functionality Sequence](docs/diagrams/Functionality_Sequence.jpg "Functionality Sequence")
 
-The sequence diagram illustrates the functionality of the _Chirp!_ application. The diagram contains 5 boundary objects;
+\newpage The sequence diagram illustrates the functionality of the _Chirp!_ application. The diagram contains 5 boundary objects;
 PublicTimeline, OAuth Login, UserTimeline, AboutMe and the database. These boundaries will be interacted with depending
 on the HTTP requests from the user. This particular sequence represents an
 unauthorized user that starts with a request to get the feed through a HTTP GET request, potentially for the first time.
@@ -110,6 +114,27 @@ Running as a matrix with common runtime identifiers (RID), it sets up .NET, publ
 In our case, it creates 3 `.zip` files (one for each RID), specific for the commit at which the workflow was run at.
 
 ## Team work
+### Project board
+![Project Board](docs/diagrams/ProjectBoard.png "Project Board")
+
+\newpage The project board helps the team to organise issues with status, adding assignees and clarify acceptance criteria. When an issue is made, it is important that the creator of the issue is clear in the instruction and gives a perspective of why an issue is necessary. Additionally, conversations, questions and updates can be commented at each issue.
+
+### Teamwork flow
+![Teamwork Flow](docs/diagrams/Teamwork.jpg "Teamwork Flow")
+During the project, we followed the flow shown above. It all starts when an issue is created.
+From there, we specialise and decorate the issue, such that it is easy for anyone to pick it up.
+
+Thereafter, the issue assignee branches out from the default branch, and starts his or hers iterative process.
+This process constitutes of commiting changes (following the issue criteria), fix/modify failing tests, and pushing to origin.
+
+Once this has been done enough times that the issue is satisfied, our workflows come into play, catching any errors the user might've missed.
+If such a workflow fails, the issue assignee goes back to the _commit changes_ iterative step.
+
+When the workflows finally pass, a review is initiated by another team member.
+If the reviewer requests changes, the assignee falls back again to the _commit changes_ iterative step.
+
+Once the PR is finally approved, it can be merged, where the issue will automatically be closed.
+
 ## How to make _Chirp!_ work locally
 ### Clone Github repository
 To make _Chirp!_ work locally, first clone the repository with the following command if you have SSH keys set up for Github:
