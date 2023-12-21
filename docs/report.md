@@ -57,10 +57,13 @@ This diagram shows the cloud architecture of how the clients and different Azure
 
 ![UserJourney - diagram explanation](docs/diagrams/UserJourneyExplanation.jpg "User Journey - Diagram Explanation")
 
+This diagram provides an explanation for the following user journeys.
+
 ### User Journey - Writing a Cheep
 
 ![UserJourney - write cheep](docs/diagrams/UserJourneyWriteCheep.jpg "User Journey - Write Cheep")
 
+\newpage
 
 ### User Journey - Following an author and seeing their cheeps on own timeline
 
@@ -69,9 +72,7 @@ This diagram shows the cloud architecture of how the clients and different Azure
 \newpage We have created the above diagrams to illustrate typical user activities/journeys through Chirp.
 We strove to create a user-flow that is smooth and functional. Therefore the register/login process is handled with OAuth and Github. This removes the need for a complicated registration (assuming the user has a Github account). 
 
-This can be seen in the diagrams after the user press the "Login" button. This starts the OAuth process. If the user has already been logged in to Chirp before, a Login press will simply handle the login and automatically redirect to the timeline without any further action from the user. 
-
-To ease the understanding of the diagrams, the first picture explains symbols and color definitions of the diagrams.
+This can be seen in the diagrams after the user press the "Login" button. This starts the OAuth process. If the user has already been logged in to Chirp before, a Login press will simply handle the login and automatically redirect to the timeline without any further action from the user.
 
 ## Sequence of functionality/calls trough _Chirp!_
 ![Functionality Sequence](docs/diagrams/Functionality_Sequence.jpg "Functionality Sequence")
