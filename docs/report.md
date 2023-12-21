@@ -13,6 +13,9 @@ numbersections: true
 # Design and Architecture of _Chirp!_
 
 ## Domain model
+![Domain Model](docs/diagrams/DomainModel.jpg "Domain Model")
+
+This domain model showcases the base models in our application, along with their relations and cardinalities.
 
 ### ER Diagram
 ![ER Diagram](docs/diagrams/ER_Diagram.jpg "ER Diagram")
