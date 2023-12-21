@@ -54,12 +54,16 @@ This diagram shows the cloud architecture of how the clients and different Azure
 
 ## User activities
 ### Diagram explanation
+
 ![UserJourney - diagram explanation](docs/diagrams/UserJourneyExplanation.jpg "User Journey - Diagram Explanation")
-\newpage
+
 ### User Journey - Writing a Cheep
+
 ![UserJourney - write cheep](docs/diagrams/UserJourneyWriteCheep.jpg "User Journey - Write Cheep")
-\newpage
+
+
 ### User Journey - Following an author and seeing their cheeps on own timeline
+
 ![UserJourney - Follow author](docs/diagrams/UserJourneyFollowAuthor.jpg "User Journey - Follow Author")
 
 \newpage We have created the above diagrams to illustrate typical user activities/journeys through Chirp.
