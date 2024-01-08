@@ -13,7 +13,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="7.0.13" />
         <PackageReference Include="Microsoft.Playwright" Version="1.40.0" />
         <PackageReference Include="Testcontainers.SqlEdge" Version="3.6.0" />
-        <PackageReference Include="xunit.extensibility.core" Version="2.6.3" />
+        <PackageReference Include="xunit.extensibility.core" Version="2.6.5" />
     </ItemGroup>
 
     <ItemGroup>
